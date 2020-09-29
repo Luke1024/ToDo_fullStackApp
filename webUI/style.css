@@ -1,0 +1,67 @@
+body {
+    background-color: black
+
+}
+
+#topPanel {
+    background-color:rgb(177, 121, 0);
+    margin:auto;
+    min-width: 300px;
+    max-width: 500px;
+    height:50px;
+    margin-bottom:20px;
+    position: relative;
+}
+
+#topBarSave {
+    position: absolute;
+    top:15px;
+    right: 200px;
+}
+
+#logIn {
+    position: absolute;
+    top:15px;
+    right: 120px;
+}
+
+#signIn {
+    position: absolute;
+    top:15px;
+    right: 40px;
+}
+
+#card {
+    margin-top: 20px;
+    background-color: tomato;
+    margin:auto;
+    min-width: 300px;
+    max-width: 500px;
+    height:85px;
+    position: relative;
+}
+
+#cardSave {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+#cardEdit {
+    position: absolute;
+    top: 30px;
+    right: 5px;
+}
+
+#cardDelete {
+    position: absolute;
+    top: 55px;
+    right: 5px;
+}
+
+#cardInput {
+    position: absolute;
+    top:5px;
+    left:5px;
+    bottom:5px;
+}
