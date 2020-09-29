@@ -1,67 +1,136 @@
 body {
     background-color: black
-
 }
 
-#topPanel {
-    background-color:rgb(177, 121, 0);
+#topBar {
     margin:auto;
-    min-width: 300px;
-    max-width: 500px;
-    height:50px;
-    margin-bottom:20px;
+    min-width: 400px;
+    max-width: 800px;
     position: relative;
+}
+
+#startPanel {
+    background-color:yellow;
+    position:relative;
+    height:32px;
+    margin-top:20px;
+    margin-bottom:20px;
 }
 
 #topBarSave {
-    position: absolute;
-    top:15px;
-    right: 200px;
+    position:absolute;
+    top:5px;
+    right:150px;
 }
 
 #logIn {
-    position: absolute;
-    top:15px;
-    right: 120px;
+    position:absolute;
+    top:5px;
+    right:80px;
 }
 
 #signIn {
-    position: absolute;
-    top:15px;
-    right: 40px;
+    position:absolute;
+    top:5px;
+    right:10px;
 }
 
-#card {
-    margin-top: 20px;
-    background-color: tomato;
+#loggedPanel {
+    background-color:gray;
+    position: relative;
+    height:32px;
+    margin-top:20px;
+    margin-bottom:20px;
+}
+
+#logOutButton{
+    position:absolute;
+    top:5px;
+    right:10px;
+}
+
+#logInPanel {
+    background-color: yellowgreen;
+    position: relative;
+    height:100px;
+    margin-top:20px;
+    margin-bottom:20px;
+}
+
+#signInPanel {
+    background-color: darkcyan;
+    position:relative;
+    height:80px;
+    margin-top:20px;
+    margin-bottom:20px;
+}
+
+#cardArea {
     margin:auto;
-    min-width: 300px;
-    max-width: 500px;
-    height:85px;
+    min-width: 400px;
+    max-width: 800px;
     position: relative;
 }
 
-#cardSave {
-    position: absolute;
-    top: 5px;
-    right: 5px;
+#newCard {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: rgb(243, 50, 17);
+    height: 25px;
+    position: relative;
 }
 
-#cardEdit {
+#newTaskButton {
     position: absolute;
-    top: 30px;
-    right: 5px;
+    margin:auto;
 }
 
-#cardDelete {
+#cardEditMode {
+    margin: 20px 0px 20px 0px;
+    background-color: tomato;
+    height:105px;
+    position: relative;
+}
+
+#taskForm {
     position: absolute;
-    top: 55px;
-    right: 5px;
+    top:5px;
+    left:5px;
 }
 
 #cardInput {
     position: absolute;
-    top:5px;
+    top:30px;
     left:5px;
-    bottom:5px;
+}
+
+#cardSave {
+    position:absolute;
+    top:5px;
+    right:5px;
+}
+
+#cardSaved {
+    margin:20px 0px 20px 0px;
+    background-color: tomato;
+    height:32px;
+    position: relative;
+}
+
+#cardMore {
+    position:absolute;
+    top:5px;
+    right:150px;   
+}
+
+#cardEdit {
+    position:absolute;
+    top:5px;
+    right:80px;
+}
+
+#cardDelete {
+    position:absolute;
+    top:5px;
+    right:10px;
 }

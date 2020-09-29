@@ -5,20 +5,53 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div id="topPanel">
-    <p>ToDo</p>
-    <button id="topBarSave">Save</button>
-    <button id="logIn">Log In</button>
-    <button id="signIn">Sign In</button>
-</div>
-
-<div id="card">
-    <textarea id="cardInput" rows="3" cols="50"></textarea>
-    <button id="cardSave">Save</button>
-    <button id="cardEdit">Edit</button>
-    <button id="cardDelete">Delete</button>
-</div>
-
+    <div id="topBar">
+        <div id="startPanel">
+            <p>ToDo</p>
+            <button id="topBarSave">Save</button>
+            <button id="logIn">Log In</button>
+            <button id="signIn">Sign In</button>
+        </div>
+        <div id="loggedPanel">
+            <p>User</p>
+            <button id="logOutButton">Log Out</button>
+        </div>
+        <div id="logInPanel">
+            <form id="loginForm">
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email">
+                <label for="password">Password:</label>
+                <input type="text" id="password" name="password">
+            </form>
+            <button id="logInExecutor">Log In</button>
+        </div>
+        <div id="signInPanel">
+            <form id="signinForm">
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email">
+                <label for="password">Password:</label>
+                <input type="text" id="password" name="password">
+                <label for="passwordRepeat">Repeat password:</label>
+                <input type="text" id="passwordRepeat" name="passwordRepeat">
+            </form>
+            <button id="signInExecutor">Sign In</button>
+        </div>
+    </div>
+    <div id="cardArea">
+        <div id="newCard">
+            <button id="newTaskButton">New Task</button>
+        </div>
+        <div id="cardEditMode">
+            <input type="text" id="taskForm"></input>
+            <textarea id="cardInput" rows="3" cols="50"></textarea>
+            <button id="cardSave">Save</button>
+        </div>
+        <div id="cardSaved">
+            <p>Area with text</p>
+            <button id="cardMore">More</button>
+            <button id="cardEdit">Edit</button>
+            <button id="cardDelete">Delete</button>
+        </div>
+    </div>
 </body>
 </html> 
