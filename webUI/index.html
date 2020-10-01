@@ -3,14 +3,15 @@
 <head>
 <title>ToDoApp</title>
 <link rel="stylesheet" href="style.css">
+<script src = script.js></script>
 </head>
-<body>
+<body onload="onLoadFunction()">
     <div id="topBar">
         <div id="startPanel">
-            <p>ToDo</p>
-            <button id="topBarSave">Save</button>
-            <button id="logIn">Log In</button>
-            <button id="signIn">Sign In</button>
+            <p id="toDoP">ToDo</p>
+            <button id="buttonTopBarSave">Save</button>
+            <button id="buttonLogIn">Log In</button>
+            <button id="buttonSignIn">Sign In</button>
         </div>
         <div id="loggedPanel">
             <p>User</p>
@@ -26,7 +27,7 @@
             <button id="logInExecutor">Log In</button>
         </div>
         <div id="signInPanel">
-            <form id="signinForm">
+            <form id="signInForm">
                 <label for="email">Email:</label>
                 <input type="text" id="email" name="email">
                 <label for="password">Password:</label>
@@ -39,12 +40,13 @@
     </div>
     <div id="cardArea">
         <div id="newCard">
-            <button id="newTaskButton">New Task</button>
+            <button id="newTaskButton" onclick="newTaskButtonClicked()">New Task</button>
         </div>
         <div id="cardEditMode">
             <input type="text" id="taskForm"></input>
             <textarea id="cardInput" rows="3" cols="50"></textarea>
             <button id="cardSave">Save</button>
+            <button id="cardCancel" onclick="cardCancelCLicked()">Cancel</button>
         </div>
         <div id="cardSaved">
             <p>Area with text</p>

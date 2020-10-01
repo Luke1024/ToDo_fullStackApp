@@ -2,6 +2,8 @@ body {
     background-color: black
 }
 
+/* topBar */
+
 #topBar {
     margin:auto;
     min-width: 400px;
@@ -9,38 +11,43 @@ body {
     position: relative;
 }
 
+/*startPanel*/
+
 #startPanel {
-    background-color:yellow;
+    background-color:rgb(255, 153, 0);
     position:relative;
     height:32px;
     margin-top:20px;
     margin-bottom:20px;
 }
 
-#topBarSave {
+#buttonTopBarSave {
     position:absolute;
     top:5px;
     right:150px;
 }
 
-#logIn {
+#buttonLogIn {
     position:absolute;
     top:5px;
     right:80px;
 }
 
-#signIn {
+#buttonSignIn {
     position:absolute;
     top:5px;
     right:10px;
 }
 
+/*loggedPanel*/
+
 #loggedPanel {
-    background-color:gray;
+    background-color:rgb(255, 153, 0);
     position: relative;
     height:32px;
     margin-top:20px;
     margin-bottom:20px;
+    display: none;
 }
 
 #logOutButton{
@@ -49,21 +56,31 @@ body {
     right:10px;
 }
 
+/*logInPanel*/
+
 #logInPanel {
-    background-color: yellowgreen;
+    background-color:rgb(255, 153, 0);
     position: relative;
     height:100px;
     margin-top:20px;
     margin-bottom:20px;
+    display: none;
 }
 
+/*signInPanel*/
+
 #signInPanel {
-    background-color: darkcyan;
+    background-color: rgb(255, 153, 0);
     position:relative;
     height:80px;
     margin-top:20px;
     margin-bottom:20px;
+    display:none;
 }
+
+
+
+/*cardArea*/
 
 #cardArea {
     margin:auto;
@@ -71,6 +88,8 @@ body {
     max-width: 800px;
     position: relative;
 }
+
+/*newCard*/
 
 #newCard {
     margin-top: 20px;
@@ -85,11 +104,14 @@ body {
     margin:auto;
 }
 
+/*cardEditMode*/
+
 #cardEditMode {
     margin: 20px 0px 20px 0px;
     background-color: tomato;
     height:105px;
     position: relative;
+    display:none;
 }
 
 #taskForm {
@@ -110,11 +132,20 @@ body {
     right:5px;
 }
 
+#cardCancel {
+    position:absolute;
+    top:30px;
+    right:5px;
+}
+
+/*cardSaved*/
+
 #cardSaved {
     margin:20px 0px 20px 0px;
     background-color: tomato;
     height:32px;
     position: relative;
+    display: none;
 }
 
 #cardMore {
