@@ -1,12 +1,4 @@
-let serverAdress = "";
-
-function onLoadFunction() {
-    getUserInfo();
-}
-
-function getUserInfo(){
-
-}
+var serverAdress = "";
 
 function newTaskButtonClicked() {
     document.getElementById("newCard").style.display = 'none';
@@ -19,5 +11,16 @@ function cardCancelCLicked() {
 }
 
 function cardSaveClicked() {
+    var name = document.getElementById("taskForm").elements[0].value;
+    /*tasks.push(name);*/
+    /*document.getElementById("cardEditMode").style.display = 'none';*/
+    showCards();
+}
 
+function showCards(){
+    showCard();
+}
+
+function showCard(){
+    document.getElementById("savedDescription").innerHTML = 'random';
 }

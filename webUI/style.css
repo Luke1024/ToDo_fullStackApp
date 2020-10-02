@@ -114,13 +114,13 @@ body {
     display:none;
 }
 
-#taskForm {
+#taskName {
     position: absolute;
     top:5px;
     left:5px;
 }
 
-#cardInput {
+#taskDescription {
     position: absolute;
     top:30px;
     left:5px;
@@ -145,7 +145,6 @@ body {
     background-color: tomato;
     height:32px;
     position: relative;
-    display: none;
 }
 
 #cardMore {

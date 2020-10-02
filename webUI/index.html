@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="style.css">
 <script src = script.js></script>
 </head>
-<body onload="onLoadFunction()">
+<body>
     <div id="topBar">
         <div id="startPanel">
             <p id="toDoP">ToDo</p>
@@ -39,20 +39,22 @@
         </div>
     </div>
     <div id="cardArea">
+        <div id="cardSaved">
+            <p id="savedDescription">Area with text</p>
+            <button id="cardMore">More</button>
+            <button id="cardEdit">Edit</button>
+            <button id="cardDelete">Delete</button>
+        </div>
         <div id="newCard">
             <button id="newTaskButton" onclick="newTaskButtonClicked()">New Task</button>
         </div>
         <div id="cardEditMode">
-            <input type="text" id="taskForm"></input>
-            <textarea id="cardInput" rows="3" cols="50"></textarea>
-            <button id="cardSave" onClick="cardSaveClicked()">Save</button>
-            <button id="cardCancel" onclick="cardCancelCLicked()">Cancel</button>
-        </div>
-        <div id="cardSaved">
-            <p>Area with text</p>
-            <button id="cardMore">More</button>
-            <button id="cardEdit">Edit</button>
-            <button id="cardDelete">Delete</button>
+            <form id="taskForm">
+                <input type="text" id="taskName"></input>
+                <textarea id="taskDescription" rows="3" cols="50"></textarea>
+                <button id="cardSave" onclick="cardSaveClicked()">Save</button>
+                <button id="cardCancel" onclick="cardCancelCLicked()">Cancel</button>
+            </form>
         </div>
     </div>
 </body>
