@@ -3,7 +3,6 @@
 <head>
 <title>ToDoApp</title>
 <link rel="stylesheet" href="style.css">
-<script src = script.js></script>
 </head>
 <body>
     <div id="topBar">
@@ -13,11 +12,11 @@
             <button id="buttonLogIn">Log In</button>
             <button id="buttonSignIn">Sign In</button>
         </div>
-        <div id="loggedPanel">
+        <div id="loggedPanel" class="hidden">
             <p>User</p>
             <button id="logOutButton">Log Out</button>
         </div>
-        <div id="logInPanel">
+        <div id="logInPanel" class="hidden">
             <form id="loginForm">
                 <label for="email">Email:</label>
                 <input type="text" id="email" name="email">
@@ -26,7 +25,7 @@
             </form>
             <button id="logInExecutor">Log In</button>
         </div>
-        <div id="signInPanel">
+        <div id="signInPanel" class="hidden">
             <form id="signInForm">
                 <label for="email">Email:</label>
                 <input type="text" id="email" name="email">
@@ -39,23 +38,26 @@
         </div>
     </div>
     <div id="cardArea">
-        <div id="cardSaved">
+        <div id="cardSaved" class="hidden">
             <p id="savedDescription">Area with text</p>
             <button id="cardMore">More</button>
             <button id="cardEdit">Edit</button>
             <button id="cardDelete">Delete</button>
         </div>
         <div id="newCard">
-            <button id="newTaskButton" onclick="newTaskButtonClicked()">New Task</button>
+            <button id="newTaskButton">New Task</button>
         </div>
-        <div id="cardEditMode">
+        <div id="cardEditMode" card-edit-mode>
             <form id="taskForm">
                 <input type="text" id="taskName"></input>
                 <textarea id="taskDescription" rows="3" cols="50"></textarea>
-                <button id="cardSave" onclick="cardSaveClicked()">Save</button>
-                <button id="cardCancel" onclick="cardCancelCLicked()">Cancel</button>
+                <button id="cardSave">Save</button>
+                <button id="cardCancel">Cancel</button>
             </form>
         </div>
     </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src ="script.js"></script>
 </body>
-</html> 
+</html>
