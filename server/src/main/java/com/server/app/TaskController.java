@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("toDo")
+@RequestMapping("/toDo")
 public class TaskController {
     private Logger logger = Logger.getLogger(TaskController.class.getName());
 

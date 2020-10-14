@@ -1,26 +1,17 @@
-var serverAdress = "";
+$(document).ready(function(){
+  console.log("execution");
 
-function newTaskButtonClicked() {
-    document.getElementById("newCard").style.display = 'none';
-    document.getElementById("cardEditMode").style.display = 'flex';
-}
+  let cardArea = $("#cardArea");
 
-function cardCancelCLicked() {
-    document.getElementById("newCard").style.display = 'flex';
-    document.getElementById("cardEditMode").style.display = 'none';
-}
 
-function cardSaveClicked() {
-    var name = document.getElementById("taskForm").elements[0].value;
-    /*tasks.push(name);*/
-    /*document.getElementById("cardEditMode").style.display = 'none';*/
-    showCards();
-}
 
-function showCards(){
-    showCard();
-}
 
-function showCard(){
-    document.getElementById("savedDescription").innerHTML = 'random';
-}
+  function cardEditModeToggle(){
+      let card = $('#cardEditMode');
+      card.slideToggle(500);
+      console.log(card);
+  }
+
+  cardArea.on('click', '#cardCancel', cardEditModeToggle);
+  cardArea.on('click', '#newTaskButton', cardEditModeToggle);
+});
