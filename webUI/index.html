@@ -6,7 +6,7 @@
 </head>
 <body>
     <div app-container>
-        <div id="topBar">
+        <div id="topBar" class="hidden">
             <div id="startPanel">
                 <p id="toDoP">ToDo</p>
                 <button type="button" id="buttonTopBarSave">Save</button>
@@ -55,12 +55,13 @@
                 <div card-edit-mode class="cardEditMode hidden">
                     <form task-form>
                         <input type="text" task-name class="taskName"></input>
-                        <p task-name-content></p>
                         <textarea task-description rows="3" cols="50" class="taskDescription"></textarea>
-                        <p task-description-content></p>
-                        <button type="button" card-save class="cardSave">Save</button>
-                        <button type="button" card-cancel class="cardCancel">Cancel</button>
                     </form>
+                    <p task-name-content></p>
+                    <p task-description-content></p>
+                    <button type="button" card-save class="cardSave">Save</button>
+                    <button type="button" card-edit class="cardSave hidden">Edit</button>
+                    <button type="button" card-cancel class="cardCancel">Cancel</button>
                 </div>
             </div>
         </div>
