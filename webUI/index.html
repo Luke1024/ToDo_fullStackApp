@@ -5,55 +5,64 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="topBar">
-        <div id="startPanel">
-            <p id="toDoP">ToDo</p>
-            <button id="buttonTopBarSave">Save</button>
-            <button id="buttonLogIn">Log In</button>
-            <button id="buttonSignIn">Sign In</button>
+    <div app-container>
+        <div id="topBar">
+            <div id="startPanel">
+                <p id="toDoP">ToDo</p>
+                <button type="button" id="buttonTopBarSave">Save</button>
+                <button type="button" id="buttonLogIn">Log In</button>
+                <button type="button" id="buttonSignIn">Sign In</button>
+            </div>
+            <div id="loggedPanel">
+                <p>User</p>
+                <button type="button" id="logOutButton">Log Out</button>
+            </div>
+            <div id="logInPanel">
+                <form id="loginForm">
+                    <label for="email">Email:</label>
+                    <input type="text" id="email" name="email">
+                    <label for="password">Password:</label>
+                    <input type="text" id="password" name="password">
+                </form>
+                <button type="button" id="logInExecutor">Log In</button>
+            </div>
+            <div id="signInPanel">
+                <form id="signInForm">
+                    <label for="email">Email:</label>
+                    <input type="text" id="email" name="email">
+                    <label for="password">Password:</label>
+                    <input type="text" id="password" name="password">
+                    <label for="passwordRepeat">Repeat password:</label>
+                    <input type="text" id="passwordRepeat" name="passwordRepeat">
+                </form>
+                <button type="button" id="signInExecutor">Sign In</button>
+            </div>
         </div>
-        <div id="loggedPanel" class="hidden">
-            <p>User</p>
-            <button id="logOutButton">Log Out</button>
+        <div card-container>
+    
         </div>
-        <div id="logInPanel" class="hidden">
-            <form id="loginForm">
-                <label for="email">Email:</label>
-                <input type="text" id="email" name="email">
-                <label for="password">Password:</label>
-                <input type="text" id="password" name="password">
-            </form>
-            <button id="logInExecutor">Log In</button>
-        </div>
-        <div id="signInPanel" class="hidden">
-            <form id="signInForm">
-                <label for="email">Email:</label>
-                <input type="text" id="email" name="email">
-                <label for="password">Password:</label>
-                <input type="text" id="password" name="password">
-                <label for="passwordRepeat">Repeat password:</label>
-                <input type="text" id="passwordRepeat" name="passwordRepeat">
-            </form>
-            <button id="signInExecutor">Sign In</button>
-        </div>
-    </div>
-    <div id="cardArea">
-        <div id="cardSaved" class="hidden">
-            <p id="savedDescription">Area with text</p>
-            <button id="cardMore">More</button>
-            <button id="cardEdit">Edit</button>
-            <button id="cardDelete">Delete</button>
-        </div>
-        <div id="newCard">
-            <button id="newTaskButton">New Task</button>
-        </div>
-        <div id="cardEditMode" card-edit-mode>
-            <form id="taskForm">
-                <input type="text" id="taskName"></input>
-                <textarea id="taskDescription" rows="3" cols="50"></textarea>
-                <button id="cardSave">Save</button>
-                <button id="cardCancel">Cancel</button>
-            </form>
+        <div card-area-template class="hidden">
+            <div card card-id="0">
+                <div card-saved class="cardSaved hidden">
+                    <p saved-description>Area with text</p>
+                    <button type="button" card-more class="cardMore">More</button>
+                    <button type="button" card-edit class="cardEdit">Edit</button>
+                    <button type="button" card-delete class="cardDelete">Delete</button>
+                </div>
+                <div new-card class="newCard hidden">
+                    <button type="button" new-task-button class="newTaskButton">New Task</button>
+                </div>
+                <div card-edit-mode class="cardEditMode hidden">
+                    <form task-form>
+                        <input type="text" task-name class="taskName"></input>
+                        <p task-name-content></p>
+                        <textarea task-description rows="3" cols="50" class="taskDescription"></textarea>
+                        <p task-description-content></p>
+                        <button type="button" card-save class="cardSave">Save</button>
+                        <button type="button" card-cancel class="cardCancel">Cancel</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 

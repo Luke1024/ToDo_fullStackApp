@@ -6,7 +6,7 @@ body {
 }
 /* topBar */
 
-#topBar {
+#appContainer {
     margin:auto;
     min-width: 400px;
     max-width: 800px;
@@ -79,16 +79,10 @@ body {
 
 /*cardArea*/
 
-#cardArea {
-    margin:auto;
-    min-width: 400px;
-    max-width: 800px;
-    position: relative;
-}
 
 /*newCard*/
 
-#newCard {
+.newCard {
     margin-top: 20px;
     margin-bottom: 20px;
     background-color: rgb(243, 50, 17);
@@ -96,39 +90,38 @@ body {
     position: relative;
 }
 
-#newTaskButton {
+.newTaskButton {
     position: absolute;
-    margin:auto;
 }
 
 /*cardEditMode*/
 
-#cardEditMode {
+.cardEditMode {
     margin: 20px 0px 20px 0px;
     background-color: tomato;
     height:105px;
     position: relative;
 }
 
-#taskName {
+.taskName {
     position: absolute;
     top:5px;
     left:5px;
 }
 
-#taskDescription {
+.taskDescription {
     position: absolute;
     top:30px;
     left:5px;
 }
 
-#cardSave {
+.cardSave {
     position:absolute;
     top:5px;
     right:5px;
 }
 
-#cardCancel {
+.cardCancel {
     position:absolute;
     top:30px;
     right:5px;
@@ -136,26 +129,26 @@ body {
 
 /*cardSaved*/
 
-#cardSaved {
+.cardSaved {
     margin:20px 0px 20px 0px;
     background-color: tomato;
     height:32px;
     position: relative;
 }
 
-#cardMore {
+.cardMore {
     position:absolute;
     top:5px;
     right:150px;   
 }
 
-#cardEdit {
+.cardEdit {
     position:absolute;
     top:5px;
     right:80px;
 }
 
-#cardDelete {
+.cardDelete {
     position:absolute;
     top:5px;
     right:10px;
