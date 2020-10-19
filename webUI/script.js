@@ -8,16 +8,20 @@ $(document).ready(function(){
   loadLayout();
 
   function loadLayout(){
+    loadCardTemplate();
+  }
+
+  function loadCardTemplate(){
     let template = cardTemplate.children('[card]');
     let newCard = template.clone();
-    newCard.children("[new-card]").removeClass('hidden');
     newCard.appendTo(cardContainer);
   }
 
-  function cardEditModeToggle(){
-    let newCard = $(this).parents('[new-card]');
-    let cardEdit = newCard.siblings('[card-edit-mode]');
-    cardEdit.slideToggle(500);
+  function unfoldCard(){
+    let cardEdit = $(this).siblings('[card-edit-mode]');
+    let cardFolded = cardEdit.siblings('[card-folded]');
+    cardFolded.addClass("hidden");
+    cardEdit.slideDown(100);
   }
 
   function saveCard(){
@@ -27,20 +31,31 @@ $(document).ready(function(){
     let description = form.children('[task-description]');
     let nameContent = $(this).siblings('[task-name-content]');
     let descriptionContent = $(this).siblings('[task-description-content]');
-    form.addClass('hidden');
-    nameContent.text(name.val());
-    descriptionContent.text(description.val());
-    switchSaveToEditButton($(this));
+    let cardFolded = cardEdit.siblings('[card-folded]');
+    if(name.val().length > 1){
+      form.addClass('hidden');
+      nameContent.text(name.val());
+      descriptionContent.text(description.val());
+      switchToEditButton($(this));
+      cardFolded.children('[content]').text(name.val());
+      loadCardTemplate();
+      cardEdit.slideUp(100);
+      cardFolded.removeClass('hidden');
+    } else {
+      description.val("");
+      cardFolded.removeClass('hidden');
+      cardEdit.slideUp(100);
+    }
   }
 
-  function switchSaveToEditButton(button){
+  function switchToEditButton(button){
     button.addClass("hidden");
     button.siblings('[card-edit]').removeClass("hidden");
   }
 
-  function switchEditToSaveButton(button){
+  function switchToUpdateButton(button){
     button.addClass("hidden");
-    button.siblings('[card-save]').removeClass("hidden");
+    button.siblings('[card-update]').removeClass("hidden");
   }
 
   function cardEditCancel(){
@@ -48,9 +63,11 @@ $(document).ready(function(){
     let form = $(this).siblings('[task-form]');
     let name = form.children('[task-name]');
     let description = form.children('[task-description]');
+    let cardFolded = cardEdit.siblings('[card-folded]');
     name.val("");
     description.val("");
-    cardEdit.slideUp();
+    cardFolded.removeClass('hidden');
+    cardEdit.slideUp(100);
   }
 
   function editCard(){
@@ -64,11 +81,35 @@ $(document).ready(function(){
     taskDescription.addClass("hidden");
     taskName.addClass("hidden");
     form.removeClass("hidden");
-    switchEditToSaveButton($(this));
+    switchToUpdateButton($(this));
+  }
+
+  function cardUpdate(){
+    let cardEdit = $(this).parents('[card-edit-mode]');
+    let form = $(this).siblings('[task-form]');
+    let name = form.children('[task-name]');
+    let description = form.children('[task-description]');
+    let nameContent = $(this).siblings('[task-name-content]');
+    let descriptionContent = $(this).siblings('[task-description-content]');
+    let cardFolded = cardEdit.siblings('[card-folded]');
+    if(name.val().length > 1){
+      form.addClass('hidden');
+      nameContent.text(name.val());
+      descriptionContent.text(description.val());
+      switchToEditButton($(this));
+      cardFolded.children('[content]').text(name.val());
+      cardEdit.slideUp(100);
+      cardFolded.removeClass('hidden');
+    } else {
+      description.val("");
+      cardFolded.removeClass('hidden');
+      cardEdit.slideUp(100);
+    }
   }
 
   appContainer.on('click', '[card-cancel]', cardEditCancel);
   appContainer.on('click', '[card-save]', saveCard);
   appContainer.on('click', '[card-edit]', editCard);
-  appContainer.on('click', '[new-task-button]', cardEditModeToggle);
+  appContainer.on('click', '[card-update]', cardUpdate);
+  appContainer.on('click', '[card-folded]', unfoldCard);
 });

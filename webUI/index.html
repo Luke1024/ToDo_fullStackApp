@@ -43,30 +43,24 @@
         </div>
         <div card-area-template class="hidden">
             <div card card-id="0">
-                <div card-saved class="cardSaved hidden">
-                    <p saved-description>Area with text</p>
-                    <button type="button" card-more class="cardMore">More</button>
-                    <button type="button" card-edit class="cardEdit">Edit</button>
-                    <button type="button" card-delete class="cardDelete">Delete</button>
+                <div card-folded class="card-folded">
+                    <p content>Click to add new task.</p>
                 </div>
-                <div new-card class="newCard hidden">
-                    <button type="button" new-task-button class="newTaskButton">New Task</button>
-                </div>
-                <div card-edit-mode class="cardEditMode hidden">
+                <div card-edit-mode class="card-edit-mode hidden">
                     <form task-form>
-                        <input type="text" task-name class="taskName"></input>
-                        <textarea task-description rows="3" cols="50" class="taskDescription"></textarea>
+                        <input type="text" task-name class="task-name"></input>
+                        <textarea task-description rows="3" cols="50" class="task-description"></textarea>
                     </form>
                     <p task-name-content></p>
                     <p task-description-content></p>
-                    <button type="button" card-save class="cardSave">Save</button>
-                    <button type="button" card-edit class="cardSave hidden">Edit</button>
-                    <button type="button" card-cancel class="cardCancel">Cancel</button>
+                    <button type="button" card-save class="card-save">Save</button>
+                    <button type="button" card-edit class="card-save hidden">Edit</button>
+                    <button type="button" card-update class="card-save hidden">Update</button>
+                    <button type="button" card-cancel class="card-cancel">Cancel</button>
                 </div>
             </div>
         </div>
     </div>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src ="script.js"></script>
 </body>

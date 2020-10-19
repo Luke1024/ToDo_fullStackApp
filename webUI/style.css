@@ -82,74 +82,41 @@ body {
 
 /*newCard*/
 
-.newCard {
+.card-folded {
     margin-top: 20px;
-    margin-bottom: 20px;
     background-color: rgb(243, 50, 17);
     height: 25px;
     position: relative;
 }
 
-.newTaskButton {
-    position: absolute;
-}
-
 /*cardEditMode*/
 
-.cardEditMode {
-    margin: 20px 0px 20px 0px;
+.card-edit-mode {
     background-color: tomato;
     height:105px;
     position: relative;
 }
 
-.taskName {
+.task-name {
     position: absolute;
     top:5px;
     left:5px;
 }
 
-.taskDescription {
+.task-description {
     position: absolute;
     top:30px;
     left:5px;
 }
 
-.cardSave {
+.card-save {
     position:absolute;
     top:5px;
     right:5px;
 }
 
-.cardCancel {
+.card-cancel {
     position:absolute;
     top:30px;
     right:5px;
-}
-
-/*cardSaved*/
-
-.cardSaved {
-    margin:20px 0px 20px 0px;
-    background-color: tomato;
-    height:32px;
-    position: relative;
-}
-
-.cardMore {
-    position:absolute;
-    top:5px;
-    right:150px;   
-}
-
-.cardEdit {
-    position:absolute;
-    top:5px;
-    right:80px;
-}
-
-.cardDelete {
-    position:absolute;
-    top:5px;
-    right:10px;
 }
