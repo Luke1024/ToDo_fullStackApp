@@ -84,7 +84,7 @@ body {
 
 .card-folded {
     margin-top: 20px;
-    background-color: rgb(243, 50, 17);
+    background-color: tomato;
     height: 25px;
     position: relative;
 }
@@ -92,19 +92,20 @@ body {
 /*cardEditMode*/
 
 .card-edit-mode {
+    margin-top: 20px;
     background-color: tomato;
     height:105px;
-    position: relative;
+    position:relative;
 }
 
 .task-name {
-    position: absolute;
+    position:absolute;
     top:5px;
     left:5px;
 }
 
 .task-description {
-    position: absolute;
+    position:absolute;
     top:30px;
     left:5px;
 }

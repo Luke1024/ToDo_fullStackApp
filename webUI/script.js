@@ -66,6 +66,7 @@ $(document).ready(function(){
     let cardFolded = cardEdit.siblings('[card-folded]');
     name.val("");
     description.val("");
+    form.addClass('hidden');
     cardFolded.removeClass('hidden');
     cardEdit.slideUp(100);
   }
