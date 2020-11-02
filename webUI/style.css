@@ -79,45 +79,59 @@ body {
 
 /*cardArea*/
 
-
-/*newCard*/
-
-.card-folded {
+.card {
     margin-top: 20px;
     background-color: tomato;
-    height: 25px;
+    height: 30px;
     position: relative;
 }
 
-/*cardEditMode*/
+.task-name-input {
+    position: absolute;
+    top:5px;
+    left:5px;    
+}
 
-.card-edit-mode {
-    margin-top: 20px;
-    background-color: tomato;
-    height:105px;
-    position:relative;
+.task-description-input {
+    position: absolute;
+    top:30px;
+    left:5px;
+    resize:none;
 }
 
 .task-name {
-    position:absolute;
-    top:5px;
+    position: absolute;
+    top:-10px;
     left:5px;
 }
 
 .task-description {
-    position:absolute;
+    position: absolute;
     top:30px;
     left:5px;
 }
 
-.card-save {
+.button-card-mark {
+    position:absolute;
+    top:5px;
+    right:75px;
+}
+
+.button-card-remove {
     position:absolute;
     top:5px;
     right:5px;
 }
 
-.card-cancel {
+.button-card-saveEditUpdate {
     position:absolute;
     top:30px;
     right:5px;
 }
+
+.button-card-cancel {
+    position:absolute;
+    top:55px;
+    right:5px;
+}
+

@@ -38,26 +38,25 @@
                 <button type="button" id="signInExecutor">Sign In</button>
             </div>
         </div>
-        <div card-container>
+        <div card-container>   
     
         </div>
-        <div card-area-template class="hidden">
-            <div card card-id="0">
-                <div card-folded class="card-folded">
-                    <p content>Click to add new task.</p>
+        <div card-area-template class="hidden" >
+            <div card card-id="0" card-mode="editEmptyMode" mark-done="false" class="card">
+                <form task-form class="hidden">
+                    <input type="text" task-name-form class="task-name-input"></input>
+                    <textarea task-description-form rows="3" cols="50" class="task-description-input"></textarea>
+                </form>
+                <div paragraphs>
+                    <p task-name-paragraph class="task-name">Click to add new task</p>
+                    <p task-description-paragraph class="task-description"></p>
                 </div>
-                <div card-edit-mode class="card-edit-mode hidden">
-                    <form task-form>
-                        <input type="text" task-name class="task-name"></input>
-                        <textarea task-description rows="3" cols="50" class="task-description"></textarea>
-                    </form>
-                    <p task-name-content></p>
-                    <p task-description-content></p>
-                    <button type="button" card-save class="card-save">Save</button>
-                    <button type="button" card-edit class="card-save hidden">Edit</button>
-                    <button type="button" card-update class="card-save hidden">Update</button>
-                    <button type="button" card-cancel class="card-cancel">Cancel</button>
-                </div>
+                <button type="button" button-card-mark class="button-card-mark hidden">Done</button>
+                <button type="button" button-card-remove class="button-card-remove hidden">Remove</button>
+                <button type="button" button-card-save class="button-card-saveEditUpdate hidden" >Save</button>
+                <button type="button" button-card-edit class="button-card-saveEditUpdate hidden">Edit</button>
+                <button type="button" button-card-update class="button-card-saveEditUpdate hidden">Update</button>
+                <button type="button" button-card-cancel class="button-card-cancel hidden">Cancel</button>
             </div>
         </div>
     </div>
