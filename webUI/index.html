@@ -38,25 +38,29 @@
                 <button type="button" id="signInExecutor">Sign In</button>
             </div>
         </div>
-        <div card-container>   
-    
-        </div>
+
+        <div card-container></div>
+
         <div card-area-template class="hidden" >
-            <div card card-id="0" card-mode="editEmptyMode" mark-done="false" class="card">
-                <form task-form class="hidden">
-                    <input type="text" task-name-form class="task-name-input"></input>
-                    <textarea task-description-form rows="3" cols="50" class="task-description-input"></textarea>
-                </form>
-                <div paragraphs>
-                    <p task-name-paragraph class="task-name">Click to add new task</p>
-                    <p task-description-paragraph class="task-description"></p>
+            <div card card-id="0" card-mode="blank" mark-done="false" class="card">
+                <div button-area-invisible class="button-card-area-invisible transparent"></div>
+                <div visible-in-compact-mode>
+                    <p class="task-name" task-name-paragraph>Click to add new task</p>
+                    <button type="button" button-card-mark class="button-card-mark hidden">Done</button>
+                    <button type="button" button-card-remove class="button-card-remove hidden">Remove</button>
                 </div>
-                <button type="button" button-card-mark class="button-card-mark hidden">Done</button>
-                <button type="button" button-card-remove class="button-card-remove hidden">Remove</button>
-                <button type="button" button-card-save class="button-card-saveEditUpdate hidden" >Save</button>
-                <button type="button" button-card-edit class="button-card-saveEditUpdate hidden">Edit</button>
-                <button type="button" button-card-update class="button-card-saveEditUpdate hidden">Update</button>
-                <button type="button" button-card-cancel class="button-card-cancel hidden">Cancel</button>
+      
+                <div visible-in-expanded-mode class="hidden">
+                    <form task-form>
+                        <input type="text" task-name-form class="task-name-input"></input>
+                        <textarea task-description-form rows="3" cols="50" class="task-description-input"></textarea>
+                    </form>
+                    <p class="task-description" task-description-paragraph></p>
+                    <button type="button" button-card-save class="button-card-saveEditUpdate" >Save</button>
+                    <button type="button" button-card-edit class="button-card-saveEditUpdate hidden">Edit</button>
+                    <button type="button" button-card-update class="button-card-saveEditUpdate hidden">Update</button>
+                    <button type="button" button-card-cancel class="button-card-cancel">Cancel</button>
+                </div>
             </div>
         </div>
     </div>

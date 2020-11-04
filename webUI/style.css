@@ -1,8 +1,12 @@
 body {
     background-color: black
 }
-.hidden{
+.hidden {
     display:none;
+}
+
+.transparent {
+    opacity:0;
 }
 /* topBar */
 
@@ -84,6 +88,12 @@ body {
     background-color: tomato;
     height: 30px;
     position: relative;
+}
+
+.button-card-area-invisible {
+    position: relative;
+    z-index: 1;
+    height: 30px;
 }
 
 .task-name-input {
