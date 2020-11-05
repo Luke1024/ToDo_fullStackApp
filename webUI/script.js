@@ -4,6 +4,25 @@ $(document).ready(function(){
   let cardTemplate = $("[card-area-template]");
 
   //card variables
+  let card;
+  let buttonAreaInvisible;
+
+  let visibleInCompactMode;
+  let taskNameParagraph;
+  let buttonCardMark;
+  let buttonCardRemove;
+
+  let visibleInExpandedMode;
+  let taskNameForm;
+  let taskDescriptionForm;
+  let taskDescriptionParagraph;
+
+  let buttonCardSave;
+  let buttonCardEdit;
+  let buttonCardUpdate;
+  let buttonCardAbort;
+  let buttonCardFold;
+  let buttonCardCancel;
 
   console.log("execution");
   loadLayout();
@@ -18,37 +37,120 @@ $(document).ready(function(){
     newCard.appendTo(cardContainer);
   }
 
-  function cardEditCancel(){
-    let card = $(this).parents('[card]');
-    card.children('[visible-in-expanded-mode]').fadeOut(200);
-    card.attr("card-mode", "folded-mode-blank");
+  function loadCardObjectsToGlobalVariables(button){
+    card = button.parents('[card]');
+
+    buttonAreaInvisible = card.find('[button-area-invisible]');
+
+    visibleInCompactMode = card.find('[visible-in-compact-mode]');
+    taskNameParagraph = card.find('[task-name-paragraph]');
+    buttonCardMark = card.find('[button-card-mark]');
+    buttonCardRemove = card.find('[button-card-remove]');
+
+    visibleInExpandedMode = card.find('[visible-in-expanded-mode]');
+    taskNameForm = card.find('[task-name-form]');
+    taskDescriptionForm = card.find('[task-description-form]');
+    taskDescriptionParagraph = card.find('[task-description-paragraph]');
+
+    buttonCardSave = card.find('[button-card-save]');
+    buttonCardEdit = card.find('[button-card-edit]');
+    buttonCardUpdate = card.find('[button-card-update]');
+    buttonCardAbort = card.find('[button-card-abort]');
+    buttonCardFold = card.find('[button-card-fold]');
+    buttonCardCancel = card.find('[button-card-cancel]');
+  }
+
+  function processToSavedMode() {
+    taskNameForm.fadeOut(200);
+    taskDescriptionForm.fadeOut(200);
+
+    buttonCardUpdate.addClass("hidden");
+    buttonCardAbort.addClass("hidden");
+
+    buttonCardEdit.removeClass("hidden");
+    buttonCardAbort.removeClass("hidden");
+
+    buttonCardMark.removeClass("hidden");
+    buttonCardRemove.removeClass("hidden");
+
+    visibleInExpandedMode.fadeOut(200);
     card.delay(200).animate({height:'30px'});
-    card.children('[button-area-invisible]').removeClass("hidden");
+    buttonAreaInvisible.removeClass("hidden");
+  }
+
+  function cardUpdate(){
+    loadCardObjectsToGlobalVariables($(this));
+    taskNameParagraph.text(taskNameForm.val());
+    taskDescriptionParagraph.text(taskDescriptionForm.val());
+    processToSavedMode();
+  }
+
+  function cardAbort(){
+    loadCardObjectsToGlobalVariables($(this));
+    taskNameForm.val('');
+    taskDescriptionForm.val('');
+    processToSavedMode();
+  }
+
+  function cardEdit(){
+    loadCardObjectsToGlobalVariables($(this));
+    buttonCardMark.fadeOut(200);
+    buttonCardRemove.fadeOut(200);
+
+    buttonCardEdit.addClass("hidden");
+    buttonCardUpdate.removeClass("hidden");
+    buttonCardFold.addClass("hidden");
+    buttonCardAbort.removeClass("hidden");
+
+
+    taskNameForm.fadeIn(200);
+    taskDescriptionForm.fadeIn(200);
+
+    taskNameForm.val(taskNameParagraph.text());
+    taskDescriptionForm.val(taskDescriptionParagraph.text());
+  }
+
+  function cardCancelFold(){
+    loadCardObjectsToGlobalVariables($(this));
+    visibleInExpandedMode.fadeOut(200);
+    card.delay(200).animate({height:'30px'});
+    buttonAreaInvisible.removeClass("hidden");
   }
 
   function saveCard(){
-    let card = $(this).parents('[card]');
-    let form = card.children('[task-form]');
-    let taskForm = form.children('[task-name-form]');
-    let descriptionForm = form.children('[task-description-form]');
-    let taskParagraph = card.children('[task-name-paragraph]');
-    let taskDescription = card.children('[task-description-paragraph]');
+    loadCardObjectsToGlobalVariables($(this));
 
-    taskParagraph.text(taskForm);
+    taskNameParagraph.text(taskNameForm.val());
+    taskDescriptionParagraph.text(taskDescriptionForm.val());
 
-    //form.fadeOut(200);
-    //card.children('[visible-in-expanded-mode]').delay(200).fadeOut(200);
-    //card.delay(400).animate({height:'30px'});
-    //card.children('[button-area-invisible]').removeClass("hidden");
+    buttonCardSave.addClass("hidden");
+    buttonCardEdit.removeClass("hidden");
+    buttonCardCancel.addClass("hidden");
+    buttonCardFold.removeClass("hidden");
+    buttonCardMark.removeClass("hidden");
+    buttonCardRemove.removeClass("hidden");
+
+    taskNameForm.fadeOut(200);
+    taskDescriptionForm.fadeOut(400);
+
+    visibleInExpandedMode.delay(400).fadeOut(200);
+    card.delay(600).animate({height:'30px'});
+
+    buttonAreaInvisible.removeClass("hidden");
   }
 
   function expandCard(){
-    $(this).addClass("hidden");
-    $(this).parents('[card]').animate({height:'100px'}, 200)
-    .children('[visible-in-expanded-mode]').delay(200).fadeIn(200);
+    loadCardObjectsToGlobalVariables($(this));
+    buttonAreaInvisible.addClass("hidden");
+    card.animate({height:'100px'}, 200)
+    visibleInExpandedMode.delay(200).fadeIn(200);
   }
 
-  appContainer.on('click', '[button-card-cancel]', cardEditCancel);
+  appContainer.on('click', '[button-card-update]', cardUpdate);
+  appContainer.on('click', '[button-card-abort]', cardAbort);
+  appContainer.on('click', '[button-card-edit]', cardEdit);
+  appContainer.on('click', '[button-card-cancel]', cardCancelFold);
   appContainer.on('click', '[button-card-save]', saveCard);
+  appContainer.on('click', '[button-card-fold]', cardCancelFold);
   appContainer.on('click', '[button-area-invisible]', expandCard);
 });

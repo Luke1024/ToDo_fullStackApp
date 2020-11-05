@@ -1,8 +1,10 @@
  <!DOCTYPE html>
 <html>
 <head>
-<title>ToDoApp</title>
-<link rel="stylesheet" href="style.css">
+    <title>ToDoApp</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src ="script.js"></script>
 </head>
 <body>
     <div app-container>
@@ -49,22 +51,19 @@
                     <button type="button" button-card-mark class="button-card-mark hidden">Done</button>
                     <button type="button" button-card-remove class="button-card-remove hidden">Remove</button>
                 </div>
-      
                 <div visible-in-expanded-mode class="hidden">
-                    <form task-form>
-                        <input type="text" task-name-form class="task-name-input"></input>
-                        <textarea task-description-form rows="3" cols="50" class="task-description-input"></textarea>
-                    </form>
+                    <input type="text" task-name-form class="task-name-input"></input>
+                    <textarea task-description-form rows="3" cols="50" class="task-description-input"></textarea>
                     <p class="task-description" task-description-paragraph></p>
                     <button type="button" button-card-save class="button-card-saveEditUpdate" >Save</button>
                     <button type="button" button-card-edit class="button-card-saveEditUpdate hidden">Edit</button>
                     <button type="button" button-card-update class="button-card-saveEditUpdate hidden">Update</button>
+                    <button type="button" button-card-abort class="button-card-cancel hidden">Abort</button>
+                    <button type="button" button-card-fold class="button-card-cancel hidden">Fold</button>
                     <button type="button" button-card-cancel class="button-card-cancel">Cancel</button>
                 </div>
             </div>
         </div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src ="script.js"></script>
 </body>
 </html>
