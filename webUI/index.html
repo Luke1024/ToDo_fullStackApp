@@ -49,7 +49,12 @@
                 <div visible-in-compact-mode>
                     <p class="task-name" task-name-paragraph>Click to add new task</p>
                     <button type="button" button-card-mark class="button-card-mark hidden">Done</button>
-                    <button type="button" button-card-remove class="button-card-remove hidden">Remove</button>
+                    <button type="button" button-card-remove class="button-card-remove">-</button>
+                    <button type="button" button-card-remove-secondary class="button-card-remove hidden">-</button>
+                    <div remove-menu class="remove-menu hidden">
+                        <button type="button" authorize-remove class="authorize-remove">Remove Card</button>
+                        <button type="button" cancel-remove class="cancel-remove">Cancel</button>
+                    </div>
                 </div>
                 <div visible-in-expanded-mode class="hidden">
                     <input type="text" task-name-form class="task-name-input"></input>
@@ -61,8 +66,12 @@
                     <button type="button" button-card-abort class="button-card-cancel hidden">Abort</button>
                     <button type="button" button-card-fold class="button-card-cancel hidden">Fold</button>
                     <button type="button" button-card-cancel class="button-card-cancel">Cancel</button>
+                    <p blank-warning class="blank-warning hidden">Task name cannot be blank.</p>
                 </div>
             </div>
+        </div>
+        <div button-card-new class="button-card-new">
+            <p>+</p>
         </div>
     </div>
 </body>

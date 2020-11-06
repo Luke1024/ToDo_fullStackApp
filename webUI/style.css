@@ -129,8 +129,40 @@ body {
 
 .button-card-remove {
     position:absolute;
-    top:5px;
+    top:2px;
+    right:2px;
+    height:26px;
+    width:26px;
+    background-color: blue;
+    border:none;
+    transition-duration:0.3s;
+    color:white;
+}
+
+.button-card-remove:hover {
+    background-color: green;
+}
+
+.remove-menu {
+    position:absolute;
+    top:25px;
     right:5px;
+    z-index:1;
+}
+
+.remove-menu button {
+    height:25px;
+    width:100px;
+    border:none;
+    display:inline-block;
+    color:white;
+    background-color: teal;
+    text-align:center;
+}
+
+.remove-menu button:hover {
+    color:wheat;
+    background-color: blue;
 }
 
 .button-card-saveEditUpdate {
@@ -143,5 +175,30 @@ body {
     position:absolute;
     top:55px;
     right:5px;
+}
+
+.blank-warning {
+    position:absolute;
+    top:30px;
+    right:30px;
+    background-color:white;
+}
+
+.button-card-new {
+    position:relative;
+    margin-top:10px;
+    background-color:tomato;
+    width:30px;
+    height:30px;
+    border-radius:5px;
+}
+
+.button-card-new p {
+    position:absolute;
+    color:white;
+    top:-15px;
+    left:8px;
+    font-size:20px;
+    font-weight: bold;
 }
 
