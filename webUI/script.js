@@ -2,6 +2,7 @@ $(document).ready(function(){
   let appContainer = $("[app-container]");
   let cardContainer = $("[card-container]");
   let cardTemplate = $("[card-area-template]");
+  let doneParagraph = $("[done-card-container]");
 
   //new button
   let newButton = $("[button-card-new]");
@@ -165,6 +166,7 @@ $(document).ready(function(){
     visibleInExpandedMode.delay(400).fadeOut(200);
     card.delay(600).animate({height:'30px'});
 
+    buttonAreaInvisible.css({"width":"91%"});
     buttonAreaInvisible.removeClass("hidden");
     addAuthorizationToCardRemoving();
   }
@@ -182,6 +184,18 @@ $(document).ready(function(){
     blankWarning.fadeIn(200).delay(500).fadeOut(2000);
   }
 
+  function markDone(){
+    loadCardObjectsToGlobalVariables($(this));
+    card.appendTo(doneParagraph);
+    card.css({"background-color":"green"});
+    if(card.css("height")=='100px'){
+      visibleInExpandedMode.fadeOut(200);
+      card.delay(200).animate({height:'30px'});
+      buttonAreaInvisible.removeClass("hidden");
+      buttonCardMark.addClass('hidden');
+    }
+  }
+
   function expandCard(){
     loadCardObjectsToGlobalVariables($(this));
     buttonAreaInvisible.addClass("hidden");
@@ -189,6 +203,7 @@ $(document).ready(function(){
     visibleInExpandedMode.delay(200).fadeIn(200);
   }
 
+  appContainer.on('click', '[button-card-mark]', markDone);
   appContainer.on('click', '[button-card-remove]', cardRemove);
   appContainer.on('click', '[button-card-remove-secondary]', toggleRemoveMenu)
   appContainer.on('click', '[authorize-remove]', cardRemove);
