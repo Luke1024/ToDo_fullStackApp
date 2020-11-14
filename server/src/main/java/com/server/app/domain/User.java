@@ -1,14 +1,8 @@
 package com.server.app.domain;
 
-import com.server.app.domain.Session;
-import com.server.app.domain.Task;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Entity
 public class User {
@@ -19,14 +13,26 @@ public class User {
     private String userName;
     private String userEmail;
     private String password;
-    private Optional<Session> session;
+    private boolean logged;
+    private String token;
+    private LocalDateTime sessionActiveTo;
+    @OneToMany(targetEntity = Task.class,
+            mappedBy = "user",
+            cascade = {CascadeType.ALL},
+            fetch = FetchType.EAGER
+    )
     private List<Task> taskList;
 
-    public User(String userName, String userEmail, String password, Optional<Session> session, List<Task> taskList) {
+    public User() {}
+
+    public User(String userName, String userEmail, String password, boolean logged, String token,
+                LocalDateTime sessionActiveTo, List<Task> taskList) {
         this.userName = userName;
         this.userEmail = userEmail;
         this.password = password;
-        this.session = session;
+        this.logged = logged;
+        this.token = token;
+        this.sessionActiveTo = sessionActiveTo;
         this.taskList = taskList;
     }
 
@@ -42,8 +48,16 @@ public class User {
         return password;
     }
 
-    public Optional<Session> getSession() {
-        return session;
+    public boolean isLogged() {
+        return logged;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public LocalDateTime getSessionActiveTo() {
+        return sessionActiveTo;
     }
 
     public List<Task> getTaskList() {

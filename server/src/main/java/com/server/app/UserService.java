@@ -3,6 +3,7 @@ package com.server.app;
 import com.server.app.domain.*;
 import com.server.app.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,12 +11,15 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Service
 public class UserService {
 
     @Autowired
     private TaskRepository taskRepository;
 
     private Logger logger = Logger.getLogger(UserService.class.getName());
+
+    /*
 
     public void saveUpdateTask(TaskCreateUpdateDto taskCreateUpdateDto){
         String receivedToken = taskCreateUpdateDto.getUserToken();
@@ -76,4 +80,5 @@ public class UserService {
         logger.log(Level.INFO, "Token generated: " + generatedString);
         return generatedString;
     }
+    */
 }

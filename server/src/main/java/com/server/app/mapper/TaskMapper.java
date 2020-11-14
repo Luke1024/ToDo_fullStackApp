@@ -5,8 +5,6 @@ import com.server.app.domain.TaskCreateUpdateDto;
 
 public class TaskMapper {
     public Task mapToTaskFromDto(TaskCreateUpdateDto taskCreateUpdateDto){
-        return new Task(taskCreateUpdateDto.getFrontId(),
-                taskCreateUpdateDto.getName(),
-                taskCreateUpdateDto.getDescription());
+        return new Task();
     };
 }

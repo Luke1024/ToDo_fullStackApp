@@ -21,17 +21,16 @@ public class TaskController {
     @PostMapping(value = "/tasks")
     public void receiveTask(@RequestBody TaskCreateUpdateDto taskCreateUpdateDto) {
         logger.log(Level.INFO, "Task received : " + taskCreateUpdateDto.getName() + "  " + taskCreateUpdateDto.getDescription());
-        userService.saveUpdateTask(taskCreateUpdateDto);
     }
 
     @PostMapping(value = "/authorize")
     public String authorize(@RequestBody UserDto userDto) {
-        return userService.generateTokenForLoggedUser(userDto);
+        return "";
     }
 
     @GetMapping(value = "/token")
     public String receiveToken(){
-        return userService.generateGuestToken();
+        return "";
     }
 }
 

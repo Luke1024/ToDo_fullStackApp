@@ -1,9 +1,6 @@
 package com.server.app.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Task {
@@ -12,21 +9,18 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private int frontId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "USER_ID")
+    private User user;
     private String taskName;
     private String taskDescription;
     private boolean done;
 
-    public Task(int frontId, String taskName, String taskDescription) {
-        this.frontId = frontId;
-        this.taskName = taskName;
-        this.taskDescription = taskDescription;
-        this.done = false;
-    }
+    public Task() {}
 
-    public Task(Long id, int frontId, String taskName,
-                String taskDescription, boolean done) {
-        this.id = id;
+    public Task(int frontId, User user, String taskName, String taskDescription, boolean done) {
         this.frontId = frontId;
+        this.user = user;
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.done = done;
@@ -38,6 +32,10 @@ public class Task {
 
     public int getFrontId() {
         return frontId;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public String getTaskName() {
