@@ -36,6 +36,16 @@ public class User {
         this.taskList = taskList;
     }
 
+    public void addTasks(List<Task> tasks){
+        for(Task task : tasks){
+            task.setUser(this);
+        }
+    }
+
+    public Long getId() {
+        return id;
+    }
+
     public String getUserName() {
         return userName;
     }
@@ -62,5 +72,29 @@ public class User {
 
     public List<Task> getTaskList() {
         return taskList;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setLogged(boolean logged) {
+        this.logged = logged;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public void setSessionActiveTo(LocalDateTime sessionActiveTo) {
+        this.sessionActiveTo = sessionActiveTo;
     }
 }

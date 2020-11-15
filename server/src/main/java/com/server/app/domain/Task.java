@@ -38,6 +38,15 @@ public class Task {
         return user;
     }
 
+    public void setUser(User user) {
+        if(user != null){
+            user.getTaskList().add(this);
+        } else if (this.user != null){
+            this.user.getTaskList().remove(this);
+        }
+        this.user = user;
+    }
+
     public String getTaskName() {
         return taskName;
     }
@@ -48,5 +57,25 @@ public class Task {
 
     public boolean isDone() {
         return done;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setFrontId(int frontId) {
+        this.frontId = frontId;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
+    public void setTaskDescription(String taskDescription) {
+        this.taskDescription = taskDescription;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
     }
 }
