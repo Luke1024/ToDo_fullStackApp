@@ -45,7 +45,7 @@ public class TaskService {
     }
 
     private Optional<User> getUserWithActiveSessionToken(String receivedToken){
-
+/*
         for(int i=0; i<users.size(); i++){
             Optional<Session> session = users.get(i).getSession();
             if(session.isPresent()){
@@ -56,6 +56,8 @@ public class TaskService {
                 }
             }
         }
+
+ */
         return Optional.empty();
     }
 

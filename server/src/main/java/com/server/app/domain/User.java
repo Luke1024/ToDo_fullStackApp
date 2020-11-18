@@ -4,9 +4,19 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@NamedNativeQuery(
+        name = "User.findLoggedUserByToken",
+        query = "SELECT * FROM user WHERE token =:TOKEN and logged = 0",
+        resultClass = User.class
+)
+@NamedNativeQuery(
+        name = "User.findUserByEmailAndPassword",
+        query = "SELECT * FROM user WHERE user_email =:EMAIL AND password =:PASSWORD",
+        resultClass = User.class
+)
+
 @Entity
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -96,5 +106,18 @@ public class User {
 
     public void setSessionActiveTo(LocalDateTime sessionActiveTo) {
         this.sessionActiveTo = sessionActiveTo;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", userName='" + userName + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", password='" + password + '\'' +
+                ", logged=" + logged +
+                ", token='" + token + '\'' +
+                ", taskList=" + taskList +
+                '}';
     }
 }

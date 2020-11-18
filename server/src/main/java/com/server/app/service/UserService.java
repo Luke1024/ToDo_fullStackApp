@@ -62,7 +62,7 @@ public class UserService {
     private Optional<User> loadQuestUser(UserDto userDto){
         if(userDto != null){
             if(userDto.getUserToken() != null) {
-                return userRepository.findUserByActiveToken(userDto.getUserToken());
+                return userRepository.findLoggedUserByToken(userDto.getUserToken());
             }
         }
         return Optional.empty();
