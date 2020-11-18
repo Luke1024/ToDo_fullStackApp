@@ -1,6 +1,6 @@
 package com.server.app.controller;
 
-import com.server.app.UserService;
+import com.server.app.service.TaskService;
 import com.server.app.domain.TaskCreateUpdateDto;
 import com.server.app.domain.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ public class TaskController {
     private Logger logger = Logger.getLogger(TaskController.class.getName());
 
     @Autowired
-    private UserService userService;
+    private TaskService taskService;
 
     @PostMapping(value = "/tasks")
     public void receiveTask(@RequestBody TaskCreateUpdateDto taskCreateUpdateDto) {

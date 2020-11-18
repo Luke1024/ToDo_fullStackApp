@@ -1,4 +1,4 @@
-package com.server.app;
+package com.server.app.service;
 
 import com.server.app.domain.*;
 import com.server.app.repository.TaskRepository;
@@ -12,14 +12,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service
-public class UserService {
+public class TaskService {
 
     @Autowired
     private TaskRepository taskRepository;
 
-    private Logger logger = Logger.getLogger(UserService.class.getName());
-
-    /*
+    private Logger logger = Logger.getLogger(TaskService.class.getName());
 
     public void saveUpdateTask(TaskCreateUpdateDto taskCreateUpdateDto){
         String receivedToken = taskCreateUpdateDto.getUserToken();
@@ -80,5 +78,5 @@ public class UserService {
         logger.log(Level.INFO, "Token generated: " + generatedString);
         return generatedString;
     }
-    */
+
 }
