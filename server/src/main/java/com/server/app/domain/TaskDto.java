@@ -1,24 +1,21 @@
 package com.server.app.domain;
 
-public class TaskCreateUpdateDto {
+public class TaskDto {
     private int frontId;
-    private String userToken;
     private String name;
     private String description;
 
-    public TaskCreateUpdateDto(int frontId, String userToken, String name, String description) {
+    public TaskDto() {
+    }
+
+    public TaskDto(int frontId, String name, String description) {
         this.frontId = frontId;
-        this.userToken = userToken;
         this.name = name;
         this.description = description;
     }
 
     public int getFrontId() {
         return frontId;
-    }
-
-    public String getUserToken() {
-        return userToken;
     }
 
     public String getName() {

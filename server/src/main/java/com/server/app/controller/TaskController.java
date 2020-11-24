@@ -1,11 +1,15 @@
 package com.server.app.controller;
 
+import com.server.app.domain.TaskDto;
+import com.server.app.service.ServiceResponse;
 import com.server.app.service.TaskService;
-import com.server.app.domain.TaskCreateUpdateDto;
-import com.server.app.domain.UserDto;
+import com.server.app.domain.TaskCrudDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,19 +22,28 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
+    @GetMapping(value = "/tasks/{token}")
+    public ResponseEntity<List<TaskDto>> getTasks(@RequestParam String token){
+        return new ResponseEntity<>(taskService.getTasks(token), HttpStatus.OK);
+    }
+
     @PostMapping(value = "/tasks")
-    public void receiveTask(@RequestBody TaskCreateUpdateDto taskCreateUpdateDto) {
-        logger.log(Level.INFO, "Task received : " + taskCreateUpdateDto.getName() + "  " + taskCreateUpdateDto.getDescription());
+    public ResponseEntity<String> postTask(@RequestBody TaskCrudDto taskCrudDto){
+        logger.log(Level.INFO, "Task received : " + taskCrudDto.getName() + "  " + taskCrudDto.getDescription());
+        ServiceResponse response = taskService.saveTask(taskCrudDto);
+        return new ResponseEntity<>(response.getMessage(), response.getHttpStatus());
     }
 
-    @PostMapping(value = "/authorize")
-    public String authorize(@RequestBody UserDto userDto) {
-        return "";
+    @PostMapping(value = "/tasks")
+    public ResponseEntity<String> updateTask(@RequestBody TaskCrudDto taskCrudDto){
+        ServiceResponse response = taskService.updateTask(taskCrudDto);
+        return new ResponseEntity<>(response.getMessage(), response.getHttpStatus());
     }
 
-    @GetMapping(value = "/token")
-    public String receiveToken(){
-        return "";
+    @DeleteMapping(value = "/tasks")
+    public ResponseEntity<String> deleteTask(@RequestBody TaskCrudDto taskCrudDto){
+        ServiceResponse response = taskService.deleteTask(taskCrudDto);
+        return new ResponseEntity<>(response.getMessage(), response.getHttpStatus());
     }
 }
 

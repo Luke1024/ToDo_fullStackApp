@@ -25,7 +25,7 @@ public class UserService {
 
     private Logger logger = Logger.getLogger(UserService.class.getName());
 
-    public void registerUser(UserDto userDto){
+    public ServiceResponse registerUser(UserDto userDto){
 
     }
 
@@ -35,17 +35,17 @@ public class UserService {
         return guestToken;
     }
 
-    public String loginUserAndGenerateNewToken(UserDto userDto){
+    public ServiceResponse loginUserAndGenerateNewToken(UserDto userDto){
         Optional<User> userAsQuest = loadQuestUser(userDto);
         Optional<User> userRegistered = loadRegisteredUser(userDto);
 
         if(userAsQuest.isPresent() && userRegistered.isPresent()) {
             return logInUserAndCopyTasks(userAsQuest.get(), userRegistered.get());
         }
-        return "";
+        return new ServiceResponse();
     }
 
-    private String logInUserAndCopyTasks(User userAsQuest, User userRegistered){
+    private ServiceResponse logInUserAndCopyTasks(User userAsQuest, User userRegistered){
         List<Task> questTasks = userAsQuest.getTaskList();
         if(questTasks.size()>1){
             userRegistered.addTasks(questTasks);
@@ -56,7 +56,7 @@ public class UserService {
         String newToken = generateToken();
         userRegistered.setToken(newToken);
 
-        return newToken;
+        return new ServiceResponse();
     }
 
     private Optional<User> loadQuestUser(UserDto userDto){

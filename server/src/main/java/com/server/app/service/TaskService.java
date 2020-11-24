@@ -1,10 +1,12 @@
 package com.server.app.service;
 
 import com.server.app.domain.*;
+import com.server.app.mapper.TaskMapper;
 import com.server.app.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -17,24 +19,36 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
+    @Autowired
+    private TaskMapper taskMapper;
+
     private Logger logger = Logger.getLogger(TaskService.class.getName());
 
-    public void saveUpdateTask(TaskCreateUpdateDto taskCreateUpdateDto){
-        String receivedToken = taskCreateUpdateDto.getUserToken();
+    public List<TaskDto> getTasks(String token){
+        Optional<User> userOptional = getUserWithActiveSessionToken(token);
+        if(userOptional.isPresent()){
+            List<Task> taskList = userOptional.get().getTaskList();
+            return taskMapper.mapToTaskDtoList(taskList);
+        }
+        return new ArrayList<>();
+    }
+
+    public void saveTask(TaskCrudDto taskCrudDto){
+        String receivedToken = taskCrudDto.getUserToken();
         Optional<User> userOptional = getUserWithActiveSessionToken(receivedToken);
         if(userOptional.isPresent()){
-            executeTaskSaveUpdate(userOptional.get(), taskCreateUpdateDto);
+            executeTaskSaveUpdate(userOptional.get(), taskCrudDto);
         }
     }
 
-    private void executeTaskSaveUpdate(User user, TaskCreateUpdateDto taskCreateUpdateDto){
-        Optional<Task> task = findTask(taskCreateUpdateDto, taskCreateUpdateDto.getFrontId(), user);
+    private void executeTaskSaveUpdate(User user, TaskCrudDto taskCrudDto){
+        Optional<Task> task = findTask(taskCrudDto, taskCrudDto.getFrontId(), user);
         if(task.isPresent()){
 
         }
     }
 
-    private Optional<Task> findTask(TaskCreateUpdateDto updateDto, int frontId, User user){
+    private Optional<Task> findTask(TaskCrudDto updateDto, int frontId, User user){
         List<Task> taskList = user.getTaskList();
         for(int i=0; i<taskList.size(); i++){
             if(taskList.get(i).getFrontId()==frontId){
