@@ -20,6 +20,9 @@ public class TaskService {
     private TaskRepository taskRepository;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private TaskMapper taskMapper;
 
     private Logger logger = Logger.getLogger(TaskService.class.getName());
@@ -59,7 +62,10 @@ public class TaskService {
     }
 
     private Optional<User> getUserWithActiveSessionToken(String receivedToken){
+
+        userService.
 /*
+
         for(int i=0; i<users.size(); i++){
             Optional<Session> session = users.get(i).getSession();
             if(session.isPresent()){

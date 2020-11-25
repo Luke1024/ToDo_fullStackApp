@@ -14,13 +14,17 @@ import java.util.List;
         query = "SELECT * FROM user WHERE user_email =:EMAIL AND password =:PASSWORD",
         resultClass = User.class
 )
+@NamedNativeQuery(
+        name = "User.findByEmail",
+        query = "SELECT * FROM user WHERE user_email =:EMAIL",
+        resultClass = User.class
+)
 
 @Entity
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String userName;
     private String userEmail;
     private String password;
     private boolean logged;
@@ -35,9 +39,8 @@ public class User {
 
     public User() {}
 
-    public User(String userName, String userEmail, String password, boolean logged, String token,
+    public User(String userEmail, String password, boolean logged, String token,
                 LocalDateTime sessionActiveTo, List<Task> taskList) {
-        this.userName = userName;
         this.userEmail = userEmail;
         this.password = password;
         this.logged = logged;
@@ -54,10 +57,6 @@ public class User {
 
     public Long getId() {
         return id;
-    }
-
-    public String getUserName() {
-        return userName;
     }
 
     public String getUserEmail() {
@@ -84,10 +83,6 @@ public class User {
         return taskList;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     public void setUserEmail(String userEmail) {
         this.userEmail = userEmail;
     }
@@ -112,7 +107,6 @@ public class User {
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", userName='" + userName + '\'' +
                 ", userEmail='" + userEmail + '\'' +
                 ", password='" + password + '\'' +
                 ", logged=" + logged +
