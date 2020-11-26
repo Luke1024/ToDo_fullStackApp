@@ -1,18 +1,16 @@
 package com.server.app.domain;
 
-public class UserDto {
-    private String userToken;
+public class UserCredentialsDto {
+
+    public UserCredentialsDto() {
+    }
+
     private String userEmail;
     private String userPassword;
 
-    public UserDto(String userToken, String userEmail, String userPassword) {
-        this.userToken = userToken;
+    public UserCredentialsDto(String userEmail, String userPassword) {
         this.userEmail = userEmail;
         this.userPassword = userPassword;
-    }
-
-    public String getUserToken() {
-        return userToken;
     }
 
     public String getUserEmail() {

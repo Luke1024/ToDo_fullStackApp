@@ -1,6 +1,6 @@
 package com.server.app.service.userservice;
 
-import com.server.app.domain.UserDto;
+import com.server.app.domain.UserCredentialsDto;
 import com.server.app.service.UserServiceSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,11 +11,11 @@ public class UserDtoChecker {
     @Autowired
     private UserServiceSettings serviceSettings;
 
-    public String checkDto(UserDto userDto) {
-        if (userDto != null) {
-            String message = checkToken(userDto.getUserToken());
-            message += checkMail(userDto.getUserEmail());
-            message += checkPassword(userDto.getUserPassword());
+    public String checkDto(UserCredentialsDto userCredentialsDto) {
+        if (userCredentialsDto != null) {
+            String message = checkToken(userCredentialsDto.getUserToken());
+            message += checkMail(userCredentialsDto.getUserEmail());
+            message += checkPassword(userCredentialsDto.getUserPassword());
             return message;
         } else {
             return "UserDto is null.";

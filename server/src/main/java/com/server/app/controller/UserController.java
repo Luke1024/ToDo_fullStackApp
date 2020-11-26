@@ -1,7 +1,6 @@
 package com.server.app.controller;
 
-import com.server.app.domain.UserDto;
-import com.server.app.service.ServiceResponse;
+import com.server.app.domain.UserCredentialsDto;
 import com.server.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,25 +15,22 @@ public class UserController {
     private UserService userService;
 
     @GetMapping(value = "/token")
-    public String receiveToken(){
+    public ResponseEntity<String> receiveToken(){
         return userService.createGuestUserAndGenerateToken();
     }
 
-    @PostMapping(value = "/login")
-    public ResponseEntity<String> login(@RequestBody UserDto userDto){
-        ServiceResponse response = userService.loginUserAndGenerateNewToken(userDto);
-        return new ResponseEntity<>(response.getMessage(), response.getHttpStatus());
+    @PostMapping(value = "/login/{token}/")
+    public ResponseEntity<String> login(@RequestParam String token, @RequestBody UserCredentialsDto userCredentialsDto){
+        return userService.loginUserAndGenerateNewToken(token, userCredentialsDto);
     }
 
-    @PostMapping(value = "/register")
-    public ResponseEntity<String> register(@RequestBody UserDto userDto){
-        ServiceResponse response = userService.registerUser(userDto);
-        return new ResponseEntity<>(response.getMessage(), response.getHttpStatus());
+    @PostMapping(value = "/register/{token}/")
+    public ResponseEntity register(@RequestParam String token, @RequestBody UserCredentialsDto userCredentialsDto){
+        return userService.registerUser(token, userCredentialsDto);
     }
 
     @PostMapping(value = "logout/{token}")
-    public ResponseEntity<String> logout(@RequestParam String token){
-        ServiceResponse response = userService.logoutUser(token);
-        return new ResponseEntity<>(response.getMessage(), response.getHttpStatus());
+    public ResponseEntity logout(@RequestParam String token){
+        return userService.logoutUser(token);
     }
 }

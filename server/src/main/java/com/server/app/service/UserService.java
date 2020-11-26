@@ -1,10 +1,10 @@
 package com.server.app.service;
 
-import com.server.app.domain.UserDto;
-import com.server.app.repository.UserRepository;
+import com.server.app.domain.UserCredentialsDto;
 import com.server.app.service.userservice.UserLogging;
 import com.server.app.service.userservice.UserRegistration;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.logging.Logger;
@@ -15,9 +15,6 @@ public class UserService {
     @Autowired
     private UserServiceSettings serviceSettings;
 
-    @Autowired
-    private UserRepository userRepository;
-
     private Logger logger = Logger.getLogger(UserService.class.getName());
 
     @Autowired
@@ -26,19 +23,19 @@ public class UserService {
     @Autowired
     private UserLogging userLogging;
 
-    public ServiceResponse registerUser(UserDto userDto){
-        return userRegistration.registerUser(userDto);
+    public ResponseEntity registerUser(String token, UserCredentialsDto userCredentialsDto){
+        return userRegistration.registerUser(token, userCredentialsDto);
     }
 
-    public String createGuestUserAndGenerateToken(){
+    public ResponseEntity<String> createGuestUserAndGenerateToken(){
         return userLogging.createGuestUserAndGenerateToken();
     }
 
-    public ServiceResponse loginUserAndGenerateNewToken(UserDto userDto){
-        return userLogging.loginUserAndGenerateNewToken(userDto);
+    public ResponseEntity<String> loginUserAndGenerateNewToken(String token, UserCredentialsDto userCredentialsDto){
+        return userLogging.loginUserAndGenerateNewToken(token, userCredentialsDto);
     }
 
-    public ServiceResponse logoutUser(String token){
+    public ResponseEntity logoutUser(String token){
         return userLogging.logoutUser(token);
     }
 }
