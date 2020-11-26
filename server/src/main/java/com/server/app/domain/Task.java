@@ -1,10 +1,24 @@
 package com.server.app.domain;
 
+import jdk.jfr.Name;
+
 import javax.persistence.*;
+
+
+//check logged number
+@NamedNativeQuery(
+        name = "Task.findTasksByActiveToken",
+        query = "SELECT * FROM task WHERE token =:TOKEN and logged = 1",
+        resultClass = Task.class
+)
+@NamedNativeQuery(
+        name = "Task.findTasksByActiveTokenAndFrontId",
+        query = "SELECT * FROM task WHERE token =:TOKEN and logged = 1 and front_id =:FRONT_ID",
+        resultClass = Task.class
+)
 
 @Entity
 public class Task {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -20,7 +34,7 @@ public class Task {
 
     public Task(int frontId, User user, String taskName, String taskDescription, boolean done) {
         this.frontId = frontId;
-        this.user = user;
+        setUser(user);
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.done = done;

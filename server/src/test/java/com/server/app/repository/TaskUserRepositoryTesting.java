@@ -26,7 +26,7 @@ public class TaskUserRepositoryTesting {
 
     @Test
     public void testSave(){
-        User user1 = new User("User1", "user1@gmail.com", "chn2347asd",
+        User user1 = new User("user1@gmail.com", "chn2347asd",
                 true, "asda3534532", LocalDateTime.now().plusHours(3), new ArrayList<>());
 
         List<Task> tasks = new ArrayList<>(Arrays.asList(
@@ -50,7 +50,7 @@ public class TaskUserRepositoryTesting {
 
     @Test
     public void testUpdate(){
-        User user1 = new User("User1", "user1@gmail.com", "chn2347asd",
+        User user1 = new User("user1@gmail.com", "chn2347asd",
                 true, "asda3534532", LocalDateTime.now().plusHours(3), new ArrayList<>());
 
         List<Task> tasks = new ArrayList<>(Arrays.asList(

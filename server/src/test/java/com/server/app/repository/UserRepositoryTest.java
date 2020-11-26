@@ -80,7 +80,7 @@ public class UserRepositoryTest {
     }
 
     private User generateUserWithRandomParameters(){
-        return new User(generateRandomString(), generateRandomString(), generateRandomString(), true,
+        return new User(generateRandomString(), generateRandomString(), true,
                 generateRandomString(), LocalDateTime.now().plusHours(3), new ArrayList<>());
     }
 

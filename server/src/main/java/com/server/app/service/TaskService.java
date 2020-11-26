@@ -3,14 +3,13 @@ package com.server.app.service;
 import com.server.app.domain.*;
 import com.server.app.mapper.TaskMapper;
 import com.server.app.repository.TaskRepository;
+import com.server.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service
@@ -20,85 +19,62 @@ public class TaskService {
     private TaskRepository taskRepository;
 
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Autowired
     private TaskMapper taskMapper;
 
     private Logger logger = Logger.getLogger(TaskService.class.getName());
 
-    public List<TaskDto> getTasks(String token){
-        Optional<User> userOptional = getUserWithActiveSessionToken(token);
-        if(userOptional.isPresent()){
-            List<Task> taskList = userOptional.get().getTaskList();
-            return taskMapper.mapToTaskDtoList(taskList);
-        }
-        return new ArrayList<>();
-    }
-
-    public void saveTask(TaskCrudDto taskCrudDto){
-        String receivedToken = taskCrudDto.getUserToken();
-        Optional<User> userOptional = getUserWithActiveSessionToken(receivedToken);
-        if(userOptional.isPresent()){
-            executeTaskSaveUpdate(userOptional.get(), taskCrudDto);
+    public ResponseEntity<List<TaskDto>> getTasks(String token){
+        List<Task> taskList = taskRepository.findTasksByActiveToken(token);
+        if(taskList.isEmpty() && taskList == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(taskMapper.mapToTaskDtoList(taskList));
         }
     }
 
-    private void executeTaskSaveUpdate(User user, TaskCrudDto taskCrudDto){
-        Optional<Task> task = findTask(taskCrudDto, taskCrudDto.getFrontId(), user);
-        if(task.isPresent()){
-
+    public ResponseEntity saveTask(String token, TaskDto taskDto){
+        Optional<User> user = userRepository.findLoggedUserByToken(token);
+        if(user.isPresent()){
+            return processWithTaskSaving(user.get(), taskDto);
+        } else {
+            return ResponseEntity.badRequest().build();
         }
     }
 
-    private Optional<Task> findTask(TaskCrudDto updateDto, int frontId, User user){
-        List<Task> taskList = user.getTaskList();
-        for(int i=0; i<taskList.size(); i++){
-            if(taskList.get(i).getFrontId()==frontId){
-                return Optional.of(taskList.get(i));
-            }
+    private ResponseEntity processWithTaskSaving(User user, TaskDto taskDto){
+        Task taskToSave = taskMapper.mapToTaskFromDto(taskDto, user);
+        taskRepository.save(taskToSave);
+        return ResponseEntity.accepted().build();
+    }
+
+    public ResponseEntity updateTask(String token, TaskDto taskDto){
+        Optional<Task> taskToUpdate = taskRepository.findTasksByActiveTokenAndFrontId(token, taskDto.getFrontId());
+        if(taskToUpdate.isPresent()){
+            return processWithTaskUpdate(taskToUpdate.get(), taskDto);
+        } else {
+            return ResponseEntity.notFound().build();
         }
-        return Optional.empty();
     }
 
-    private Optional<User> getUserWithActiveSessionToken(String receivedToken){
+    private ResponseEntity processWithTaskUpdate(Task taskToUpdate, TaskDto taskDto){
+        taskToUpdate.setFrontId(taskDto.getFrontId());
+        taskToUpdate.setTaskName(taskDto.getName());
+        taskToUpdate.setTaskDescription(taskDto.getDescription());
+        taskToUpdate.setDone(taskDto.isDone());
+        taskRepository.save(taskToUpdate);
+        return ResponseEntity.accepted().build();
+    }
 
-        userService.
-/*
-
-        for(int i=0; i<users.size(); i++){
-            Optional<Session> session = users.get(i).getSession();
-            if(session.isPresent()){
-                if(session.get().isLogged()){
-                    if(session.get().getToken().equals(receivedToken)){
-                        return Optional.of(users.get(i));
-                    }
-                }
-            }
+    public ResponseEntity deleteTask(String token, TaskDto taskDto){
+        Optional<Task> taskToDelete = taskRepository.findTasksByActiveTokenAndFrontId(token, taskDto.getFrontId());
+        if(taskToDelete.isPresent()){
+            taskRepository.delete(taskToDelete.get());
+            return ResponseEntity.accepted().build();
+        }else{
+            return ResponseEntity.notFound().build();
         }
-
- */
-        return Optional.empty();
     }
-
-    public String generateTokenForLoggedUser(UserDto userDto){
-        return generateGuestToken();
-    }
-
-    public String generateGuestToken(){
-        int leftLimit = 32;
-        int rightLimit = 127;
-        int targetStringLength = 15;
-        Random random = new Random();
-        StringBuilder buffer = new StringBuilder(targetStringLength);
-        for (int i = 0; i < targetStringLength; i++) {
-            int randomLimitedInt = leftLimit + (int)
-                    (random.nextFloat() * (rightLimit - leftLimit + 1));
-            buffer.append((char) randomLimitedInt);
-        }
-        String generatedString = buffer.toString();
-        logger.log(Level.INFO, "Token generated: " + generatedString);
-        return generatedString;
-    }
-
 }
