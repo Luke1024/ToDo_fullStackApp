@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 @Service
 public class TaskService {
@@ -24,18 +24,17 @@ public class TaskService {
     @Autowired
     private TaskMapper taskMapper;
 
-    private Logger logger = Logger.getLogger(TaskService.class.getName());
-
     public ResponseEntity<List<TaskDto>> getTasks(String token){
-        List<Task> taskList = taskRepository.findTasksByActiveToken(token);
-        if(taskList.isEmpty() && taskList == null) {
-            return ResponseEntity.notFound().build();
+        Optional<User> user = userRepository.findLoggedUserByToken(token);
+        if(user.isPresent()) {
+            List<TaskDto> taskDtos = taskMapper.mapToTaskDtoList(user.get().getTaskList());
+            return ResponseEntity.ok(taskDtos);
         } else {
-            return ResponseEntity.ok(taskMapper.mapToTaskDtoList(taskList));
+            return ResponseEntity.badRequest().build();
         }
     }
 
-    public ResponseEntity saveTask(String token, TaskDto taskDto){
+    public ResponseEntity<String> saveTask(String token, TaskDto taskDto){
         Optional<User> user = userRepository.findLoggedUserByToken(token);
         if(user.isPresent()){
             return processWithTaskSaving(user.get(), taskDto);
@@ -44,22 +43,24 @@ public class TaskService {
         }
     }
 
-    private ResponseEntity processWithTaskSaving(User user, TaskDto taskDto){
-        Task taskToSave = taskMapper.mapToTaskFromDto(taskDto, user);
-        taskRepository.save(taskToSave);
+    private ResponseEntity<String> processWithTaskSaving(User user, TaskDto taskDto){
+        user.addTasks(Collections.singletonList(taskMapper.mapToTaskFromDto(taskDto)));
+        userRepository.save(user);
         return ResponseEntity.accepted().build();
     }
 
-    public ResponseEntity updateTask(String token, TaskDto taskDto){
-        Optional<Task> taskToUpdate = taskRepository.findTasksByActiveTokenAndFrontId(token, taskDto.getFrontId());
-        if(taskToUpdate.isPresent()){
-            return processWithTaskUpdate(taskToUpdate.get(), taskDto);
+    public ResponseEntity<String> updateTask(String token, TaskDto taskDto){
+        Optional<User> user = userRepository.findLoggedUserByToken(token);
+        if(user.isPresent()){
+            return processWithTaskUpdate(user.get(), taskDto);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    private ResponseEntity processWithTaskUpdate(Task taskToUpdate, TaskDto taskDto){
+    private ResponseEntity<String> processWithTaskUpdate(User userWithTaskToUpdate, TaskDto taskDto){
+        Optional<Task> taskToUpdate = findTaskToUpdate(userWithTaskToUpdate, taskDto);
+
         taskToUpdate.setFrontId(taskDto.getFrontId());
         taskToUpdate.setTaskName(taskDto.getName());
         taskToUpdate.setTaskDescription(taskDto.getDescription());
@@ -68,7 +69,17 @@ public class TaskService {
         return ResponseEntity.accepted().build();
     }
 
-    public ResponseEntity deleteTask(String token, TaskDto taskDto){
+    private Optional<Task> findTaskToUpdate(User userWithTaskToUpdate, TaskDto taskDto){
+        List<Task> userTaskList = userWithTaskToUpdate.getTaskList();
+        if(userTaskList.isEmpty() || userTaskList == null){
+            return Optional.empty();
+        } else {
+            int frontId = taskDto.getFrontId()
+            return ;
+        }
+    }
+
+    public ResponseEntity<String> deleteTask(String token, TaskDto taskDto){
         Optional<Task> taskToDelete = taskRepository.findTasksByActiveTokenAndFrontId(token, taskDto.getFrontId());
         if(taskToDelete.isPresent()){
             taskRepository.delete(taskToDelete.get());

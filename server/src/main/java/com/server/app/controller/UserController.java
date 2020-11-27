@@ -25,12 +25,12 @@ public class UserController {
     }
 
     @PostMapping(value = "/register/{token}/")
-    public ResponseEntity register(@RequestParam String token, @RequestBody UserCredentialsDto userCredentialsDto){
+    public ResponseEntity<String> register(@RequestParam String token, @RequestBody UserCredentialsDto userCredentialsDto){
         return userService.registerUser(token, userCredentialsDto);
     }
 
     @PostMapping(value = "logout/{token}")
-    public ResponseEntity logout(@RequestParam String token){
+    public ResponseEntity<String> logout(@RequestParam String token){
         return userService.logoutUser(token);
     }
 }

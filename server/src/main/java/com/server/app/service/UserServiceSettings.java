@@ -5,6 +5,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserServiceSettings {
 
+    private UserServiceSettings() {
+    }
+
     //settings
     private static int sessionActiveHours = 6;
     private static int acceptTokenLength = 15;

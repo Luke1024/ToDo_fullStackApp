@@ -7,13 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/toDo")
 public class TaskController {
-    private Logger logger = Logger.getLogger(TaskController.class.getName());
 
     @Autowired
     private TaskService taskService;
@@ -24,7 +22,7 @@ public class TaskController {
     }
 
     @PostMapping(value = "/tasks/{token}/")
-    public ResponseEntity saveTask(@RequestParam String token, @RequestBody TaskDto taskDto){
+    public ResponseEntity<String> saveTask(@RequestParam String token, @RequestBody TaskDto taskDto){
         return taskService.saveTask(token, taskDto);
     }
 

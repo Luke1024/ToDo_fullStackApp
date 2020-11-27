@@ -18,23 +18,22 @@ import java.util.Random;
 @Service
 public class UserLogging {
 
+    private Random random = new Random();
+
     @Autowired
     private UserServiceSettings serviceSettings;
 
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private UserDtoChecker dtoChecker;
-
-    public ResponseEntity createGuestUserAndGenerateToken(){
+    public ResponseEntity<String> createGuestUserAndGenerateToken(){
         String guestToken = generateToken();
         createGuestUser(guestToken);
         return ResponseEntity.ok(guestToken);
     }
 
     public ResponseEntity<String> loginUserAndGenerateNewToken(String token, UserCredentialsDto userCredentialsDto) {
-        if(token.length()>= serviceSettings.getAcceptTokenLength() && token != null){
+        if(token.length()>= serviceSettings.getAcceptTokenLength()){
             Optional<User> userAsGuest = userRepository.findLoggedUserByToken(token);
             if(userAsGuest.isPresent()){
                 return processWithUserLogging(userAsGuest.get(), userCredentialsDto);
@@ -43,7 +42,7 @@ public class UserLogging {
         return ResponseEntity.badRequest().build();
     }
 
-    public ResponseEntity logoutUser(String token){
+    public ResponseEntity<String> logoutUser(String token){
         Optional<User> userOptional = userRepository.findLoggedUserByToken(token);
         if(userOptional.isPresent()){
             userOptional.get().setToken("");
@@ -63,7 +62,7 @@ public class UserLogging {
 
     private ResponseEntity<String> logInUserAndCopyTasks(User userAsQuest, User userRegistered){
         List<Task> questTasks = userAsQuest.getTaskList();
-        if(questTasks.size()>0){
+        if( ! questTasks.isEmpty()){
             userRegistered.addTasks(questTasks);
         }
         userRegistered.setLogged(true);
@@ -88,14 +87,12 @@ public class UserLogging {
         int leftLimit = 32;
         int rightLimit = 127;
         int targetStringLength = 15;
-        Random random = new Random();
         StringBuilder buffer = new StringBuilder(targetStringLength);
         for (int i = 0; i < targetStringLength; i++) {
             int randomLimitedInt = leftLimit + (int)
                     (random.nextFloat() * (rightLimit - leftLimit + 1));
             buffer.append((char) randomLimitedInt);
         }
-        String generatedString = buffer.toString();
-        return generatedString;
+        return buffer.toString();
     }
 }

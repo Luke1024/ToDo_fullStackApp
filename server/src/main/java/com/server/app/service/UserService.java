@@ -7,15 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.logging.Logger;
-
 @Service
 public class UserService {
 
     @Autowired
     private UserServiceSettings serviceSettings;
-
-    private Logger logger = Logger.getLogger(UserService.class.getName());
 
     @Autowired
     private UserRegistration userRegistration;
@@ -23,7 +19,7 @@ public class UserService {
     @Autowired
     private UserLogging userLogging;
 
-    public ResponseEntity registerUser(String token, UserCredentialsDto userCredentialsDto){
+    public ResponseEntity<String> registerUser(String token, UserCredentialsDto userCredentialsDto){
         return userRegistration.registerUser(token, userCredentialsDto);
     }
 
@@ -35,7 +31,7 @@ public class UserService {
         return userLogging.loginUserAndGenerateNewToken(token, userCredentialsDto);
     }
 
-    public ResponseEntity logoutUser(String token){
+    public ResponseEntity<String> logoutUser(String token){
         return userLogging.logoutUser(token);
     }
 }

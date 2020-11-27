@@ -18,22 +18,19 @@ public class UserRegistration {
     private UserRepository userRepository;
 
     @Autowired
-    private UserServiceSettings serviceSettings;
+    private static UserServiceSettings serviceSettings;
 
-    @Autowired
-    private UserDtoChecker dtoChecker;
-
-    public ResponseEntity registerUser(String token, UserCredentialsDto userCredentialsDto){
-        if(token.length()>= serviceSettings.getAcceptTokenLength() && token != null){
+    public ResponseEntity<String> registerUser(String token, UserCredentialsDto userCredentialsDto){
+        if(token.length()>= serviceSettings.getAcceptTokenLength()){
             Optional<User> user = userRepository.findLoggedUserByToken(token);
             if(user.isPresent()) {
-                return processToUserRegistration(user.get(), userCredentialsDto);
+                return processToUserRegistration(userCredentialsDto);
             }
         }
         return ResponseEntity.badRequest().build();
     }
 
-    private ResponseEntity processToUserRegistration(User userAsGuest,UserCredentialsDto userCredentialsDto){
+    private ResponseEntity<String> processToUserRegistration(UserCredentialsDto userCredentialsDto){
         if(userWithThisEmailExist(userCredentialsDto.getUserEmail())){
             return ResponseEntity.badRequest().build();
         } else {
