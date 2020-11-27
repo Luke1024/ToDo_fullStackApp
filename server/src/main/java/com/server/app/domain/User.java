@@ -6,7 +6,7 @@ import java.util.List;
 
 @NamedNativeQuery(
         name = "User.findLoggedUserByToken",
-        query = "SELECT * FROM user WHERE token =:TOKEN and logged = 1",
+        query = "SELECT * FROM user WHERE token =:TOKEN and logged = 0",
         resultClass = User.class
 )
 @NamedNativeQuery(

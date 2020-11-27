@@ -24,7 +24,7 @@ public class TaskRepositoryTest {
 
     @Test
     public void testSave(){
-        Task task = new Task(1, null, "task1", "task1 description", false);
+        Task task = new Task(null, "task1", "task1 description", false);
 
         taskRepository.save(task);
         Assert.assertNotNull(task.getId());
@@ -33,31 +33,12 @@ public class TaskRepositoryTest {
 
     @Test
     public void testUpdate(){
-        Task task = new Task(1, null, "task1", "task1 description", false);
+        Task task = new Task(null, "task1", "task1 description", false);
 
         taskRepository.save((task));
         Optional<Task> taskOptional = taskRepository.findById(task.getId());
         taskOptional.get().setTaskDescription("new description");
         taskRepository.save(taskOptional.get());
         Assert.assertEquals("new description",taskRepository.findById(task.getId()).get().getTaskDescription());
-    }
-
-    @Test
-    public void findTasksByActiveToken_TokenActive(){
-        String token = "nqbwkjehgqlkwe";
-
-        User user1 = new User("user@mail.com", "password1", true, token, LocalDateTime.now().plusHours(1), new ArrayList<>());
-        Task task1 = new Task(1, user1, "task1", "task1 description", false);
-        Task task2 = new Task(2, user1, "task2", "task2 description", true);
-
-        taskRepository.save(task1);
-        taskRepository.save(task2);
-
-        List<Task> taskList = taskRepository.findTasksByActiveToken(token);
-
-        Assert.assertEquals(new ArrayList<>(Arrays.asList(task1, task2)).toString(), taskList.toString());
-
-        taskRepository.deleteById(task1.getId());
-        taskRepository.deleteById(task2.getId());
     }
 }

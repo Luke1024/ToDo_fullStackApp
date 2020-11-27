@@ -59,33 +59,40 @@ public class TaskService {
     }
 
     private ResponseEntity<String> processWithTaskUpdate(User userWithTaskToUpdate, TaskDto taskDto){
-        Optional<Task> taskToUpdate = findTaskToUpdate(userWithTaskToUpdate, taskDto);
+        Optional<Task> taskToUpdateOptional = findTask(userWithTaskToUpdate, taskDto);
 
-        taskToUpdate.setFrontId(taskDto.getFrontId());
-        taskToUpdate.setTaskName(taskDto.getName());
-        taskToUpdate.setTaskDescription(taskDto.getDescription());
-        taskToUpdate.setDone(taskDto.isDone());
-        taskRepository.save(taskToUpdate);
-        return ResponseEntity.accepted().build();
+        if(taskToUpdateOptional.isPresent()) {
+            Task taskToUpdate = taskToUpdateOptional.get();
+            taskToUpdate.setId(taskDto.getId());
+            taskToUpdate.setTaskName(taskDto.getName());
+            taskToUpdate.setTaskDescription(taskDto.getDescription());
+            taskToUpdate.setDone(taskDto.isDone());
+            taskRepository.save(taskToUpdate);
+            return ResponseEntity.accepted().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    private Optional<Task> findTaskToUpdate(User userWithTaskToUpdate, TaskDto taskDto){
+    private Optional<Task> findTask(User userWithTaskToUpdate, TaskDto taskDto){
         List<Task> userTaskList = userWithTaskToUpdate.getTaskList();
         if(userTaskList.isEmpty() || userTaskList == null){
             return Optional.empty();
         } else {
-            int frontId = taskDto.getFrontId()
-            return ;
+            long frontId = taskDto.getId();
+            return userTaskList.stream().filter(task -> task.getId()==frontId).findFirst();
         }
     }
 
     public ResponseEntity<String> deleteTask(String token, TaskDto taskDto){
-        Optional<Task> taskToDelete = taskRepository.findTasksByActiveTokenAndFrontId(token, taskDto.getFrontId());
-        if(taskToDelete.isPresent()){
-            taskRepository.delete(taskToDelete.get());
-            return ResponseEntity.accepted().build();
-        }else{
-            return ResponseEntity.notFound().build();
+        Optional<User> user = userRepository.findLoggedUserByToken(token);
+        if(user.isPresent()){
+            Optional<Task> foundTask = findTask(user.get(), taskDto);
+            if(foundTask.isPresent()){
+                taskRepository.delete(foundTask.get());
+                return ResponseEntity.accepted().build();
+            }
         }
+        return ResponseEntity.notFound().build();
     }
 }

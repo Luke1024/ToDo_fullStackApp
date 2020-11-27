@@ -11,10 +11,4 @@ import java.util.Optional;
 
 @Repository
 public interface TaskRepository extends CrudRepository<Task, Long>{
-
-    @Query
-    List<Task> findTasksByActiveToken(@Param("TOKEN")String token);
-
-    @Query
-    Optional<Task> findTasksByActiveTokenAndFrontId(@Param("TOKEN")String token,@Param("FRONT_ID")int id);
 }
