@@ -43,12 +43,6 @@ public class TaskService {
         }
     }
 
-    private ResponseEntity<String> processWithTaskSaving(User user, TaskDto taskDto){
-        user.addTasks(Collections.singletonList(taskMapper.mapToTaskFromDto(taskDto)));
-        userRepository.save(user);
-        return ResponseEntity.accepted().build();
-    }
-
     public ResponseEntity<String> updateTask(String token, TaskDto taskDto){
         Optional<User> user = userRepository.findLoggedUserByToken(token);
         if(user.isPresent()){
@@ -56,6 +50,28 @@ public class TaskService {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    public ResponseEntity<String> deleteTask(String token, long id) {
+        Optional<User> user = userRepository.findLoggedUserByToken(token);
+
+        if (user.isPresent()) {
+            List<Task> userTaskList = user.get().getTaskList();
+            if ( ! (userTaskList.isEmpty() || userTaskList == null)) {
+                Optional<Task> foundTask = userTaskList.stream().filter(task -> task.getId() == id).findFirst();
+                if (foundTask.isPresent()) {
+                    taskRepository.delete(foundTask.get());
+                    return ResponseEntity.accepted().build();
+                }
+            }
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    private ResponseEntity<String> processWithTaskSaving(User user, TaskDto taskDto){
+        user.addTasks(Collections.singletonList(taskMapper.mapToTaskFromDto(taskDto)));
+        userRepository.save(user);
+        return ResponseEntity.accepted().build();
     }
 
     private ResponseEntity<String> processWithTaskUpdate(User userWithTaskToUpdate, TaskDto taskDto){
@@ -79,20 +95,7 @@ public class TaskService {
         if(userTaskList.isEmpty() || userTaskList == null){
             return Optional.empty();
         } else {
-            long frontId = taskDto.getId();
-            return userTaskList.stream().filter(task -> task.getId()==frontId).findFirst();
+            return userTaskList.stream().filter(task -> task.getId()==taskDto.getId()).findFirst();
         }
-    }
-
-    public ResponseEntity<String> deleteTask(String token, TaskDto taskDto){
-        Optional<User> user = userRepository.findLoggedUserByToken(token);
-        if(user.isPresent()){
-            Optional<Task> foundTask = findTask(user.get(), taskDto);
-            if(foundTask.isPresent()){
-                taskRepository.delete(foundTask.get());
-                return ResponseEntity.accepted().build();
-            }
-        }
-        return ResponseEntity.notFound().build();
     }
 }

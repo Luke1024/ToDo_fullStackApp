@@ -68,7 +68,7 @@ public class UserRepositoryTest {
     public void testFindLoggedUserByToken(){
         User user1 = generateUserWithRandomParameters();
         User user2 = generateUserWithRandomParameters();
-        user1.setLogged(false);
+        user2.setLogged(false);
         userRepository.save(user1);
         userRepository.save(user2);
 
@@ -77,6 +77,9 @@ public class UserRepositoryTest {
 
         Assert.assertEquals(user1.toString(), optionalUserLogged.get().toString());
         Assert.assertEquals(Optional.empty(), optionalUserLoggedOut);
+
+        userRepository.deleteById(user1.getId());
+        userRepository.deleteById(user2.getId());
     }
 
     private User generateUserWithRandomParameters(){

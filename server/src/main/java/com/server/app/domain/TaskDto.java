@@ -31,4 +31,14 @@ public class TaskDto {
     public boolean isDone() {
         return done;
     }
+
+    //for testing
+    @Override
+    public String toString() {
+        return "TaskDto{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", done=" + done +
+                '}';
+    }
 }

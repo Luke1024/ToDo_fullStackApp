@@ -31,9 +31,9 @@ public class TaskController {
         return taskService.updateTask(token, taskDto);
     }
 
-    @DeleteMapping(value = "/tasks/{token}/")
-    public ResponseEntity<String> deleteTask(@RequestParam String token, @RequestBody TaskDto taskDto){
-        return taskService.deleteTask(token, taskDto);
+    @DeleteMapping(value = "/tasks/{token}/{id}")
+    public ResponseEntity<String> deleteTask(@RequestParam String token, @PathVariable long id){
+        return taskService.deleteTask(token, id);
     }
 }
 
