@@ -71,6 +71,8 @@ public class UserLogging {
         String newToken = generateToken();
         userRegistered.setToken(newToken);
 
+        userRepository.save(userRegistered);
+
         return ResponseEntity.ok(newToken);
     }
 

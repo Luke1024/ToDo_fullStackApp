@@ -21,7 +21,7 @@ public class UserRegistration {
     private static UserServiceSettings serviceSettings;
 
     public ResponseEntity<String> registerUser(String token, UserCredentialsDto userCredentialsDto){
-        if(token.length()>= serviceSettings.getAcceptTokenLength()){
+        if(token.length() >= serviceSettings.getAcceptTokenLength()){
             Optional<User> user = userRepository.findLoggedUserByToken(token);
             if(user.isPresent()) {
                 return processToUserRegistration(userCredentialsDto);
@@ -31,12 +31,13 @@ public class UserRegistration {
     }
 
     private ResponseEntity<String> processToUserRegistration(UserCredentialsDto userCredentialsDto){
-        if(userWithThisEmailExist(userCredentialsDto.getUserEmail())){
-            return ResponseEntity.badRequest().build();
-        } else {
-            userRepository.save(createNewUser(userCredentialsDto));
-            return ResponseEntity.accepted().build();
+        if( ! userWithThisEmailExist(userCredentialsDto.getUserEmail())){
+            if(userCredentialsDto.getUserPassword().length() >= serviceSettings.getMinimalPasswordLength()) {
+                userRepository.save(createNewUser(userCredentialsDto));
+                return ResponseEntity.accepted().build();
+            }
         }
+        return ResponseEntity.badRequest().build();
     }
 
     private boolean userWithThisEmailExist(String userEmail){
