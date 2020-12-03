@@ -19,18 +19,18 @@ public class UserController {
         return userService.createGuestUserAndGenerateToken();
     }
 
-    @PostMapping(value = "/login/{token}/")
-    public ResponseEntity<String> login(@RequestParam String token, @RequestBody UserCredentialsDto userCredentialsDto){
+    @PostMapping(value = "/login/{token}")
+    public ResponseEntity<String> login(@PathVariable String token, @RequestBody UserCredentialsDto userCredentialsDto){
         return userService.loginUserAndGenerateNewToken(token, userCredentialsDto);
     }
 
-    @PostMapping(value = "/register/{token}/")
-    public ResponseEntity<String> register(@RequestParam String token, @RequestBody UserCredentialsDto userCredentialsDto){
+    @PostMapping(value = "/register/{token}")
+    public ResponseEntity<String> register(@PathVariable String token, @RequestBody UserCredentialsDto userCredentialsDto){
         return userService.registerUser(token, userCredentialsDto);
     }
 
-    @PostMapping(value = "logout/{token}")
-    public ResponseEntity<String> logout(@RequestParam String token){
+    @PostMapping(value = "/logout/{token}")
+    public ResponseEntity<String> logout(@PathVariable String token){
         return userService.logoutUser(token);
     }
 }

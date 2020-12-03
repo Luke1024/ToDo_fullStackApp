@@ -2,11 +2,11 @@ package com.server.app.domain;
 
 public class UserCredentialsDto {
 
-    public UserCredentialsDto() {
-    }
-
     private String userEmail;
     private String userPassword;
+
+    public UserCredentialsDto() {
+    }
 
     public UserCredentialsDto(String userEmail, String userPassword) {
         this.userEmail = userEmail;

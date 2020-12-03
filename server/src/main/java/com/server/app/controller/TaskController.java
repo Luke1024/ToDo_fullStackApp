@@ -17,22 +17,22 @@ public class TaskController {
     private TaskService taskService;
 
     @GetMapping(value = "/tasks/{token}")
-    public ResponseEntity<List<TaskDto>> getTasks(@RequestParam String token){
+    public ResponseEntity<List<TaskDto>> getTasks(@PathVariable String token){
         return taskService.getTasks(token);
     }
 
-    @PostMapping(value = "/tasks/{token}/")
-    public ResponseEntity<String> saveTask(@RequestParam String token, @RequestBody TaskDto taskDto){
+    @PostMapping(value = "/tasks/{token}")
+    public ResponseEntity<String> saveTask(@PathVariable String token, @RequestBody TaskDto taskDto){
         return taskService.saveTask(token, taskDto);
     }
 
-    @PutMapping(value = "/tasks/{token}/")
-    public ResponseEntity<String> updateTask(@RequestParam String token, @RequestBody TaskDto taskDto){
+    @PutMapping(value = "/tasks/{token}")
+    public ResponseEntity<String> updateTask(@PathVariable String token, @RequestBody TaskDto taskDto){
         return taskService.updateTask(token, taskDto);
     }
 
     @DeleteMapping(value = "/tasks/{token}/{id}")
-    public ResponseEntity<String> deleteTask(@RequestParam String token, @PathVariable long id){
+    public ResponseEntity<String> deleteTask(@PathVariable String token, @PathVariable long id){
         return taskService.deleteTask(token, id);
     }
 }
