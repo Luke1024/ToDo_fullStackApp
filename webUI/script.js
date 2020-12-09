@@ -4,6 +4,12 @@ $(document).ready(function(){
   let cardTemplate = $("[card-area-template]");
   let doneParagraph = $("[done-card-container]");
 
+  const toDoApiRoot = "http://localhost:8080/toDo/";
+  const tasksEndpoint = "tasks";
+  const tokenEndpoint = "token";
+
+  let token;
+
   //new button
   let newButton = $("[button-card-new]");
 
@@ -36,12 +42,26 @@ $(document).ready(function(){
 
   function loadLayout(){
     loadCardTemplate();
+    getTokenFromServer();
   }
 
   function loadCardTemplate(){
     let template = cardTemplate.children('[card]');
     let newCard = template.clone();
     newCard.appendTo(cardContainer);
+  }
+
+  function getTokenFromServer(){
+    console.log('send execution');
+    let requestUrl = toDoApiRoot + tokenEndpoint; 
+
+    $.get(requestUrl, function(data, status){
+      if(status=='success'){
+        token = data;
+        console.log("token set: " + token);
+        console.log(data + " " + status);
+      }
+    });
   }
 
   function loadCardObjectsToGlobalVariables(button){
@@ -101,9 +121,27 @@ $(document).ready(function(){
       taskNameParagraph.text(taskNameForm.val());
       taskDescriptionParagraph.text(taskDescriptionForm.val());
       processToSavedMode();
+      sendDataToServer();
     } else {
       informAboutBlankName();
     }
+  }
+
+  function sendDataToServer(){
+    console.log('send execution');
+    let requestUrl = toDoApiRoot + tasksEndpoint; 
+
+    $.ajax({
+      url: requestUrl,
+      method: 'POST',
+      processData: false,
+      contentType: "application/json; charset=utf-8",
+      dataType: 'json',
+      data: JSON.stringify({
+        task: taskNameParagraph.text(),
+        description: taskDescriptionParagraph.text(),
+      })
+    });
   }
 
   function cardAbort(){
@@ -143,6 +181,7 @@ $(document).ready(function(){
     
     if(taskNameForm.val().length>0){
       processWithCardSaving();
+      sendDataToServer();
     } else {
       informAboutBlankName();
     }

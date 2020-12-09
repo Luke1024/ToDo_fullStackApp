@@ -25,7 +25,6 @@ public class UserRepositoryTest {
 
         User user1 = generateUserWithRandomParameters();
 
-
         Assert.assertNull(user1.getId());
         userRepository.save(user1);
         Assert.assertNotNull(user1.getId());

@@ -66,5 +66,7 @@ public class TaskUserRepositoryTesting {
         task1.setTaskDescription("new description");
         taskRepository.save(task1);
         Assert.assertEquals("new description", taskRepository.findById(task1.getId()).get().getTaskDescription());
+
+        userRepository.delete(user1);
     }
 }

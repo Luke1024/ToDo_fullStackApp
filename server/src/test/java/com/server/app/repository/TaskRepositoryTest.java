@@ -35,5 +35,6 @@ public class TaskRepositoryTest {
         taskOptional.get().setTaskDescription("new description");
         taskRepository.save(taskOptional.get());
         Assert.assertEquals("new description",taskRepository.findById(task.getId()).get().getTaskDescription());
+        taskRepository.delete(task);
     }
 }
