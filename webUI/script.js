@@ -1,8 +1,10 @@
+let app = angular.module("todo", []);
+app.controller("cardController", function($scope){
+    $scope.cards = [{name:"task1", description:"task1 description"},
+    {name:"task2", description:"task2 description"}];
+});
+/*
 $(document).ready(function(){
-  let appContainer = $("[app-container]");
-  let cardContainer = $("[card-container]");
-  let cardTemplate = $("[card-area-template]");
-  let doneParagraph = $("[done-card-container]");
 
   const toDoApiRoot = "http://localhost:8080/toDo/";
   const tasksEndpoint = "tasks";
@@ -10,46 +12,17 @@ $(document).ready(function(){
 
   let token;
 
-  //new button
-  let newButton = $("[button-card-new]");
-
-  //card variables
-  let card;
-  let buttonAreaInvisible;
-
-  let visibleInCompactMode;
-  let taskNameParagraph;
-  let buttonCardMark;
-  let buttonCardRemove;
-  let buttonCardRemoveSecondary;
-  let removeMenu;
-
-  let visibleInExpandedMode;
-  let taskNameForm;
-  let taskDescriptionForm;
-  let taskDescriptionParagraph;
-
-  let buttonCardSave;
-  let buttonCardEdit;
-  let buttonCardUpdate;
-  let buttonCardAbort;
-  let buttonCardFold;
-  let buttonCardCancel;
-  let blankWarning;
+  
 
   console.log("execution");
   loadLayout();
 
   function loadLayout(){
-    loadCardTemplate();
+    CardViewController.loadCardTemplate();
     getTokenFromServer();
   }
 
-  function loadCardTemplate(){
-    let template = cardTemplate.children('[card]');
-    let newCard = template.clone();
-    newCard.appendTo(cardContainer);
-  }
+
 
   function getTokenFromServer(){
     console.log('send execution');
@@ -254,5 +227,6 @@ $(document).ready(function(){
   appContainer.on('click', '[button-card-save]', saveCard);
   appContainer.on('click', '[button-card-fold]', cardCancelFold);
   appContainer.on('click', '[button-area-invisible]', expandCard);
-  appContainer.on('click', '[button-card-new]', loadCardTemplate);
+  appContainer.on('click', '[button-card-new]', CardViewController.loadCardTemplate());
 });
+*/

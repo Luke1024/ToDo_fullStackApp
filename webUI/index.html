@@ -3,11 +3,11 @@
 <head>
     <title>ToDoApp</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     <script src ="script.js"></script>
 </head>
 <body>
-    <div app-container>
+    <div ng-app="todo" app-container>
         <div id="topBar" class="hidden">
             <div id="startPanel">
                 <p id="toDoP">ToDo</p>
@@ -41,13 +41,11 @@
             </div>
         </div>
 
-        <div card-container></div>
-
-        <div card-area-template class="hidden" >
-            <div card card-id="0" card-mode="blank" mark-done="false" class="card">
+        <div ng-controller="cardController" card-container>
+            <div ng-repeat="card in cards" card card-id="0" card-mode="blank" mark-done="false" class="card">
                 <div button-area-invisible class="button-card-area-invisible"></div>
                 <div visible-in-compact-mode>
-                    <p class="task-name" task-name-paragraph>Click to add new task</p>
+                    <p class="task-name" task-name-paragraph>{{card.name}}</p>
                     <button type="button" button-card-mark class="button-card-mark hidden">Done</button>
                     <button type="button" button-card-remove class="button-card-remove">-</button>
                     <button type="button" button-card-remove-secondary class="button-card-remove hidden">-</button>
