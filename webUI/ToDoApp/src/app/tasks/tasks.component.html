@@ -1,0 +1,7 @@
+<div *ngFor="let task of tasks">
+<p>id: <span>{{task.id}}</span></p>
+<p>name: <span>{{task.name}}</span></p>
+<p>description: <span>{{task.description}}</span></p>
+<input [(ngModel)]="task.name" placeholder="name">
+<input [(ngModel)]="task.description" placeholder="description">
+</div>
