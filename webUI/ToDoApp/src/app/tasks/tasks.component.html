@@ -1,7 +1,12 @@
 <div *ngFor="let task of tasks">
-<p>id: <span>{{task.id}}</span></p>
-<p>name: <span>{{task.name}}</span></p>
-<p>description: <span>{{task.description}}</span></p>
-<input [(ngModel)]="task.name" placeholder="name">
-<input [(ngModel)]="task.description" placeholder="description">
+    <p>id: <span>{{task.id}}</span></p>
+    <p>name: <span>{{task.name}}</span></p>
+    <p>description: <span>{{task.description}}</span></p>
+    <p>done: {{task.done}}</p>
+    <input [(ngModel)]="task.name" placeholder="name">
+    <input [(ngModel)]="task.description" placeholder="description">
+    <button (click)="save(task.name, task.descripton)">Save</button>
+    <button (click)="delete(task)">Delete</button>
+    <button (click)="markDone(task)">Done</button>
 </div>
+<button (click)=add()>Add</button>
