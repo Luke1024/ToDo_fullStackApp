@@ -12,7 +12,6 @@ export class TaskServiceService {
   private rootUrl = 'http://localhost:8080/toDo'
   private tokenUrl = this.rootUrl + '/token'
   private tasksUrl = this.rootUrl + '/tasks/'
-  private token:String = ''
   private tokenLoaded = false
 
   httpOptions = {
@@ -21,35 +20,29 @@ export class TaskServiceService {
 
   constructor(private http:HttpClient) {}
 
-  getToken(){
-    this.http.get<String>(this.tokenUrl)
+  getToken(): Observable<String> {
+    return this.http.get<String>(this.tokenUrl)
     .pipe(catchError(this.handleError<String>('getToken', '')))
-    .subscribe(token => this.setToken(token))
   }
 
-  private setToken(token:String){
-    this.token = token
-    this.tokenLoaded = true
-  }
-
-  getTasks(): Observable<Task[]> {
-    return this.http.get<Task[]>(this.tasksUrl + this.token)
+  getTasks(token:String): Observable<Task[]> {
+    return this.http.get<Task[]>(this.tasksUrl + token)
       .pipe(catchError(this.handleError<Task[]>('getTasks', [])))
   }
 
-  saveTask(task: Task): Observable<Task> {
-    return this.http.post<Task>(this.tasksUrl + this.token, task, this.httpOptions)
+  saveTask(token:String,task: Task): Observable<Task> {
+    return this.http.post<Task>(this.tasksUrl + token, task, this.httpOptions)
     .pipe(catchError(this.handleError<Task>('addTask')))
   }
 
-  updateTask(task: Task): Observable<any> {
-    return this.http.put(this.tasksUrl, task, this.httpOptions)
+  updateTask(token:String,task: Task): Observable<any> {
+    return this.http.put(this.tasksUrl + token, task, this.httpOptions)
     .pipe(catchError(this.handleError<any>('updateTask')))
   }
 
-  deleteTask(task: Task | number): Observable<Task> {
+  deleteTask(token:String,task: Task | number): Observable<Task> {
     const id = typeof task === 'number' ? task : task.id;
-    const url = `${this.tasksUrl}/${id}`
+    const url = `${this.tasksUrl + token}/${id}`
 
     return this.http.delete<Task>(url, this.httpOptions).pipe(
       catchError(this.handleError<Task>('deleteTask'))

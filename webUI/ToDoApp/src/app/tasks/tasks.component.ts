@@ -11,10 +11,18 @@ export class TasksComponent implements OnInit {
 
   tasks:Task[] = []
 
+  private token:String = ''
+  private tokenReceived = false
+
   constructor(private taskService:TaskServiceService) { }
 
   ngOnInit(): void {
-    this.taskService.loadToken()
+    this.taskService.getToken().subscribe(token => this.setToken(token))
+  }
+
+  private setToken(token:String) {
+    this.tokenReceived = true
+    this.token = token
   }
 
   save(name:string, description:string){
