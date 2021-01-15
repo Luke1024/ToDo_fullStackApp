@@ -10,9 +10,9 @@ import { catchError, map, tap } from 'rxjs/operators';
 export class TaskServiceService {
 
   private rootUrl = 'http://localhost:8080/toDo'
-  private tokenUrl = '/token'
-  private tasksUrl = '/tasks/'
-  private token:String
+  private tokenUrl = this.rootUrl + '/token'
+  private tasksUrl = this.rootUrl + '/tasks/'
+  private token:String = ''
   private tokenLoaded = false
 
   httpOptions = {
@@ -21,34 +21,40 @@ export class TaskServiceService {
 
   constructor(private http:HttpClient) {}
 
-  
+  getToken(){
+    this.http.get<String>(this.tokenUrl)
+    .pipe(catchError(this.handleError<String>('getToken', '')))
+    .subscribe(token => this.setToken(token))
+  }
 
-  loadToken(token:String){
+  private setToken(token:String){
     this.token = token
     this.tokenLoaded = true
-    
   }
 
   getTasks(): Observable<Task[]> {
-    if(this.tokenLoaded){
-      return this.http.get<Task[]>(this.rootUrl + this.tasksUrl)
+    return this.http.get<Task[]>(this.tasksUrl + this.token)
       .pipe(catchError(this.handleError<Task[]>('getTasks', [])))
-    } else {
-      this.getToken()
-    }
   }
 
-  getToken():void {
-    this.http.get<String>(this.rootUrl + this.tokenUrl)
-    .pipe(catchError(this.handleError<String>('getToken', '')))
-    .subscribe(token => this.loadToken(token))
+  saveTask(task: Task): Observable<Task> {
+    return this.http.post<Task>(this.tasksUrl + this.token, task, this.httpOptions)
+    .pipe(catchError(this.handleError<Task>('addTask')))
   }
 
-  save() {}
+  updateTask(task: Task): Observable<any> {
+    return this.http.put(this.tasksUrl, task, this.httpOptions)
+    .pipe(catchError(this.handleError<any>('updateTask')))
+  }
 
+  deleteTask(task: Task | number): Observable<Task> {
+    const id = typeof task === 'number' ? task : task.id;
+    const url = `${this.tasksUrl}/${id}`
 
-
-
+    return this.http.delete<Task>(url, this.httpOptions).pipe(
+      catchError(this.handleError<Task>('deleteTask'))
+    )
+  }
 
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {

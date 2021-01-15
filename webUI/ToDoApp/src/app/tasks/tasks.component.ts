@@ -14,7 +14,7 @@ export class TasksComponent implements OnInit {
   constructor(private taskService:TaskServiceService) { }
 
   ngOnInit(): void {
-    this.tasks = this.taskService.getTasks()
+    this.taskService.loadToken()
   }
 
   save(name:string, description:string){
