@@ -30,9 +30,9 @@ public class TaskUserRepositoryTesting {
                 true, "asda3534532", LocalDateTime.now().plusHours(3), new ArrayList<>());
 
         List<Task> tasks = new ArrayList<>(Arrays.asList(
-                new Task(null, "task1", "task1 description", false),
-                new Task(null, "task2", "task2 description", true),
-                new Task(null, "task3", "task3 description", true)
+                new Task(1,null, "task1", "task1 description", false),
+                new Task(2,null, "task2", "task2 description", true),
+                new Task(3,null, "task3", "task3 description", true)
         ));
 
         user1.addTasks(tasks);
@@ -54,9 +54,9 @@ public class TaskUserRepositoryTesting {
                 true, "asda3534532", LocalDateTime.now().plusHours(3), new ArrayList<>());
 
         List<Task> tasks = new ArrayList<>(Arrays.asList(
-                new Task(null, "task1", "task1 description", false),
-                new Task(null, "task2", "task2 description", true),
-                new Task(null, "task3", "task3 description", true)
+                new Task(1,null, "task1", "task1 description", false),
+                new Task(2,null, "task2", "task2 description", true),
+                new Task(3,null, "task3", "task3 description", true)
         ));
 
         user1.addTasks(tasks);

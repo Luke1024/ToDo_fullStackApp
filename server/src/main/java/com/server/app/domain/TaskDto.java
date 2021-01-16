@@ -1,7 +1,7 @@
 package com.server.app.domain;
 
 public class TaskDto {
-    private long id;
+    private int frontId;
     private String name;
     private String description;
     private boolean done;
@@ -9,15 +9,15 @@ public class TaskDto {
     public TaskDto() {
     }
 
-    public TaskDto(long id, String name, String description, boolean done) {
-        this.id = id;
+    public TaskDto(int frontId, String name, String description, boolean done) {
+        this.frontId = frontId;
         this.name = name;
         this.description = description;
         this.done = done;
     }
 
-    public long getId() {
-        return id;
+    public int getFrontId() {
+        return frontId;
     }
 
     public String getName() {

@@ -43,8 +43,8 @@ public class TaskServiceIntegrationTest {
         TaskDto taskDto1 = new TaskDto(0,"task1", "task1 description", false);
         TaskDto taskDto2 = new TaskDto(0,"task2","task2 description", true);
 
-        Task task1 = new Task(null, "task1", "task1 description", false);
-        Task task2 = new Task(null,"task2","task2 description", true);
+        Task task1 = new Task(1,null, "task1", "task1 description", false);
+        Task task2 = new Task(2,null,"task2","task2 description", true);
 
         User user1 = new User("user1@email.com", "password1", true, token,
                 LocalDateTime.now(), new ArrayList<>());
@@ -65,8 +65,8 @@ public class TaskServiceIntegrationTest {
     public void getTasksFromUserWithExpiredSession(){
         String token = generateToken();
 
-        Task task1 = new Task(null, "task1", "task1 description", false);
-        Task task2 = new Task(null,"task2","task2 description", true);
+        Task task1 = new Task(1,null, "task1", "task1 description", false);
+        Task task2 = new Task(2,null,"task2","task2 description", true);
 
         User user1 = new User("user1@email.com", "password1", false, token,
                 LocalDateTime.now(), new ArrayList<>());
@@ -87,8 +87,8 @@ public class TaskServiceIntegrationTest {
         String token = generateToken();
         String newToken = generateToken();
 
-        Task task1 = new Task(null, "task1", "task1 description", false);
-        Task task2 = new Task(null,"task2","task2 description", true);
+        Task task1 = new Task(1,null, "task1", "task1 description", false);
+        Task task2 = new Task(2,null,"task2","task2 description", true);
 
         User user1 = new User("user1@email.com", "password1", false, token,
                 LocalDateTime.now(), new ArrayList<>());
@@ -164,12 +164,12 @@ public class TaskServiceIntegrationTest {
 
         User user1 = new User("user1@email.com", "password1", true, token,
                 LocalDateTime.now(), new ArrayList<>());
-        Task task1 = new Task(null, "task1", "task1 description", false);
+        Task task1 = new Task(1,null, "task1", "task1 description", false);
 
         user1.addTasks(Collections.singletonList(task1));
         userRepository.save(user1);
 
-        TaskDto taskUpdatedDto = new TaskDto(task1.getId(),"task1 updated", "task1 description updated", false);
+        TaskDto taskUpdatedDto = new TaskDto(task1.getFrontId(),"task1 updated", "task1 description updated", false);
 
         Assert.assertEquals(ResponseEntity.accepted().build(), taskService.updateTask(token, taskUpdatedDto));
 
@@ -188,12 +188,12 @@ public class TaskServiceIntegrationTest {
 
         User user1 = new User("user1@email.com", "password1", true, token,
                 LocalDateTime.now(), new ArrayList<>());
-        Task task1 = new Task(null, "task1", "task1 description", false);
+        Task task1 = new Task(1,null, "task1", "task1 description", false);
 
         user1.addTasks(Collections.singletonList(task1));
         userRepository.save(user1);
 
-        TaskDto taskUpdatedDto = new TaskDto(task1.getId(),"task1 updated", "task1 description updated", false);
+        TaskDto taskUpdatedDto = new TaskDto(task1.getFrontId(),"task1 updated", "task1 description updated", false);
 
         Assert.assertEquals(ResponseEntity.notFound().build(), taskService.updateTask(unusedToken, taskUpdatedDto));
 
@@ -210,12 +210,12 @@ public class TaskServiceIntegrationTest {
 
         User user1 = new User("user1@email.com", "password1", false, token,
                 LocalDateTime.now(), new ArrayList<>());
-        Task task1 = new Task(null, "task1", "task1 description", false);
+        Task task1 = new Task(1,null, "task1", "task1 description", false);
 
         user1.addTasks(Collections.singletonList(task1));
         userRepository.save(user1);
 
-        TaskDto taskUpdatedDto = new TaskDto(task1.getId(),"task1 updated", "task1 description updated", false);
+        TaskDto taskUpdatedDto = new TaskDto(task1.getFrontId(),"task1 updated", "task1 description updated", false);
 
         Assert.assertEquals(ResponseEntity.notFound().build(), taskService.updateTask(token, taskUpdatedDto));
 
@@ -232,12 +232,12 @@ public class TaskServiceIntegrationTest {
 
         User user1 = new User("user1@email.com", "password1", true, token,
                 LocalDateTime.now(), new ArrayList<>());
-        Task task1 = new Task(null, "task1", "task1 description", false);
+        Task task1 = new Task(1,null, "task1", "task1 description", false);
 
         user1.addTasks(Collections.singletonList(task1));
         userRepository.save(user1);
 
-        TaskDto taskUpdatedDto = new TaskDto(1231286301208363016L,"task1 updated", "task1 description updated", false);
+        TaskDto taskUpdatedDto = new TaskDto(123128630,"task1 updated", "task1 description updated", false);
 
         Assert.assertEquals(ResponseEntity.notFound().build(), taskService.updateTask(token, taskUpdatedDto));
 
@@ -252,7 +252,7 @@ public class TaskServiceIntegrationTest {
     public void deleteTask(){
         String token = generateToken();
 
-        Task task1 = new Task(null, "task1", "task1 description", false);
+        Task task1 = new Task(1,null, "task1", "task1 description", false);
         User user1 = new User("user1@email.com", "password1", true, token,
                 LocalDateTime.now(), new ArrayList<>());
 
@@ -272,7 +272,7 @@ public class TaskServiceIntegrationTest {
         String token = generateToken();
         String unusedToken = generateToken();
 
-        Task task1 = new Task(null, "task1", "task1 description", false);
+        Task task1 = new Task(1,null, "task1", "task1 description", false);
         User user1 = new User("user1@email.com", "password1", true, token,
                 LocalDateTime.now(), new ArrayList<>());
 
@@ -291,7 +291,7 @@ public class TaskServiceIntegrationTest {
     public void deleteTaskWhenUserSessionExpired(){
         String token = generateToken();
 
-        Task task1 = new Task(null, "task1", "task1 description", false);
+        Task task1 = new Task(1,null, "task1", "task1 description", false);
         User user1 = new User("user1@email.com", "password1", false, token,
                 LocalDateTime.now(), new ArrayList<>());
 
@@ -310,14 +310,14 @@ public class TaskServiceIntegrationTest {
     public void deleteTaskWithMistakenId(){
         String token = generateToken();
 
-        Task task1 = new Task(null, "task1", "task1 description", false);
+        Task task1 = new Task(1,null, "task1", "task1 description", false);
         User user1 = new User("user1@email.com", "password1", true, token,
                 LocalDateTime.now(), new ArrayList<>());
 
         user1.addTasks(Collections.singletonList(task1));
         userRepository.save(user1);
 
-        long taskId = 14102631035742L;
+        int taskId = 1410263;
 
         Assert.assertEquals(ResponseEntity.notFound().build(), taskService.deleteTask(token, taskId));
         Assert.assertEquals(task1.toString(), taskRepository.findById(task1.getId()).get().toString());

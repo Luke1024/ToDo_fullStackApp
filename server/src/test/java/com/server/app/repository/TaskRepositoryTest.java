@@ -19,7 +19,7 @@ public class TaskRepositoryTest {
 
     @Test
     public void testSave(){
-        Task task = new Task(null, "task1", "task1 description", false);
+        Task task = new Task(1,null, "task1", "task1 description", false);
 
         taskRepository.save(task);
         Assert.assertNotNull(task.getId());
@@ -28,7 +28,7 @@ public class TaskRepositoryTest {
 
     @Test
     public void testUpdate(){
-        Task task = new Task(null, "task1", "task1 description", false);
+        Task task = new Task(1,null, "task1", "task1 description", false);
 
         taskRepository.save((task));
         Optional<Task> taskOptional = taskRepository.findById(task.getId());

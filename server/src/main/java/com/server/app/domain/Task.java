@@ -11,6 +11,7 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private int frontId;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "USER_ID")
     private User user;
@@ -20,7 +21,7 @@ public class Task {
 
     public Task() {}
 
-    public Task(User user, String taskName, String taskDescription, boolean done) {
+    public Task(int frontId,User user, String taskName, String taskDescription, boolean done) {
         setUser(user);
         this.taskName = taskName;
         this.taskDescription = taskDescription;
@@ -29,6 +30,10 @@ public class Task {
 
     public Long getId() {
         return id;
+    }
+
+    public int getFrontId() {
+        return frontId;
     }
 
     public User getUser() {
@@ -56,8 +61,8 @@ public class Task {
         return done;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setFrontId(int frontId) {
+        this.frontId = frontId;
     }
 
     public void setTaskName(String taskName) {

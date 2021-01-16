@@ -79,7 +79,7 @@ public class TaskService {
 
         if(taskToUpdateOptional.isPresent()) {
             Task taskToUpdate = taskToUpdateOptional.get();
-            taskToUpdate.setId(taskDto.getId());
+            taskToUpdate.setFrontId(taskDto.getFrontId());
             taskToUpdate.setTaskName(taskDto.getName());
             taskToUpdate.setTaskDescription(taskDto.getDescription());
             taskToUpdate.setDone(taskDto.isDone());
@@ -95,7 +95,7 @@ public class TaskService {
         if(userTaskList.isEmpty() || userTaskList == null){
             return Optional.empty();
         } else {
-            return userTaskList.stream().filter(task -> task.getId()==taskDto.getId()).findFirst();
+            return userTaskList.stream().filter(task -> task.getFrontId()==taskDto.getFrontId()).findFirst();
         }
     }
 }
