@@ -1,5 +1,6 @@
 package com.server.app.service;
 
+import com.server.app.domain.StringDto;
 import com.server.app.domain.UserCredentialsDto;
 import com.server.app.service.userservice.UserLogging;
 import com.server.app.service.userservice.UserRegistration;
@@ -23,7 +24,7 @@ public class UserService {
         return userRegistration.registerUser(token, userCredentialsDto);
     }
 
-    public ResponseEntity<String> createGuestUserAndGenerateToken(){
+    public ResponseEntity<StringDto> createGuestUserAndGenerateToken(){
         return userLogging.createGuestUserAndGenerateToken();
     }
 

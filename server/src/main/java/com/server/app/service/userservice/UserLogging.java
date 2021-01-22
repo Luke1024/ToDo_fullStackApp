@@ -1,5 +1,6 @@
 package com.server.app.service.userservice;
 
+import com.server.app.domain.StringDto;
 import com.server.app.domain.Task;
 import com.server.app.domain.User;
 import com.server.app.domain.UserCredentialsDto;
@@ -26,10 +27,10 @@ public class UserLogging {
     @Autowired
     private UserRepository userRepository;
 
-    public ResponseEntity<String> createGuestUserAndGenerateToken(){
+    public ResponseEntity<StringDto> createGuestUserAndGenerateToken(){
         String guestToken = generateToken();
         createGuestUser(guestToken);
-        return ResponseEntity.ok(guestToken);
+        return ResponseEntity.ok(new StringDto(guestToken));
     }
 
     public ResponseEntity<String> loginUserAndGenerateNewToken(String token, UserCredentialsDto userCredentialsDto) {
@@ -86,8 +87,8 @@ public class UserLogging {
     }
 
     private String generateToken(){
-        int leftLimit = 32;
-        int rightLimit = 127;
+        int leftLimit = 97;
+        int rightLimit = 122;
         int targetStringLength = 15;
         StringBuilder buffer = new StringBuilder(targetStringLength);
         for (int i = 0; i < targetStringLength; i++) {
