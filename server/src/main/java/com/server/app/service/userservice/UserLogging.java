@@ -6,6 +6,8 @@ import com.server.app.domain.User;
 import com.server.app.domain.UserCredentialsDto;
 import com.server.app.repository.UserRepository;
 import com.server.app.service.UserServiceSettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,8 @@ public class UserLogging {
     @Autowired
     private UserRepository userRepository;
 
+    private Logger LOGGER = LoggerFactory.getLogger(UserLogging.class);
+
     public ResponseEntity<StringDto> createGuestUserAndGenerateToken(){
         String guestToken = generateToken();
         createGuestUser(guestToken);
@@ -38,8 +42,12 @@ public class UserLogging {
             Optional<User> userAsGuest = userRepository.findLoggedUserByToken(token);
             if(userAsGuest.isPresent()){
                 return processWithUserLogging(userAsGuest.get(), userCredentialsDto);
+            } else {
+                LOGGER.warn("Logging failed. User with token " + token + " don'exist or logged out.");
+                return ResponseEntity.badRequest().build();
             }
         }
+        LOGGER.warn("Logging failed. Token " + token + " is to short.");
         return ResponseEntity.badRequest().build();
     }
 
@@ -50,6 +58,7 @@ public class UserLogging {
             userOptional.get().setLogged(false);
             return ResponseEntity.accepted().build();
         } else {
+            LOGGER.warn("Logout failed. User with token " + token + " don't exist or logged out.");
             return ResponseEntity.badRequest().build();
         }
     }
@@ -58,7 +67,9 @@ public class UserLogging {
         Optional<User> userRegistered = loadRegisteredUser(userCredentialsDto);
         if(userRegistered.isPresent()){
             return logInUserAndCopyTasks(userAsGuest, userRegistered.get());
-        } else return ResponseEntity.badRequest().build();
+        } else
+            LOGGER.warn("User with credentials " + userCredentialsDto.getUserEmail() + " " + userCredentialsDto.getUserPassword() + " not found.");
+            return ResponseEntity.badRequest().build();
     }
 
     private ResponseEntity<String> logInUserAndCopyTasks(User userAsQuest, User userRegistered){

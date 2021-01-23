@@ -40,8 +40,8 @@ public class TaskServiceIntegrationTest {
     public void getTasksFromLoggedUser(){
         String token = generateToken();
 
-        TaskDto taskDto1 = new TaskDto(0,"task1", "task1 description", false);
-        TaskDto taskDto2 = new TaskDto(0,"task2","task2 description", true);
+        TaskDto taskDto1 = new TaskDto(1,"task1", "task1 description", false);
+        TaskDto taskDto2 = new TaskDto(2,"task2","task2 description", true);
 
         Task task1 = new Task(1,null, "task1", "task1 description", false);
         Task task2 = new Task(2,null,"task2","task2 description", true);
@@ -259,10 +259,8 @@ public class TaskServiceIntegrationTest {
         user1.addTasks(Collections.singletonList(task1));
         userRepository.save(user1);
 
-        long taskId = task1.getId();
-
-        Assert.assertEquals(ResponseEntity.accepted().build(), taskService.deleteTask(token, taskId));
-        Assert.assertEquals(Optional.empty(), taskRepository.findById(taskId));
+        Assert.assertEquals(ResponseEntity.accepted().build(), taskService.deleteTask(token, task1.getFrontId()));
+        Assert.assertEquals(Optional.empty(), taskRepository.findById(task1.getId()));
 
         userRepository.delete(user1);
     }

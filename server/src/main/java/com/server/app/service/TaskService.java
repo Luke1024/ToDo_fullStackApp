@@ -4,6 +4,8 @@ import com.server.app.domain.*;
 import com.server.app.mapper.TaskMapper;
 import com.server.app.repository.TaskRepository;
 import com.server.app.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,12 +26,15 @@ public class TaskService {
     @Autowired
     private TaskMapper taskMapper;
 
+    private Logger LOGGER = LoggerFactory.getLogger(TaskService.class);
+
     public ResponseEntity<List<TaskDto>> getTasks(String token){
         Optional<User> user = userRepository.findLoggedUserByToken(token);
         if(user.isPresent()) {
             List<TaskDto> taskDtos = taskMapper.mapToTaskDtoList(user.get().getTaskList());
             return ResponseEntity.ok(taskDtos);
         } else {
+            LOGGER.warn("User with token: " + token + " not found.");
             return ResponseEntity.badRequest().build();
         }
     }
@@ -39,6 +44,7 @@ public class TaskService {
         if(user.isPresent()){
             return processWithTaskSaving(user.get(), taskDto);
         } else {
+            LOGGER.warn("User with token: " + token + " not found.");
             return ResponseEntity.badRequest().build();
         }
     }
@@ -48,6 +54,7 @@ public class TaskService {
         if(user.isPresent()){
             return processWithTaskUpdate(user.get(), taskDto);
         } else {
+            LOGGER.warn("User with token: " + token + " not found.");
             return ResponseEntity.notFound().build();
         }
     }
@@ -62,9 +69,16 @@ public class TaskService {
                 if (foundTask.isPresent()) {
                     taskRepository.delete(foundTask.get());
                     return ResponseEntity.accepted().build();
+                } else {
+                    LOGGER.warn("The user has no tasks.");
+                    return ResponseEntity.notFound().build();
                 }
+            } else {
+                LOGGER.warn("Task with id: " + id + " don't exist.");
+                return ResponseEntity.badRequest().build();
             }
         }
+        LOGGER.warn("User with token: " + token + " not found.");
         return ResponseEntity.notFound().build();
     }
 

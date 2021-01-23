@@ -32,11 +32,11 @@ public class TaskDto {
         return done;
     }
 
-    //for testing
     @Override
     public String toString() {
         return "TaskDto{" +
-                "name='" + name + '\'' +
+                "frontId=" + frontId +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", done=" + done +
                 '}';

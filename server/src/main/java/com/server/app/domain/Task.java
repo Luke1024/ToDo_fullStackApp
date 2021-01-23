@@ -22,6 +22,7 @@ public class Task {
     public Task() {}
 
     public Task(int frontId,User user, String taskName, String taskDescription, boolean done) {
+        this.frontId = frontId;
         setUser(user);
         this.taskName = taskName;
         this.taskDescription = taskDescription;
