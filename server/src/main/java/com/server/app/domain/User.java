@@ -32,7 +32,7 @@ public class User {
     private LocalDateTime sessionActiveTo;
     @OneToMany(targetEntity = Task.class,
             mappedBy = "user",
-            cascade = {CascadeType.ALL},
+            cascade = CascadeType.ALL,
             fetch = FetchType.EAGER
     )
     @OrderColumn

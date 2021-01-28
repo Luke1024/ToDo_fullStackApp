@@ -1,10 +1,7 @@
 package com.server.app.domain;
 
-import org.springframework.core.annotation.Order;
-
 import javax.persistence.*;
 
-//check logged number
 
 @Entity
 public class Task {
@@ -18,6 +15,7 @@ public class Task {
     private String taskName;
     private String taskDescription;
     private boolean done;
+    private boolean deleted;
 
     public Task() {}
 
@@ -27,6 +25,7 @@ public class Task {
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.done = done;
+        this.deleted = false;
     }
 
     public Long getId() {
@@ -56,6 +55,14 @@ public class Task {
 
     public String getTaskDescription() {
         return taskDescription;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public boolean isDone() {

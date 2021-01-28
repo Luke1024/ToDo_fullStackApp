@@ -67,6 +67,7 @@ public class TaskService {
             if ( ! (userTaskList.isEmpty() || userTaskList == null)) {
                 Optional<Task> foundTask = userTaskList.stream().filter(task -> task.getFrontId() == id).findFirst();
                 if (foundTask.isPresent()) {
+                    user.get().getTaskList().remove(foundTask.get());
                     taskRepository.delete(foundTask.get());
                     return ResponseEntity.accepted().build();
                 } else {

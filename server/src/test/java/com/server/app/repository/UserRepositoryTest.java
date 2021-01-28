@@ -1,5 +1,6 @@
 package com.server.app.repository;
 
+import com.server.app.domain.Task;
 import com.server.app.domain.User;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -9,9 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -19,6 +18,9 @@ public class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private TaskRepository taskRepository;
 
     @Test
     public void testSave(){
@@ -79,6 +81,26 @@ public class UserRepositoryTest {
 
         userRepository.deleteById(user1.getId());
         userRepository.deleteById(user2.getId());
+    }
+
+    @Test
+    public void checkIfAfterDeletingUserTaskBelongingToUserStillExists(){
+        User user1 = generateUserWithRandomParameters();
+        Task task1 = new Task(1,user1,"", "", false);
+
+        user1.addTasks(Arrays.asList(task1));
+
+        userRepository.save(user1);
+
+        Optional<User> userOptional =userRepository.findById(user1.getId());
+
+        Assert.assertEquals(user1.getId(), userOptional.get().getId());
+
+        taskRepository.deleteById(task1.getId());
+
+        userOptional = userRepository.findById(user1.getId());
+
+        Assert.assertEquals(Optional.empty(),userOptional);
     }
 
     private User generateUserWithRandomParameters(){

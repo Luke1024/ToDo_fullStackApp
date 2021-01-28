@@ -139,7 +139,6 @@ public class TaskServiceIntegrationTest {
         Assert.assertEquals(ResponseEntity.badRequest().build(), taskService.saveTask(unusedToken, taskDto1));
 
         userRepository.delete(user1);
-
     }
 
     @Test
@@ -312,7 +311,7 @@ public class TaskServiceIntegrationTest {
         User user1 = new User("user1@email.com", "password1", true, token,
                 LocalDateTime.now(), new ArrayList<>());
 
-        user1.addTasks(Collections.singletonList(task1));
+        user1.addTasks(Arrays.asList(task1));
         userRepository.save(user1);
 
         int taskId = 1410263;
