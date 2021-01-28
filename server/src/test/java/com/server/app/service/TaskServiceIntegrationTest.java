@@ -43,8 +43,8 @@ public class TaskServiceIntegrationTest {
         TaskDto taskDto1 = new TaskDto(1,"task1", "task1 description", false);
         TaskDto taskDto2 = new TaskDto(2,"task2","task2 description", true);
 
-        Task task1 = new Task(1,null, "task1", "task1 description", false);
-        Task task2 = new Task(2,null,"task2","task2 description", true);
+        Task task1 = new Task(1L,null, "task1", "task1 description", false);
+        Task task2 = new Task(2L,null,"task2","task2 description", true);
 
         User user1 = new User("user1@email.com", "password1", true, token,
                 LocalDateTime.now(), new ArrayList<>());
@@ -65,8 +65,8 @@ public class TaskServiceIntegrationTest {
     public void getTasksFromUserWithExpiredSession(){
         String token = generateToken();
 
-        Task task1 = new Task(1,null, "task1", "task1 description", false);
-        Task task2 = new Task(2,null,"task2","task2 description", true);
+        Task task1 = new Task(1L,null, "task1", "task1 description", false);
+        Task task2 = new Task(2L,null,"task2","task2 description", true);
 
         User user1 = new User("user1@email.com", "password1", false, token,
                 LocalDateTime.now(), new ArrayList<>());
@@ -87,8 +87,8 @@ public class TaskServiceIntegrationTest {
         String token = generateToken();
         String newToken = generateToken();
 
-        Task task1 = new Task(1,null, "task1", "task1 description", false);
-        Task task2 = new Task(2,null,"task2","task2 description", true);
+        Task task1 = new Task(1L,null, "task1", "task1 description", false);
+        Task task2 = new Task(2L,null,"task2","task2 description", true);
 
         User user1 = new User("user1@email.com", "password1", false, token,
                 LocalDateTime.now(), new ArrayList<>());
@@ -163,7 +163,7 @@ public class TaskServiceIntegrationTest {
 
         User user1 = new User("user1@email.com", "password1", true, token,
                 LocalDateTime.now(), new ArrayList<>());
-        Task task1 = new Task(1,null, "task1", "task1 description", false);
+        Task task1 = new Task(1L,null, "task1", "task1 description", false);
 
         user1.addTasks(Collections.singletonList(task1));
         userRepository.save(user1);
@@ -187,7 +187,7 @@ public class TaskServiceIntegrationTest {
 
         User user1 = new User("user1@email.com", "password1", true, token,
                 LocalDateTime.now(), new ArrayList<>());
-        Task task1 = new Task(1,null, "task1", "task1 description", false);
+        Task task1 = new Task(1L,null, "task1", "task1 description", false);
 
         user1.addTasks(Collections.singletonList(task1));
         userRepository.save(user1);
@@ -209,7 +209,7 @@ public class TaskServiceIntegrationTest {
 
         User user1 = new User("user1@email.com", "password1", false, token,
                 LocalDateTime.now(), new ArrayList<>());
-        Task task1 = new Task(1,null, "task1", "task1 description", false);
+        Task task1 = new Task(1L,null, "task1", "task1 description", false);
 
         user1.addTasks(Collections.singletonList(task1));
         userRepository.save(user1);
@@ -231,7 +231,7 @@ public class TaskServiceIntegrationTest {
 
         User user1 = new User("user1@email.com", "password1", true, token,
                 LocalDateTime.now(), new ArrayList<>());
-        Task task1 = new Task(1,null, "task1", "task1 description", false);
+        Task task1 = new Task(1L,null, "task1", "task1 description", false);
 
         user1.addTasks(Collections.singletonList(task1));
         userRepository.save(user1);
@@ -251,7 +251,7 @@ public class TaskServiceIntegrationTest {
     public void deleteTask(){
         String token = generateToken();
 
-        Task task1 = new Task(1,null, "task1", "task1 description", false);
+        Task task1 = new Task(1L,null, "task1", "task1 description", false);
         User user1 = new User("user1@email.com", "password1", true, token,
                 LocalDateTime.now(), new ArrayList<>());
 
@@ -269,7 +269,7 @@ public class TaskServiceIntegrationTest {
         String token = generateToken();
         String unusedToken = generateToken();
 
-        Task task1 = new Task(1,null, "task1", "task1 description", false);
+        Task task1 = new Task(1L,null, "task1", "task1 description", false);
         User user1 = new User("user1@email.com", "password1", true, token,
                 LocalDateTime.now(), new ArrayList<>());
 
@@ -288,7 +288,7 @@ public class TaskServiceIntegrationTest {
     public void deleteTaskWhenUserSessionExpired(){
         String token = generateToken();
 
-        Task task1 = new Task(1,null, "task1", "task1 description", false);
+        Task task1 = new Task(1L,null, "task1", "task1 description", false);
         User user1 = new User("user1@email.com", "password1", false, token,
                 LocalDateTime.now(), new ArrayList<>());
 
@@ -307,7 +307,7 @@ public class TaskServiceIntegrationTest {
     public void deleteTaskWithMistakenId(){
         String token = generateToken();
 
-        Task task1 = new Task(1,null, "task1", "task1 description", false);
+        Task task1 = new Task(1L,null, "task1", "task1 description", false);
         User user1 = new User("user1@email.com", "password1", true, token,
                 LocalDateTime.now(), new ArrayList<>());
 

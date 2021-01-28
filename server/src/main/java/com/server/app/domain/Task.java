@@ -2,13 +2,24 @@ package com.server.app.domain;
 
 import javax.persistence.*;
 
+@NamedNativeQuery(
+        name = "Task.findAvailableTaskByUserIdAndTaskFrontId",
+        query = "SELECT * FROM task WHERE user_id =:USER_ID AND front_id=:FRONT_ID AND deleted=false",
+        resultClass = Task.class
+)
+
+@NamedNativeQuery(
+        name = "Task.findAvailableTasksByUserId",
+        query = "SELECT * FROM task WHERE user_id = :USER_ID AND deleted=false",
+        resultClass = Task.class
+)
 
 @Entity
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private int frontId;
+    private Long frontId;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "USER_ID")
     private User user;
@@ -19,7 +30,7 @@ public class Task {
 
     public Task() {}
 
-    public Task(int frontId,User user, String taskName, String taskDescription, boolean done) {
+    public Task(Long frontId,User user, String taskName, String taskDescription, boolean done) {
         this.frontId = frontId;
         setUser(user);
         this.taskName = taskName;
@@ -32,7 +43,7 @@ public class Task {
         return id;
     }
 
-    public int getFrontId() {
+    public Long getFrontId() {
         return frontId;
     }
 
@@ -69,7 +80,7 @@ public class Task {
         return done;
     }
 
-    public void setFrontId(int frontId) {
+    public void setFrontId(Long frontId) {
         this.frontId = frontId;
     }
 

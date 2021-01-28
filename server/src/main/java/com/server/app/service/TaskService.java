@@ -31,7 +31,8 @@ public class TaskService {
     public ResponseEntity<List<TaskDto>> getTasks(String token){
         Optional<User> user = userRepository.findLoggedUserByToken(token);
         if(user.isPresent()) {
-            List<TaskDto> taskDtos = taskMapper.mapToTaskDtoList(user.get().getTaskList());
+            List<Task> taskList = taskRepository.findAvailableTasksByUserId(user.get().getId());
+            List<TaskDto> taskDtos = taskMapper.mapToTaskDtoList(taskList);
             return ResponseEntity.ok(taskDtos);
         } else {
             LOGGER.warn("User with token: " + token + " not found.");
@@ -59,24 +60,18 @@ public class TaskService {
         }
     }
 
-    public ResponseEntity<String> deleteTask(String token, long id) {
+    public ResponseEntity<String> deleteTask(String token, long frontId) {
         Optional<User> user = userRepository.findLoggedUserByToken(token);
 
         if (user.isPresent()) {
-            List<Task> userTaskList = user.get().getTaskList();
-            if ( ! (userTaskList.isEmpty() || userTaskList == null)) {
-                Optional<Task> foundTask = userTaskList.stream().filter(task -> task.getFrontId() == id).findFirst();
-                if (foundTask.isPresent()) {
-                    user.get().getTaskList().remove(foundTask.get());
-                    taskRepository.delete(foundTask.get());
-                    return ResponseEntity.accepted().build();
-                } else {
-                    LOGGER.warn("The user has no tasks.");
-                    return ResponseEntity.notFound().build();
-                }
+            Optional<Task> foundTask = taskRepository.findAvailableTaskByUserIdAndTaskFrontId(user.get().getId(), frontId);
+            if (foundTask.isPresent()) {
+                foundTask.get().setDeleted(true);
+                taskRepository.save(foundTask.get());
+                return ResponseEntity.accepted().build();
             } else {
-                LOGGER.warn("Task with id: " + id + " don't exist.");
-                return ResponseEntity.badRequest().build();
+                LOGGER.warn("The user has no tasks.");
+                return ResponseEntity.notFound().build();
             }
         }
         LOGGER.warn("User with token: " + token + " not found.");
@@ -106,11 +101,6 @@ public class TaskService {
     }
 
     private Optional<Task> findTask(User userWithTaskToUpdate, TaskDto taskDto){
-        List<Task> userTaskList = userWithTaskToUpdate.getTaskList();
-        if(userTaskList.isEmpty() || userTaskList == null){
-            return Optional.empty();
-        } else {
-            return userTaskList.stream().filter(task -> task.getFrontId()==taskDto.getFrontId()).findFirst();
-        }
+        return taskRepository.findAvailableTaskByUserIdAndTaskFrontId(userWithTaskToUpdate.getId(), taskDto.getFrontId());
     }
 }
