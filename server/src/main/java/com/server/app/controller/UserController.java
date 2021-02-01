@@ -22,17 +22,17 @@ public class UserController {
     }
 
     @PostMapping(value = "/login/{token}")
-    public ResponseEntity<String> login(@PathVariable String token, @RequestBody UserCredentialsDto userCredentialsDto){
+    public ResponseEntity<StringDto> login(@PathVariable String token, @RequestBody UserCredentialsDto userCredentialsDto){
         return userService.loginUserAndGenerateNewToken(token, userCredentialsDto);
     }
 
     @PostMapping(value = "/register/{token}")
-    public ResponseEntity<String> register(@PathVariable String token, @RequestBody UserCredentialsDto userCredentialsDto){
+    public ResponseEntity<StringDto> register(@PathVariable String token, @RequestBody UserCredentialsDto userCredentialsDto){
         return userService.registerUser(token, userCredentialsDto);
     }
 
     @PostMapping(value = "/logout/{token}")
-    public ResponseEntity<String> logout(@PathVariable String token){
+    public ResponseEntity<StringDto> logout(@PathVariable String token){
         return userService.logoutUser(token);
     }
 }

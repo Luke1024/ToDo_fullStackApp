@@ -20,7 +20,7 @@ public class UserService {
     @Autowired
     private UserLogging userLogging;
 
-    public ResponseEntity<String> registerUser(String token, UserCredentialsDto userCredentialsDto){
+    public ResponseEntity<StringDto> registerUser(String token, UserCredentialsDto userCredentialsDto){
         return userRegistration.registerUser(token, userCredentialsDto);
     }
 
@@ -28,11 +28,11 @@ public class UserService {
         return userLogging.createGuestUserAndGenerateToken();
     }
 
-    public ResponseEntity<String> loginUserAndGenerateNewToken(String token, UserCredentialsDto userCredentialsDto){
+    public ResponseEntity<StringDto> loginUserAndGenerateNewToken(String token, UserCredentialsDto userCredentialsDto){
         return userLogging.loginUserAndGenerateNewToken(token, userCredentialsDto);
     }
 
-    public ResponseEntity<String> logoutUser(String token){
+    public ResponseEntity<StringDto> logoutUser(String token){
         return userLogging.logoutUser(token);
     }
 }

@@ -14,4 +14,11 @@ public class StringDto {
     public String getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return "StringDto{" +
+                "value='" + value + '\'' +
+                '}';
+    }
 }

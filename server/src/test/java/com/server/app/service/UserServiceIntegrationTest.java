@@ -62,7 +62,9 @@ public class UserServiceIntegrationTest {
 
         UserCredentialsDto credentialsDto = new UserCredentialsDto(userEmail, userPassword);
 
-        Assert.assertEquals(ResponseEntity.badRequest().build(), userService.registerUser(guestToken, credentialsDto));
+        Assert.assertEquals(new ResponseEntity<>(new StringDto("Registration failed, token " + guestToken + " expired."),
+                        HttpStatus.BAD_REQUEST).toString(),
+                userService.registerUser(guestToken, credentialsDto).toString());
 
         Assert.assertEquals(Optional.empty(), userRepository.findUserByEmailAndPassword(userEmail, userPassword));
     }
@@ -78,7 +80,8 @@ public class UserServiceIntegrationTest {
 
         UserCredentialsDto credentialsDto = new UserCredentialsDto(userEmail, userPassword);
 
-        Assert.assertEquals(ResponseEntity.badRequest().build(), userService.registerUser(guestToken, credentialsDto));
+        Assert.assertEquals(new ResponseEntity<>(new StringDto("Password is to short."), HttpStatus.BAD_REQUEST).toString(),
+                userService.registerUser(guestToken, credentialsDto).toString());
 
         Assert.assertEquals(Optional.empty(), userRepository.findUserByEmailAndPassword(userEmail, userPassword));
         userRepository.delete(userAsGuest);
@@ -93,8 +96,9 @@ public class UserServiceIntegrationTest {
         User user1 = new User(userEmail, "", true, guestToken, LocalDateTime.now(), new ArrayList<>());
         userRepository.save(user1);
 
-        Assert.assertEquals(ResponseEntity.badRequest().build(),
-                userService.registerUser(guestToken, new UserCredentialsDto(userEmail, userPassword)));
+        Assert.assertEquals(new ResponseEntity<>(new StringDto("User with this email already exist."),
+                        HttpStatus.BAD_REQUEST).toString(), userService.registerUser(
+                                guestToken, new UserCredentialsDto(userEmail, userPassword)).toString());
 
         Assert.assertEquals(Optional.empty(), userRepository.findUserByEmailAndPassword(userEmail, userPassword));
 
@@ -123,12 +127,12 @@ public class UserServiceIntegrationTest {
         ResponseEntity<StringDto> guestUserResponse = userService.createGuestUserAndGenerateToken();
         Assert.assertEquals(HttpStatus.OK, guestUserResponse.getStatusCode());
 
-        ResponseEntity<String> loginResponse = userService.loginUserAndGenerateNewToken(guestUserResponse.getBody().getValue(),
+        ResponseEntity<StringDto> loginResponse = userService.loginUserAndGenerateNewToken(guestUserResponse.getBody().getValue(),
                 new UserCredentialsDto(userEmail, userPassword));
         Optional<User> user = userRepository.findById(user1.getId());
 
         Assert.assertEquals(true, user.get().isLogged());
-        Assert.assertEquals(loginResponse.getBody(), user.get().getToken());
+        Assert.assertEquals(loginResponse.getBody().getValue(), user.get().getToken());
 
         userRepository.delete(user1);
     }
@@ -141,10 +145,11 @@ public class UserServiceIntegrationTest {
         ResponseEntity<StringDto> guestUserResponse = userService.createGuestUserAndGenerateToken();
         Assert.assertEquals(HttpStatus.OK, guestUserResponse.getStatusCode());
 
-        ResponseEntity<String> loginResponse = userService.loginUserAndGenerateNewToken(guestUserResponse.getBody().getValue(),
+        ResponseEntity<StringDto> loginResponse = userService.loginUserAndGenerateNewToken(guestUserResponse.getBody().getValue(),
                 new UserCredentialsDto(userEmail, userPassword));
 
-        Assert.assertEquals(ResponseEntity.badRequest().build(), loginResponse);
+        Assert.assertEquals(new ResponseEntity<>(new StringDto("User email or password are incorrect or user doeesn't exist.")
+                ,HttpStatus.BAD_REQUEST).toString(),loginResponse.toString());
     }
 
     @Test
@@ -158,10 +163,15 @@ public class UserServiceIntegrationTest {
         ResponseEntity<StringDto> guestUserResponse = userService.createGuestUserAndGenerateToken();
         Assert.assertEquals(HttpStatus.OK, guestUserResponse.getStatusCode());
 
-        ResponseEntity<String> loginResponse = userService.loginUserAndGenerateNewToken(generateToken(settings.getAcceptTokenLength()),
+        ResponseEntity<StringDto> loginResponse = userService.loginUserAndGenerateNewToken(generateToken(settings.getAcceptTokenLength()),
                 new UserCredentialsDto(userEmail, userPassword));
 
-        Assert.assertEquals(ResponseEntity.badRequest().build(), loginResponse);
+        ResponseEntity<StringDto> expectedResponse =
+                new ResponseEntity<>(new StringDto("User session expired or logged out."),
+                        HttpStatus.BAD_REQUEST);
+
+        Assert.assertEquals(expectedResponse.getStatusCode(), loginResponse.getStatusCode());
+        Assert.assertEquals(expectedResponse.getBody().getValue(), loginResponse.getBody().getValue());
 
         userRepository.delete(user1);
     }
@@ -178,9 +188,10 @@ public class UserServiceIntegrationTest {
         ResponseEntity<StringDto> guestUserResponse = userService.createGuestUserAndGenerateToken();
         Assert.assertEquals(HttpStatus.OK, guestUserResponse.getStatusCode());
 
-        ResponseEntity<String> loginResponse = userService.loginUserAndGenerateNewToken(guestUserResponse.getBody().getValue(), new UserCredentialsDto(userEmail, badPassword));
+        ResponseEntity<StringDto> loginResponse = userService.loginUserAndGenerateNewToken(guestUserResponse.getBody().getValue(), new UserCredentialsDto(userEmail, badPassword));
 
-        Assert.assertEquals(ResponseEntity.badRequest().build(), loginResponse);
+        Assert.assertEquals(new ResponseEntity<>(new StringDto("User email or password are incorrect or user doeesn't exist."),
+                HttpStatus.BAD_REQUEST).toString(), loginResponse.toString());
         userRepository.delete(user1);
     }
 
@@ -193,7 +204,7 @@ public class UserServiceIntegrationTest {
         User user1 = new User(userEmail, userPassword, true, token, LocalDateTime.now(), new ArrayList<>());
         userRepository.save(user1);
 
-        ResponseEntity<String> logoutResponse = userService.logoutUser(token);
+        ResponseEntity<StringDto> logoutResponse = userService.logoutUser(token);
         Assert.assertEquals(ResponseEntity.accepted().build(), logoutResponse);
 
         userRepository.delete(user1);
@@ -209,8 +220,9 @@ public class UserServiceIntegrationTest {
         User user1 = new User(userEmail, userPassword, true, token, LocalDateTime.now(), new ArrayList<>());
         userRepository.save(user1);
 
-        ResponseEntity<String> logoutResponse = userService.logoutUser(badToken);
-        Assert.assertEquals(ResponseEntity.badRequest().build(), logoutResponse);
+        ResponseEntity<StringDto> logoutResponse = userService.logoutUser(badToken);
+        Assert.assertEquals(new ResponseEntity<>(new StringDto("User session expired or logged out."),
+                HttpStatus.BAD_REQUEST).toString(), logoutResponse.toString());
 
         userRepository.delete(user1);
     }
