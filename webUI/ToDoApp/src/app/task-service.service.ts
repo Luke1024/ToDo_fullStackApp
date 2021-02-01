@@ -3,10 +3,9 @@ import { Task } from './Task';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
+import { StringDto } from './StringDto';
  
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({providedIn: 'root' })
 export class TaskServiceService {
 
   private rootUrl = 'http://localhost:8080/toDo'
@@ -20,9 +19,9 @@ export class TaskServiceService {
 
   constructor(private http:HttpClient) {}
 
-  getToken(): Observable<String> {
-    return this.http.get<String>(this.tokenUrl)
-    .pipe(catchError(this.handleError<String>('getToken', '')))
+  getToken(): Observable<StringDto> {
+    return this.http.get<StringDto>(this.tokenUrl)
+    .pipe(catchError(this.handleError<StringDto>()))
   }
 
   getTasks(token:String): Observable<Task[]> {
@@ -31,8 +30,10 @@ export class TaskServiceService {
   }
 
   saveTask(token:String,task: Task): Observable<Task> {
+    console.log('saving in service called')
+    console.log(this.tasksUrl + token)
     return this.http.post<Task>(this.tasksUrl + token, task, this.httpOptions)
-    .pipe(catchError(this.handleError<Task>('addTask')))
+    .pipe(tap((task: Task) => console.log(`added task w/ id=${task.frontId}`)),catchError(this.handleError<Task>('addTask')))
   }
 
   updateTask(token:String,task: Task): Observable<any> {
@@ -41,7 +42,7 @@ export class TaskServiceService {
   }
 
   deleteTask(token:String,task: Task | number): Observable<Task> {
-    const id = typeof task === 'number' ? task : task.id;
+    const id = typeof task === 'number' ? task : task.frontId;
     const url = `${this.tasksUrl + token}/${id}`
 
     return this.http.delete<Task>(url, this.httpOptions).pipe(
@@ -53,7 +54,7 @@ export class TaskServiceService {
     return (error: any): Observable<T> => {
 
       // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
+      //console.error(error); // log to console instead
 
       // Let the app keep running by returning an empty result.
       return of(result as T);

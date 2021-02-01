@@ -8,6 +8,7 @@ import { CardUnfoldedComponent } from './card-unfolded/card-unfolded.component';
 import { TasksComponent } from './tasks/tasks.component';
 
 import { FormsModule } from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -16,10 +17,12 @@ import { FormsModule } from '@angular/forms';
     CardFoldedComponent,
     CardUnfoldedComponent,
     TasksComponent
+    
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
