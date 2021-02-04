@@ -1,5 +1,6 @@
 import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
+import { RestService } from '../rest.service';
 import { StringDto } from '../StringDto';
 import { Task } from '../Task';
 import { TaskServiceService } from '../task-service.service';
@@ -16,10 +17,10 @@ export class TasksComponent implements OnInit {
   private token:String = ''
   private tokenReceived = false
 
-  constructor(private taskService:TaskServiceService) { }
+  constructor(private restService:RestService) { }
 
   ngOnInit(): void {
-    this.taskService.getToken().subscribe(token => this.setToken(token))
+    this.restService.getToken().subscribe(token => this.setToken(token))
     this.tasks.push({frontId:1, name:"new task", description:'task description',done:false})
   }
 
