@@ -13,8 +13,10 @@ import { TaskServiceService } from '../task-service.service';
 export class TasksComponent implements OnInit {
 
   tasks:Task[] = []
+  showMessage:boolean = false
+  message:string = ''
 
-  private token:String = ''
+  private token:string = ''
   private tokenReceived = false
 
   constructor(private restService:RestService) { }
@@ -34,10 +36,13 @@ export class TasksComponent implements OnInit {
     console.log('saving task')
     if(this.tokenReceived){
       if(!task.name || !task.description){
-         console.log('something not found') 
-         return; 
+        var message = 'Task name and task description can\'t be blank.'
+        console.log(message) 
+        this.showCardMessage(message,2)
+        return; 
       }
-      this.taskService.saveTask(this.token, task).subscribe()
+      this.restService.saveTask(this.token, task)
+      .subscribe(stringDto => this.showCardMessage(stringDto.value,2))
     } else {
       console.log('Token not found.')
     }
@@ -46,14 +51,15 @@ export class TasksComponent implements OnInit {
   updateTask(task:Task){
     if(this.tokenReceived){
       if(!task.name || !task.description){ return; }
-      this.taskService.updateTask(this.token,task).subscribe()
+      this.restService.updateTask(this.token,task)
+      .subscribe()
     }
   }
 
   deleteTask(task: Task): void {
     if(this.tokenReceived){
       this.tasks = this.tasks.filter(t => t != task);
-      this.taskService.deleteTask(this.token,task).subscribe()
+      this.restService.deleteTask(this.token,task).subscribe()
     }
   }
 
@@ -75,5 +81,9 @@ export class TasksComponent implements OnInit {
       }
     }
     return maxNum + 1
+  }
+
+  private showCardMessage(message:string, timeS:number):void {
+    //catch null
   }
 }

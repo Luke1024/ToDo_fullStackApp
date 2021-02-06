@@ -45,15 +45,13 @@ export class UserServiceService {
     return this.http.get<StringDto>(this.loginUrl + token)
     .pipe(catchError(this.handleError<StringDto>('register')))
   }
-  
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
 
-      // TODO: send the error to remote logging infrastructure
-      //console.error(error); // log to console instead
+  private handleError<StringDto>(operation = 'operation') {
+    return (error: StringDto): Observable<StringDto> => {
+      var message = { value: "someString" }
 
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
+      message.value = "${operation} failed: ${error.message}"
+      return of(message as unknown as StringDto)
+    }
   }
 }

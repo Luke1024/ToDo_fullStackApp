@@ -19,29 +19,29 @@ export class TaskServiceService {
 
   constructor(private http:HttpClient) {}
 
-  getTasks(token:String): Observable<Task[]> {
+  getTasks(token:string): Observable<Task[]> {
     return this.http.get<Task[]>(this.tasksUrl + token)
       .pipe(catchError(this.handleError<Task[]>('getTasks', [])))
   }
 
-  saveTask(token:String,task: Task): Observable<StringDto> {
+  saveTask(token:string,task: Task): Observable<StringDto> {
     console.log('saving in service called')
     console.log(this.tasksUrl + token)
     return this.http.post<StringDto>(this.tasksUrl + token, task, this.httpOptions)
-    .pipe(catchError(this.handleError<StringDto>('addTask')))
+    .pipe(catchError(this.handleErrorWithStringMessage<StringDto>('addTask')))
   }
 
-  updateTask(token:String,task: Task): Observable<StringDto> {
+  updateTask(token:string,task: Task): Observable<StringDto> {
     return this.http.put<StringDto>(this.tasksUrl + token, task, this.httpOptions)
-    .pipe(catchError(this.handleError<StringDto>('updateTask')))
+    .pipe(catchError(this.handleErrorWithStringMessage<StringDto>('updateTask')))
   }
 
-  deleteTask(token:String,task: Task | number): Observable<StringDto> {
+  deleteTask(token:string,task: Task | number): Observable<StringDto> {
     const id = typeof task === 'number' ? task : task.frontId;
     const url = `${this.tasksUrl + token}/${id}`
 
     return this.http.delete<StringDto>(url, this.httpOptions).pipe(
-      catchError(this.handleError<StringDto>('deleteTask'))
+      catchError(this.handleErrorWithStringMessage<StringDto>('deleteTask'))
     )
   }
 
@@ -49,10 +49,22 @@ export class TaskServiceService {
     return (error: any): Observable<T> => {
 
       // TODO: send the error to remote logging infrastructure
-      //console.error(error); // log to console instead
+      console.error(error); // log to console instead
+
+      // TODO: better job of transforming error for user consumption
+      //this.log(`${operation} failed: ${error.message}`);
 
       // Let the app keep running by returning an empty result.
       return of(result as T);
     };
+  }
+
+  private handleErrorWithStringMessage<StringDto>(operation = 'operation') {
+    return (error: StringDto): Observable<StringDto> => {
+      var message = { value: "someString" }
+
+      message.value = "${operation} failed: ${error.message}"
+      return of(message as unknown as StringDto)
+    }
   }
 }
