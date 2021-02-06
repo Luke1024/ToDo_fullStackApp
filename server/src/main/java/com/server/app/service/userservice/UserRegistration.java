@@ -8,11 +8,9 @@ import com.server.app.service.UserServiceSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.config.SpringDataAnnotationBeanNameGenerator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -35,7 +33,7 @@ public class UserRegistration {
             }
             String message = "Registration failed, token " + token + " expired.";
             LOGGER.warn(message);
-            return new ResponseEntity<>(new StringDto(message), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new StringDto("Registration failed, session expired."), HttpStatus.BAD_REQUEST);
         }
         LOGGER.warn("Registration failed, token: " + token + " is to short.");
         return new ResponseEntity<>(new StringDto("Token is not valid."), HttpStatus.BAD_REQUEST);

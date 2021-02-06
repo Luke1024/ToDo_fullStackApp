@@ -45,7 +45,7 @@ public class UserLogging {
                 return processWithUserLogging(userAsGuest.get(), userCredentialsDto);
             } else {
                 LOGGER.warn("Logging failed. User with token " + token + " don'exist or logged out.");
-                return new ResponseEntity<>(new StringDto("User session expired or logged out."), HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(new StringDto("User session expired or user is logged out."), HttpStatus.BAD_REQUEST);
             }
         }
         LOGGER.warn("Logging failed. Token " + token + " is to short.");
@@ -57,10 +57,10 @@ public class UserLogging {
         if(userOptional.isPresent()){
             userOptional.get().setToken("");
             userOptional.get().setLogged(false);
-            return ResponseEntity.accepted().build();
+            return new ResponseEntity<>(new StringDto("User succesfully logged out."), HttpStatus.ACCEPTED);
         } else {
             LOGGER.warn("Logout failed. User with token " + token + " don't exist or logged out.");
-            return new ResponseEntity<>(new StringDto("User session expired or logged out."), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new StringDto("User session expired or user logged out."), HttpStatus.BAD_REQUEST);
         }
     }
 
