@@ -30,12 +30,13 @@ public class TaskUserRepositoryTesting {
                 true, "asda3534532", LocalDateTime.now().plusHours(3), new ArrayList<>());
 
         List<Task> tasks = new ArrayList<>(Arrays.asList(
-                new Task(null, "task1", "task1 description", false),
-                new Task(null, "task2", "task2 description", true),
-                new Task(null, "task3", "task3 description", true)
+                new Task(1L,user1, "task1", "task1 description", false),
+                new Task(2L,user1, "task2", "task2 description", true),
+                new Task(3L,user1, "task3", "task3 description", true)
         ));
 
         user1.addTasks(tasks);
+
 
         userRepository.save(user1);
 
@@ -54,9 +55,9 @@ public class TaskUserRepositoryTesting {
                 true, "asda3534532", LocalDateTime.now().plusHours(3), new ArrayList<>());
 
         List<Task> tasks = new ArrayList<>(Arrays.asList(
-                new Task(null, "task1", "task1 description", false),
-                new Task(null, "task2", "task2 description", true),
-                new Task(null, "task3", "task3 description", true)
+                new Task(1L,null, "task1", "task1 description", false),
+                new Task(2L,null, "task2", "task2 description", true),
+                new Task(3L,null, "task3", "task3 description", true)
         ));
 
         user1.addTasks(tasks);

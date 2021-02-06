@@ -2,6 +2,8 @@ package com.server.app.controller;
 
 import com.server.app.domain.TaskDto;
 import com.server.app.service.TaskService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,8 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
+    private Logger LOGGER = LoggerFactory.getLogger(TaskController.class);
+
     @GetMapping(value = "/tasks/{token}")
     public ResponseEntity<List<TaskDto>> getTasks(@PathVariable String token){
         return taskService.getTasks(token);
@@ -23,16 +27,19 @@ public class TaskController {
 
     @PostMapping(value = "/tasks/{token}")
     public ResponseEntity<String> saveTask(@PathVariable String token, @RequestBody TaskDto taskDto){
+        LOGGER.info("Saving task with token: " + token + " " + "Task " + taskDto.toString());
         return taskService.saveTask(token, taskDto);
     }
 
     @PutMapping(value = "/tasks/{token}")
     public ResponseEntity<String> updateTask(@PathVariable String token, @RequestBody TaskDto taskDto){
+        LOGGER.info("Updating task with token: " + token + " " + "Task " + taskDto.toString());
         return taskService.updateTask(token, taskDto);
     }
 
     @DeleteMapping(value = "/tasks/{token}/{id}")
     public ResponseEntity<String> deleteTask(@PathVariable String token, @PathVariable long id){
+        LOGGER.info("Deleting task with token " + token + " , with id: " + id);
         return taskService.deleteTask(token, id);
     }
 }

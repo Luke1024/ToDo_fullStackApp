@@ -4,6 +4,8 @@ import com.server.app.domain.*;
 import com.server.app.mapper.TaskMapper;
 import com.server.app.repository.TaskRepository;
 import com.server.app.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,12 +26,16 @@ public class TaskService {
     @Autowired
     private TaskMapper taskMapper;
 
+    private Logger LOGGER = LoggerFactory.getLogger(TaskService.class);
+
     public ResponseEntity<List<TaskDto>> getTasks(String token){
         Optional<User> user = userRepository.findLoggedUserByToken(token);
         if(user.isPresent()) {
-            List<TaskDto> taskDtos = taskMapper.mapToTaskDtoList(user.get().getTaskList());
+            List<Task> taskList = taskRepository.findAvailableTasksByUserId(user.get().getId());
+            List<TaskDto> taskDtos = taskMapper.mapToTaskDtoList(taskList);
             return ResponseEntity.ok(taskDtos);
         } else {
+            LOGGER.warn("User with token: " + token + " not found.");
             return ResponseEntity.badRequest().build();
         }
     }
@@ -39,6 +45,7 @@ public class TaskService {
         if(user.isPresent()){
             return processWithTaskSaving(user.get(), taskDto);
         } else {
+            LOGGER.warn("User with token: " + token + " not found.");
             return ResponseEntity.badRequest().build();
         }
     }
@@ -48,23 +55,26 @@ public class TaskService {
         if(user.isPresent()){
             return processWithTaskUpdate(user.get(), taskDto);
         } else {
+            LOGGER.warn("User with token: " + token + " not found.");
             return ResponseEntity.notFound().build();
         }
     }
 
-    public ResponseEntity<String> deleteTask(String token, long id) {
+    public ResponseEntity<String> deleteTask(String token, long frontId) {
         Optional<User> user = userRepository.findLoggedUserByToken(token);
 
         if (user.isPresent()) {
-            List<Task> userTaskList = user.get().getTaskList();
-            if ( ! (userTaskList.isEmpty() || userTaskList == null)) {
-                Optional<Task> foundTask = userTaskList.stream().filter(task -> task.getId() == id).findFirst();
-                if (foundTask.isPresent()) {
-                    taskRepository.delete(foundTask.get());
-                    return ResponseEntity.accepted().build();
-                }
+            Optional<Task> foundTask = taskRepository.findAvailableTaskByUserIdAndTaskFrontId(user.get().getId(), frontId);
+            if (foundTask.isPresent()) {
+                foundTask.get().setDeleted(true);
+                taskRepository.save(foundTask.get());
+                return ResponseEntity.accepted().build();
+            } else {
+                LOGGER.warn("The user has no tasks.");
+                return ResponseEntity.notFound().build();
             }
         }
+        LOGGER.warn("User with token: " + token + " not found.");
         return ResponseEntity.notFound().build();
     }
 
@@ -79,7 +89,7 @@ public class TaskService {
 
         if(taskToUpdateOptional.isPresent()) {
             Task taskToUpdate = taskToUpdateOptional.get();
-            taskToUpdate.setId(taskDto.getId());
+            taskToUpdate.setFrontId(taskDto.getFrontId());
             taskToUpdate.setTaskName(taskDto.getName());
             taskToUpdate.setTaskDescription(taskDto.getDescription());
             taskToUpdate.setDone(taskDto.isDone());
@@ -91,11 +101,6 @@ public class TaskService {
     }
 
     private Optional<Task> findTask(User userWithTaskToUpdate, TaskDto taskDto){
-        List<Task> userTaskList = userWithTaskToUpdate.getTaskList();
-        if(userTaskList.isEmpty() || userTaskList == null){
-            return Optional.empty();
-        } else {
-            return userTaskList.stream().filter(task -> task.getId()==taskDto.getId()).findFirst();
-        }
+        return taskRepository.findAvailableTaskByUserIdAndTaskFrontId(userWithTaskToUpdate.getId(), taskDto.getFrontId());
     }
 }

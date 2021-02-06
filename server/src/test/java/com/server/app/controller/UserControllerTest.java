@@ -2,6 +2,7 @@ package com.server.app.controller;
 
 
 import com.google.gson.Gson;
+import com.server.app.domain.StringDto;
 import com.server.app.domain.UserCredentialsDto;
 import com.server.app.service.UserService;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class UserControllerTest {
 
     @Test
     public void receiveToken() throws Exception {
-        when(userService.createGuestUserAndGenerateToken()).thenReturn(ResponseEntity.ok("qwerty"));
+        when(userService.createGuestUserAndGenerateToken()).thenReturn(ResponseEntity.ok(new StringDto("qwerty")));
 
         mockMvc.perform(get("/toDo/token"))
                 .andExpect(content().string(containsString("qwerty")))
@@ -47,7 +48,7 @@ public class UserControllerTest {
     @Test
     public void login() throws Exception {
         when(userService.loginUserAndGenerateNewToken(anyString(), any(UserCredentialsDto.class)))
-                .thenReturn(ResponseEntity.ok("qwerty"));
+                .thenReturn(ResponseEntity.ok(new StringDto("qwerty")));
 
         mockMvc.perform(post("/toDo/login/token")
                 .contentType(MediaType.APPLICATION_JSON)
