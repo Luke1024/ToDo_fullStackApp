@@ -7,6 +7,7 @@ import com.server.app.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -78,13 +79,13 @@ public class TaskService {
         return ResponseEntity.notFound().build();
     }
 
-    private ResponseEntity<String> processWithTaskSaving(User user, TaskDto taskDto){
+    private ResponseEntity<StringDto> processWithTaskSaving(User user, TaskDto taskDto){
         user.addTasks(Collections.singletonList(taskMapper.mapToTaskFromDto(taskDto)));
         userRepository.save(user);
-        return ResponseEntity.accepted().build();
+        return new ResponseEntity<>(new StringDto("Task saved."), HttpStatus.ACCEPTED);
     }
 
-    private ResponseEntity<String> processWithTaskUpdate(User userWithTaskToUpdate, TaskDto taskDto){
+    private ResponseEntity<StringDto> processWithTaskUpdate(User userWithTaskToUpdate, TaskDto taskDto){
         Optional<Task> taskToUpdateOptional = findTask(userWithTaskToUpdate, taskDto);
 
         if(taskToUpdateOptional.isPresent()) {
@@ -94,9 +95,9 @@ public class TaskService {
             taskToUpdate.setTaskDescription(taskDto.getDescription());
             taskToUpdate.setDone(taskDto.isDone());
             taskRepository.save(taskToUpdate);
-            return ResponseEntity.accepted().build();
+            return new ResponseEntity<>(new StringDto("Task updated."), HttpStatus.ACCEPTED);
         } else {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(new StringDto("Task not found."), HttpStatus.NOT_FOUND);
         }
     }
 

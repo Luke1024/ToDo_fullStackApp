@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Task } from './Task';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { StringDto } from './StringDto';
@@ -21,7 +21,7 @@ export class TaskServiceService {
 
   getTasks(token:string): Observable<Task[]> {
     return this.http.get<Task[]>(this.tasksUrl + token)
-      .pipe(catchError(this.handleError<Task[]>('getTasks', [])))
+    .pipe(catchError(this.handleError<Task[]>('getTasks', [])))
   }
 
   saveTask(token:string,task: Task): Observable<StringDto> {

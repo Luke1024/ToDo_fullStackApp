@@ -12,7 +12,7 @@ import { UserCredentials } from './UserCredentials';
 export class RestService {
 
   constructor(private taskService:TaskServiceService, private userService:UserServiceService) { }
-  
+
   getToken(): Observable<StringDto> {
     return this.userService.getToken()
   }

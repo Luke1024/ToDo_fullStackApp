@@ -1,6 +1,7 @@
 import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { RestService } from '../rest.service';
+import { ServerConnectionManagerService } from '../server-connection-manager.service';
 import { StringDto } from '../StringDto';
 import { Task } from '../Task';
 import { TaskServiceService } from '../task-service.service';
@@ -13,47 +14,34 @@ import { TaskServiceService } from '../task-service.service';
 export class TasksComponent implements OnInit {
 
   tasks:Task[] = []
-  showMessage:boolean = false
   message:string = ''
+  cardMessage:string = ''
 
-  private token:string = ''
-  private tokenReceived = false
-
-  constructor(private restService:RestService) { }
+  constructor(private serverManager:ServerConnectionManagerService) { }
 
   ngOnInit(): void {
-    this.restService.getToken().subscribe(token => this.setToken(token))
     this.tasks.push({frontId:1, name:"new task", description:'task description',done:false})
   }
 
-  private setToken(token:StringDto) {
-    this.tokenReceived = true
-    this.token = token.value
-    console.log('token received ' + token.value)
+  saveTask(task:Task){
+    this.serverManager.saveTask(task).subscribe(message => this.saveTaskIfMessageCorrect(message,task))
   }
 
-  saveTask(task:Task){
-    console.log('saving task')
-    if(this.tokenReceived){
-      if(!task.name || !task.description){
-        var message = 'Task name and task description can\'t be blank.'
-        console.log(message) 
-        this.showCardMessage(message,2)
-        return; 
-      }
-      this.restService.saveTask(this.token, task)
-      .subscribe(stringDto => this.showCardMessage(stringDto.value,2))
-    } else {
-      console.log('Token not found.')
+  private saveTaskIfMessageCorrect(message:string, task:Task){
+    if(message=="Task saved."){
+      this.tasks.push(task)
     }
   }
 
   updateTask(task:Task){
-    if(this.tokenReceived){
-      if(!task.name || !task.description){ return; }
-      this.restService.updateTask(this.token,task)
-      .subscribe()
+    this.serverManager.updateTask(task).subscribe(message => this.updateTaskIfMessageCorrect(message))
+  }
+
+  private updateTaskIfMessageCorrect(message:StringDto){
+    if(message=="Task updated."){
+      this.tasks
     }
+    //save task
   }
 
   deleteTask(task: Task): void {
