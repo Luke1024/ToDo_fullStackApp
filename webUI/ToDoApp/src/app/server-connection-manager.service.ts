@@ -71,11 +71,9 @@ export class ServerConnectionManagerService {
   deleteTask(task: Task): Observable<string> {
     console.log('deleting task')
     return new Observable(observer => {
-      this.restService.deleteTask(task).subscribe(stringDto => observer.next(stringDto.value))
+      this.restService.deleteTask(this.token,task).subscribe(stringDto => observer.next(stringDto.value))
     })
   }
-
-
 
   private getToken(): void {
     this.restService.getToken().subscribe(token => this.setToken(token))

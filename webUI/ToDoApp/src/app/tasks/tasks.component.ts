@@ -14,8 +14,12 @@ import { TaskServiceService } from '../task-service.service';
 export class TasksComponent implements OnInit {
 
   tasks:Task[] = []
+
   message:string = ''
+  messageShow = false
+
   cardMessage:string = ''
+  cardMessageShow = false
 
   constructor(private serverManager:ServerConnectionManagerService) { }
 
@@ -31,24 +35,26 @@ export class TasksComponent implements OnInit {
     if(message=="Task saved."){
       this.tasks.push(task)
     }
+    this.showCardMessage(message, 2)
   }
 
   updateTask(task:Task){
-    this.serverManager.updateTask(task).subscribe(message => this.updateTaskIfMessageCorrect(message))
+    this.serverManager.updateTask(task).subscribe(message => this.updateTaskIfMessageCorrect(message, task))
   }
 
-  private updateTaskIfMessageCorrect(message:StringDto){
+  private updateTaskIfMessageCorrect(message:string, task:Task){
     if(message=="Task updated."){
-      this.tasks
+      for(var i=0; i<this.tasks.length; i++){
+        if(this.tasks[i].frontId == task.frontId){
+          this.tasks[i] = task
+        }
+      }
     }
-    //save task
+    this.showCardMessage(message,2)
   }
 
   deleteTask(task: Task): void {
-    if(this.tokenReceived){
-      this.tasks = this.tasks.filter(t => t != task);
-      this.restService.deleteTask(this.token,task).subscribe()
-    }
+      this.serverManager.deleteTask(task).subscribe(message => this.showCardMessage(message,2))
   }
 
   add(): void {
@@ -72,6 +78,13 @@ export class TasksComponent implements OnInit {
   }
 
   private showCardMessage(message:string, timeS:number):void {
-    //catch null
+    this.cardMessage = message
+    this.cardMessageShow = true
+    setTimeout(() => this.removeMessage(),timeS*1000)
+  }
+
+  private removeMessage(): void {
+    this.cardMessage=''
+    this.cardMessageShow = false
   }
 }
