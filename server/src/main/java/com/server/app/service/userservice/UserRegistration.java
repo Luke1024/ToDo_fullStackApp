@@ -8,7 +8,6 @@ import com.server.app.service.UserServiceSettings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.config.SpringDataAnnotationBeanNameGenerator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -45,7 +44,7 @@ public class UserRegistration {
         if( ! userWithThisEmailExist(userCredentialsDto.getUserEmail())){
             if(userCredentialsDto.getUserPassword().length() >= serviceSettings.getMinimalPasswordLength()) {
                 userRepository.save(createNewUser(userCredentialsDto));
-                return ResponseEntity.accepted().build();
+                return new ResponseEntity<>(new StringDto("User registered."), HttpStatus.ACCEPTED);
             } else {
                 LOGGER.warn("Password is to short.");
                 return new ResponseEntity<>(new StringDto("Password is to short."), HttpStatus.BAD_REQUEST);

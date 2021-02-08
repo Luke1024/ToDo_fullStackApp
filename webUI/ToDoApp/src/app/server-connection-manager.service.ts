@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { RestService } from './rest.service';
 import { StringDto } from './StringDto';
 import { Task } from './Task';
+import { UserCredentials } from './UserCredentials';
 
 @Injectable({
   providedIn: 'root'
@@ -13,14 +14,47 @@ export class ServerConnectionManagerService {
   private token:string = ''
   private tokenReceived = false
   private acceptedTokenLength:number = 15
-  private communicationStatus = true
-  private message:string = ''
+  message:string = ''
+  
+  private userLogged = false
+  private userEmail = ''
 
   constructor(private restService:RestService) { }
 
   ngOnInit(): void {
     this.getToken()
   }
+
+  loginUser(userCredentials: UserCredentials):Observable<string> {
+    return new Observable(observer => {
+      if(this.tokenReceived){
+        if(!userCredentials.userEmail || !userCredentials.userPassword){
+          var message = 'Email and password can\'t be blank.'
+          console.log(message)
+          observer.next(message)
+        }else{
+          this.restService.loginUser(this.token, userCredentials).subscribe(
+            stringDto => { 
+              observer.next(stringDto.value)
+              this.saveUserState(stringDto.value)
+            }
+          )
+        }
+      } else {
+        var message = 'Token not found.'
+        console.log(message)
+        observer.next(message)
+      }
+    })
+  }
+
+  private saveUserState(message:string){
+    if(message!=)
+  }
+
+
+
+
 
   saveTask(task:Task): Observable<string>{
     console.log('saving task')
@@ -88,7 +122,7 @@ export class ServerConnectionManagerService {
       this.message = ''
     }else{
       this.message = "Problem with connecting with the server."
-      setTimeout(()=>this.getToken(), 5000)
+      setTimeout(() => this.getToken(), 5000)
     }
   }
 
@@ -99,5 +133,5 @@ export class ServerConnectionManagerService {
       }
     }
     return false
-    }
+  }
 }

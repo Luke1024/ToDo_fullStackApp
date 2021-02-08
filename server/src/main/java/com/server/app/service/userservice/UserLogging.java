@@ -49,7 +49,7 @@ public class UserLogging {
             }
         }
         LOGGER.warn("Logging failed. Token " + token + " is to short.");
-        return ResponseEntity.badRequest().build();
+        return new ResponseEntity<>(new StringDto("Bad request."), HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<StringDto> logoutUser(String token){
@@ -57,7 +57,7 @@ public class UserLogging {
         if(userOptional.isPresent()){
             userOptional.get().setToken("");
             userOptional.get().setLogged(false);
-            return ResponseEntity.accepted().build();
+            return new ResponseEntity<>(new StringDto("User succesfully logged out."), HttpStatus.ACCEPTED);
         } else {
             LOGGER.warn("Logout failed. User with token " + token + " don't exist or logged out.");
             return new ResponseEntity<>(new StringDto("User session expired or logged out."), HttpStatus.BAD_REQUEST);
@@ -88,7 +88,7 @@ public class UserLogging {
 
         userRepository.save(userRegistered);
 
-        return ResponseEntity.ok(new StringDto(newToken));
+        return new ResponseEntity<>(new StringDto("User succesfully logged in."), HttpStatus.ACCEPTED);
     }
 
     private Optional<User> loadRegisteredUser(UserCredentialsDto userCredentialsDto){

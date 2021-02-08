@@ -9,6 +9,7 @@ import { TasksComponent } from './tasks/tasks.component';
 
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { UserPanelComponent } from './user-panel/user-panel.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
     CardComponent,
     CardFoldedComponent,
     CardUnfoldedComponent,
-    TasksComponent
+    TasksComponent,
+    UserPanelComponent
     
   ],
   imports: [
