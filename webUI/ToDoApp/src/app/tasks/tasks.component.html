@@ -8,6 +8,6 @@
     <button (click)="saveTask(task)">Save</button>
     <button (click)="deleteTask(task)">Delete</button>
     <button (click)="markDone(task)">Done</button>
-    <p *ngIf="showMessage">{{message}}</p>
+    <p *ngIf="cardMessageShow">{{message}}</p>
 </div>
 <button (click)=add()>Add</button>

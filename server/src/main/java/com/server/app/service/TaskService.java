@@ -41,27 +41,27 @@ public class TaskService {
         }
     }
 
-    public ResponseEntity<String> saveTask(String token, TaskDto taskDto){
+    public ResponseEntity<StringDto> saveTask(String token, TaskDto taskDto){
         Optional<User> user = userRepository.findLoggedUserByToken(token);
         if(user.isPresent()){
             return processWithTaskSaving(user.get(), taskDto);
         } else {
             LOGGER.warn("User with token: " + token + " not found.");
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(new StringDto("User's session expired or logged out."), HttpStatus.BAD_REQUEST);
         }
     }
 
-    public ResponseEntity<String> updateTask(String token, TaskDto taskDto){
+    public ResponseEntity<StringDto> updateTask(String token, TaskDto taskDto){
         Optional<User> user = userRepository.findLoggedUserByToken(token);
         if(user.isPresent()){
             return processWithTaskUpdate(user.get(), taskDto);
         } else {
             LOGGER.warn("User with token: " + token + " not found.");
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(new StringDto("User's session expired or logged out."), HttpStatus.BAD_REQUEST);
         }
     }
 
-    public ResponseEntity<String> deleteTask(String token, long frontId) {
+    public ResponseEntity<StringDto> deleteTask(String token, long frontId) {
         Optional<User> user = userRepository.findLoggedUserByToken(token);
 
         if (user.isPresent()) {
@@ -71,12 +71,11 @@ public class TaskService {
                 taskRepository.save(foundTask.get());
                 return ResponseEntity.accepted().build();
             } else {
-                LOGGER.warn("The user has no tasks.");
-                return ResponseEntity.notFound().build();
+                LOGGER.warn("Task not found.");
+                return new ResponseEntity<>(new StringDto("Task not found."), HttpStatus.NOT_FOUND);
             }
         }
-        LOGGER.warn("User with token: " + token + " not found.");
-        return ResponseEntity.notFound().build();
+        return new ResponseEntity<>(new StringDto("User's session expired or logged out."), HttpStatus.BAD_REQUEST);
     }
 
     private ResponseEntity<StringDto> processWithTaskSaving(User user, TaskDto taskDto){

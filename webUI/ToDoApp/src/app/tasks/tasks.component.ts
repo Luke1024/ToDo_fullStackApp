@@ -15,9 +15,6 @@ export class TasksComponent implements OnInit {
 
   tasks:Task[] = []
 
-  message:string = ''
-  messageShow = false
-
   cardMessage:string = ''
   cardMessageShow = false
 
