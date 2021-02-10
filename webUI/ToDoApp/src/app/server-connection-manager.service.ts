@@ -1,9 +1,12 @@
 import { stringify } from '@angular/compiler/src/util';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { observeOn } from 'rxjs/operators';
 import { RestService } from './rest.service';
 import { StringDto } from './StringDto';
 import { Task } from './Task';
+import { TaskServiceService } from './task-service.service';
+import { UserServiceService } from './user-service.service';
 import { UserCredentials } from './UserCredentials';
 
 @Injectable({
@@ -14,16 +17,43 @@ export class ServerConnectionManagerService {
   private token:string = ''
   private tokenReceived = false
   private acceptedTokenLength:number = 15
-  message:string = ''
+  userPanelMessage:string = ''
   
   private userLogged = false
   private userEmail = ''
 
-  constructor(private restService:RestService) { }
+  constructor(private taskService:TaskServiceService, private userService:UserServiceService) {}
 
-  ngOnInit(): void {
-    this.getToken()
+  getToken():Observable<boolean> {
+    return new Observable(observer => {
+      this.userService.getToken().subscribe(token => observer.next(this.setToken(token)))
+    })
   }
+
+  istokenReceived():boolean {
+    return this.tokenReceived
+  } 
+
+  private setToken(token:StringDto):boolean {
+    if(this.checkTokenLength(token.value)){
+      this.tokenReceived = true
+      this.token = token.value
+      console.log('token received ' + token.value)
+      return true
+    } else {
+      return false
+    } 
+  }
+
+  private checkTokenLength(token:string):boolean {
+    if(token!=null){
+      if(token.length==this.acceptedTokenLength) {
+        return true
+      }
+    }
+    return false
+  }
+
 
   loginUser(userCredentials: UserCredentials):Observable<string> {
     return new Observable(observer => {
@@ -33,10 +63,10 @@ export class ServerConnectionManagerService {
           console.log(message)
           observer.next(message)
         }else{
-          this.restService.loginUser(this.token, userCredentials).subscribe(
+          this.userService.login(this.token, userCredentials).subscribe(
             stringDto => { 
               observer.next(stringDto.value)
-              this.saveUserState(stringDto.value)
+              this.saveUserState(stringDto.value, userCredentials)
             }
           )
         }
@@ -48,12 +78,50 @@ export class ServerConnectionManagerService {
     })
   }
 
-  private saveUserState(message:string){
-    if(message!=)
+  private saveUserState(message:string, userCredentials:UserCredentials){
+    if(this.checkTokenLength(message)){
+      this.userLogged = true
+      this.userEmail = userCredentials.userEmail
+    }
   }
 
+  registerUser(userCredentials: UserCredentials):Observable<string> {
+    return new Observable(observer => {
+      if(this.tokenReceived){
+        if(!userCredentials.userEmail || !userCredentials.userPassword){
+          var message = 'Email and password can\'t be blank.'
+          console.log(message)
+          observer.next(message)
+        }else{
+          this.userService.register(this.token, userCredentials).subscribe(
+            stringDto => { 
+              observer.next(stringDto.value)
+            }
+          )
+        }
+      } else {
+        var message = 'Token not found.'
+        console.log(message)
+        observer.next(message)
+      }
+    })
+  }
 
-
+  logoutUser():Observable<string> {
+    return new Observable(observer => {
+      if(this.tokenReceived){
+        this.userService.logout(this.token).subscribe(
+          stringDto => {
+            observer.next(stringDto.value)
+          }
+        )
+      } else {
+        var message = 'Token not found.'
+        console.log(message)
+        observer.next(message)
+      }
+    })
+  }
 
 
   saveTask(task:Task): Observable<string>{
@@ -66,7 +134,7 @@ export class ServerConnectionManagerService {
         console.log(message) 
         observer.next(message); 
       } else {
-        this.restService.saveTask(this.token, task)
+        this.taskService.saveTask(this.token, task)
         .subscribe(stringDto => { 
           observer.next(stringDto.value)
         })
@@ -89,7 +157,7 @@ export class ServerConnectionManagerService {
         console.log(message) 
         observer.next(message); 
       } else {
-        this.restService.updateTask(this.token, task)
+        this.taskService.updateTask(this.token, task)
         .subscribe(stringDto => { 
           observer.next(stringDto.value)
         })
@@ -105,33 +173,10 @@ export class ServerConnectionManagerService {
   deleteTask(task: Task): Observable<string> {
     console.log('deleting task')
     return new Observable(observer => {
-      this.restService.deleteTask(this.token,task).subscribe(stringDto => observer.next(stringDto.value))
+      this.taskService.deleteTask(this.token,task).subscribe(stringDto => observer.next(stringDto.value))
     })
   }
-
-  private getToken(): void {
-    this.restService.getToken().subscribe(token => this.setToken(token))
-  }
-
-  private setToken(token:StringDto) {
-    this.message = "Connecting to server."
-    if(this.checkTokenLength(token)){
-      this.tokenReceived = true
-      this.token = token.value
-      console.log('token received ' + token.value)
-      this.message = ''
-    }else{
-      this.message = "Problem with connecting with the server."
-      setTimeout(() => this.getToken(), 5000)
-    }
-  }
-
-  private checkTokenLength(stringDto:StringDto):boolean {
-    if(stringDto!=null){
-      if(stringDto.value.length==15) {
-        return true
-      }
-    }
-    return false
-  }
 }
+
+
+

@@ -88,7 +88,7 @@ public class UserLogging {
 
         userRepository.save(userRegistered);
 
-        return new ResponseEntity<>(new StringDto("User succesfully logged in."), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(new StringDto(newToken), HttpStatus.ACCEPTED);
     }
 
     private Optional<User> loadRegisteredUser(UserCredentialsDto userCredentialsDto){

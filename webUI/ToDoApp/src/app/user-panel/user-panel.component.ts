@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ServerConnectionManagerService } from '../server-connection-manager.service';
 
 @Component({
   selector: 'app-user-panel',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserPanelComponent implements OnInit {
 
-  constructor() { }
+  constructor(connectionManager:ServerConnectionManagerService) { }
 
   ngOnInit(): void {
   }
