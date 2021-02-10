@@ -2,7 +2,6 @@ import { stringify } from '@angular/compiler/src/util';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { observeOn } from 'rxjs/operators';
-import { RestService } from './rest.service';
 import { StringDto } from './StringDto';
 import { Task } from './Task';
 import { TaskServiceService } from './task-service.service';

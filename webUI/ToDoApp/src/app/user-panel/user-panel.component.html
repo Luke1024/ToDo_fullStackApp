@@ -1,1 +1,14 @@
-<p>user-panel works!</p>
+<p>ToDo</p>
+<p *ngIf="emailShow" [(ngModel)]="email"></p>
+<div *ngIf="buttonPanelShow">
+    <button (click)="loginForm()">LogIn</button>
+    <button (click)="signinForm()">SingIn</button>
+</div>
+<div *ngIf="formShow">
+    <input [(ngModel)]="usercredentials.email" placeholder="email">
+    <input [(ngModel)]="usercredentials.password" placeholder="password">
+</div>
+<p *ngIf="messageShow" [(ngModel)]="message"></p>
+<button *ngIf="cancelShow" (click)="cancel()">Cancel</button>
+<button *ngIf="loginShow" (click)="login(usercredentials)">LogIn</button>
+<button *ngIf="signinShow" (click)="signin(usercredentials">SingIn</button>

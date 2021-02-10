@@ -1,6 +1,5 @@
 import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
-import { RestService } from '../rest.service';
 import { ServerConnectionManagerService } from '../server-connection-manager.service';
 import { StringDto } from '../StringDto';
 import { Task } from '../Task';
