@@ -1,14 +1,26 @@
-<p>ToDo</p>
-<p *ngIf="emailShow" [(ngModel)]="email"></p>
-<div *ngIf="buttonPanelShow">
-    <button (click)="loginForm()">LogIn</button>
-    <button (click)="signinForm()">SingIn</button>
+<div id="user_panel">
+    <p>ToDo</p>
+    <div *ngIf="logInSignInSet">
+        <button (click)="loginForm()">LogIn</button>
+        <button (click)="signInForm()">SingIn</button>
+    </div>
+    <div *ngIf="emailLogOutSet">
+        <p [(ngModel)]="email"></p>
+        <button (click)="logOut()">LogOut</button>
+    </div>
+    <div *ngIf="form">
+        <input [(ngModel)]="usercredentials.userEmail" placeholder="email">
+        <input [(ngModel)]="usercredentials.userPassword" placeholder="password">
+    </div>
+    <div *ngIf="logInSet">
+        <button (click)="cancel()">Cancel</button>
+        <button (click)="login(usercredentials)">Log In</button>
+    </div>
+    <div *ngIf="signInSet">
+        <button (click)="cancel()">Cancel</button>
+        <button (click)="signin(usercredentials)">Sign In</button>
+    </div>
+    <div *ngIf="messageShow">
+        <p>{{message}}</p>
+    </div>
 </div>
-<div *ngIf="formShow">
-    <input [(ngModel)]="usercredentials.email" placeholder="email">
-    <input [(ngModel)]="usercredentials.password" placeholder="password">
-</div>
-<p *ngIf="messageShow" [(ngModel)]="message"></p>
-<button *ngIf="cancelShow" (click)="cancel()">Cancel</button>
-<button *ngIf="loginShow" (click)="login(usercredentials)">LogIn</button>
-<button *ngIf="signinShow" (click)="signin(usercredentials">SingIn</button>

@@ -11,60 +11,29 @@ import { UserCredentials } from '../UserCredentials';
 export class UserPanelComponent implements OnInit {
 
   //visibility variables
-  emailShow:boolean = false
-  buttonPanelShow:boolean = false
-  formShow:boolean = false
-  messageShow:boolean = false
-  cancelShow:boolean = false
-  loginShow:boolean = false
-  signinShow:boolean = false
+  //user subbar
+  logInSignInSet:boolean = true
+  emailLogOutSet:boolean = false
+  email:string = ''
 
-  message:string = ''
+  //form visibility
+  form:boolean = false
+
+  //form button bar
+  logInSet:boolean = false
+  signInSet:boolean = false
+
+  messageShow:boolean = true
+  message:string = "Why this message is invisible?"
+
+  //user variables
   usercredentials:UserCredentials = {userEmail:'', userPassword:''}
-
-  //user status
-
-
   tokenSet:boolean = false
 
   constructor(private connectionManager:ServerConnectionManagerService) { }
 
   ngOnInit():void {
-    this.startConfig()
     this.establishConnection()
-  }
-
-  loginForm():void {
-    this.buttonPanelShow = false
-    this.formShow = true
-    this.loginShow = true
-  }
-
-  signInForm():void {
-    this.buttonPanelShow = false
-    this.formShow = true
-    this.signinShow = true
-  }
-
-  cancel():void {
-    this.emailShow = false
-    this.buttonPanelShow = true
-    this.formShow = false
-    this.cancelShow = false
-    this.loginShow = false
-    this.signinShow = false
-  }
-
-  login(userCredentials:UserCredentials):void {
-    this.connectionManager.loginUser(userCredentials).subscribe(message => this.checkLoginMessage(message))
-  }
-
-  private checkLoginMessage(message:string) {
-    if(message=="")
-  }
-
-  signin(userCredentials:UserCredentials):void {
-
   }
 
   private establishConnection():void {
@@ -73,25 +42,163 @@ export class UserPanelComponent implements OnInit {
     this.connectionManager.getToken().subscribe(isTokenSet => this.setConnectionMessage(isTokenSet))
   }
 
-  private startConfig():void {
-    this.emailShow = false
-    this.buttonPanelShow = true
-    this.formShow = false
-    this.messageShow = false
-    this.cancelShow = false
-    this.loginShow = false
-    this.signinShow = false
-  }
-
   private setConnectionMessage(isTokenSet:boolean){
     if(isTokenSet){
       this.message="Connected."
       setTimeout(()=> {
         this.messageShow = false
-      },2000)
+      },4000)
     } else {
       this.message="Server not responding."
     }    
   }
 
+  loginForm():void {
+    //user subbar
+    this.logInSignInSet = false
+    this.emailLogOutSet = false
+
+    //form visibility
+    this.form = true
+
+    //form button bar
+    this.logInSet = true
+    this.signInSet = false
+
+    this.messageShow = false
+    this.message = ''
+  }
+
+  signInForm():void {
+    //user subbar
+    this.logInSignInSet = false
+    this.emailLogOutSet = false
+    
+    //form visibility
+    this.form = true
+    
+    //form button bar
+    this.logInSet = false
+    this.signInSet = true
+    
+    this.messageShow = false
+    this.message = ''
+  }
+
+  cancel():void {
+    //user subbar
+    this.logInSignInSet = true
+    this.emailLogOutSet = false
+    
+    //form visibility
+    this.form = false
+    
+    //form button bar
+    this.logInSet = false
+    this.signInSet = false
+    
+    this.messageShow = false
+    this.message = ''
+  }
+
+  login(userCredentials:UserCredentials):void {
+    this.messageShow = true
+    this.message = "Logging user..."
+    this.connectionManager.loginUser(userCredentials).subscribe(message => {
+       this.loginUserIfResponseCorrect(message, userCredentials)
+    })
+  }
+
+  private loginUserIfResponseCorrect(message:string, userCredentials:UserCredentials){
+    if(message.length==this.connectionManager.getAcceptedTokenLength()){
+      this.message="User logged in."
+      setTimeout(()=> {
+      this.switchToLoggedView(userCredentials)
+      },4000)
+    } else {
+      this.message = message
+    }
+  }
+
+  private switchToLoggedView(userCredentials:UserCredentials){
+    //user subbar
+    this.logInSignInSet = false
+    this.emailLogOutSet = true
+    
+    //form visibility
+    this.form = false
+    
+    //form button bar
+    this.logInSet = false
+    this.signInSet = false
+    
+    this.messageShow = false
+    this.message = ''
+  }
+
+  signin(userCredentials:UserCredentials):void {
+    this.messageShow = true
+    this.message = "Signing in user..."
+    this.connectionManager.registerUser(userCredentials).subscribe(message => this.switchSignInView(message))
+  }
+
+  private switchSignInView(message:string) {
+    if(message=="User registered."){
+      setTimeout(()=> {
+        this.switchToSignInView()
+      },4000)
+    } else {
+      this.message = message
+    }
+  }
+
+  private switchToSignInView():void {
+    //user subbar
+    this.logInSignInSet = false
+    this.emailLogOutSet = true
+        
+    //form visibility
+    this.form = false
+        
+    //form button bar
+    this.logInSet = false
+    this.signInSet = false
+        
+    this.messageShow = false
+    this.message = ''
+  }
+
+  logOut():void {
+    this.messageShow = true
+    this.message = "Logging out user..."
+    this.connectionManager.logoutUser().subscribe(message => this.switchLogOutView(message))
+  }
+
+  private switchLogOutView(message:string){
+    if(message=="User succesfully logged out."){
+      setTimeout(()=> {
+      this.setLogOutView()
+      },4000)
+    }else{
+      this.message = message
+    }
+  }
+
+  private setLogOutView() {
+    //user subbar
+    this.logInSignInSet = true
+    this.emailLogOutSet = false
+            
+    //form visibility
+    this.form = false
+            
+    //form button bar
+    this.logInSet = false
+    this.signInSet = false
+            
+    this.messageShow = false
+    this.message = ''
+
+    this.usercredentials = {userEmail:'', userPassword:''}
+  }
 }

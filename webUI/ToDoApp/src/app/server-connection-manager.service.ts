@@ -33,6 +33,10 @@ export class ServerConnectionManagerService {
     return this.tokenReceived
   } 
 
+  getAcceptedTokenLength():number {
+    return this.acceptedTokenLength
+  }
+
   private setToken(token:StringDto):boolean {
     if(this.checkTokenLength(token.value)){
       this.tokenReceived = true

@@ -50,7 +50,7 @@ export class UserServiceService {
     return (error: StringDto): Observable<StringDto> => {
       var message = { value: "someString" }
 
-      message.value = "${operation} failed: ${error.message}"
+      message.value = "${" + operation + "} failed: ${" + error + "}"
       return of(message as unknown as StringDto)
     }
   }
