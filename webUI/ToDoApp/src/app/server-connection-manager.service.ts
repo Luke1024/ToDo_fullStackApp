@@ -1,7 +1,9 @@
+import { HttpResponse } from '@angular/common/http';
 import { stringify } from '@angular/compiler/src/util';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { observeOn } from 'rxjs/operators';
+import { Response } from './Response';
 import { StringDto } from './StringDto';
 import { Task } from './Task';
 import { TaskServiceService } from './task-service.service';
@@ -37,15 +39,20 @@ export class ServerConnectionManagerService {
     return this.acceptedTokenLength
   }
 
-  private setToken(token:StringDto):boolean {
-    if(this.checkTokenLength(token.value)){
-      this.tokenReceived = true
-      this.token = token.value
-      console.log('token received ' + token.value)
-      return true
-    } else {
-      return false
-    } 
+  private setToken(response:HttpResponse<StringDto>):boolean {
+    var status:number = response.status
+
+    if(status==200){
+      if(response.body?.value != null){
+        if(this.checkTokenLength(response.body.value)){
+          this.token = response.body.value
+          console.log('Token received: ' + this.token)
+          this.tokenReceived = true
+          return true
+        }
+      }
+    }
+    return false
   }
 
   private checkTokenLength(token:string):boolean {
@@ -58,74 +65,100 @@ export class ServerConnectionManagerService {
   }
 
 
-  loginUser(userCredentials: UserCredentials):Observable<string> {
+  loginUser(userCredentials: UserCredentials):Observable<Response> {
     return new Observable(observer => {
       if(this.tokenReceived){
         if(!userCredentials.userEmail || !userCredentials.userPassword){
           var message = 'Email and password can\'t be blank.'
           console.log(message)
-          observer.next(message)
+          observer.next(new Response(false,0,message))
         }else{
           this.userService.login(this.token, userCredentials).subscribe(
-            stringDto => { 
-              observer.next(stringDto.value)
-              this.saveUserState(stringDto.value, userCredentials)
+            response => { 
+              observer.next(this.analyzeLoginResponse(response, userCredentials))
             }
           )
         }
       } else {
         var message = 'Token not found.'
-        console.log(message)
-        observer.next(message)
+        observer.next(new Response(false,0,message))
       }
     })
   }
 
-  private saveUserState(message:string, userCredentials:UserCredentials){
-    if(this.checkTokenLength(message)){
-      this.userLogged = true
-      this.userEmail = userCredentials.userEmail
+  private analyzeLoginResponse(response:HttpResponse<StringDto>, userCredentials:UserCredentials):Response{
+    if(response != null){
+      var status = response.status
+      if(response.body != null){  
+        var message:string = response.body.value
+        if(status==202){
+          if(this.checkTokenLength(message)){
+            this.updateUserStatusToLogin(userCredentials, message)
+            return new Response(true, status, "User logged in.")
+          }
+        }
+      }
     }
+    return new Response(false, 0, "There is a problem with a server response.")
   }
 
-  registerUser(userCredentials: UserCredentials):Observable<string> {
+  private updateUserStatusToLogin(userCredentials:UserCredentials, token:string){
+    this.token = token
+    this.userLogged = true
+    this.userEmail = userCredentials.userEmail
+  }
+
+  registerUser(userCredentials: UserCredentials):Observable<Response> {
     return new Observable(observer => {
       if(this.tokenReceived){
         if(!userCredentials.userEmail || !userCredentials.userPassword){
           var message = 'Email and password can\'t be blank.'
-          console.log(message)
-          observer.next(message)
+          observer.next(new Response(false,0,message))
         }else{
           this.userService.register(this.token, userCredentials).subscribe(
-            stringDto => { 
-              observer.next(stringDto.value)
+            response => { 
+              observer.next(this.analyzeRegisterResponse(response))
             }
           )
         }
       } else {
         var message = 'Token not found.'
-        console.log(message)
-        observer.next(message)
+        observer.next(new Response(false,0,message))
       }
     })
   }
 
-  logoutUser():Observable<string> {
+  private analyzeRegisterResponse(response:HttpResponse<StringDto>):Response {
+    if(response != null){
+      var status = response.status
+      if(response.body != null){
+        var message:string = response.body.value
+        if(status==202){
+          return new Response(true,status,message)
+        }
+      }
+    }
+    return new Response(false, 0, "There is a problem with a server response.")
+  }
+
+  logoutUser():Observable<Response> {
     return new Observable(observer => {
       if(this.tokenReceived){
         this.userService.logout(this.token).subscribe(
-          stringDto => {
-            observer.next(stringDto.value)
+          response => {
+            observer.next(this.analyzeLogoutResponse(response))
           }
         )
       } else {
         var message = 'Token not found.'
-        console.log(message)
-        observer.next(message)
+        observer.next(new Response(false,0,message))
       }
     })
   }
 
+  private analyzeLogoutResponse(response:HttpResponse<StringDto>):Response {
+
+  }
 
   saveTask(task:Task): Observable<string>{
     console.log('saving task')

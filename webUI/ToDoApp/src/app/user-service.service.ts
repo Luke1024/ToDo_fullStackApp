@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpRequest, HttpResponse } from '@angular/common/http';
 import { StringDto } from './StringDto';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
@@ -24,34 +24,22 @@ export class UserServiceService {
 
   constructor(private http:HttpClient) {}
 
-  getToken(): Observable<StringDto> {
-    return this.http.get<StringDto>(this.tokenUrl)
-    .pipe(catchError(this.handleError<StringDto>()))
+  getToken(): Observable<HttpResponse<StringDto>> {
+    return this.http.get<StringDto>(this.tokenUrl, {observe:'response'})
+    //.pipe(catchError(this.handleError<HttpResponse>()))
   }
 
-  login(token:String, userCredentials:UserCredentials): Observable<StringDto> {
+  login(token:String, userCredentials:UserCredentials): Observable<HttpResponse<StringDto>> {
     return this.http.post<StringDto>(
-      this.loginUrl + token, userCredentials, this.httpOptions)
-      .pipe(catchError(this.handleError<StringDto>('login')))
+      this.loginUrl + token, userCredentials, {observe: 'response'})
   }
 
-  register(token:String, userCredentials:UserCredentials): Observable<StringDto> {
+  register(token:String, userCredentials:UserCredentials): Observable<HttpResponse<StringDto>> {
     return this.http.post<StringDto>(
-      this.registerUrl + token, userCredentials, this.httpOptions)
-      .pipe(catchError(this.handleError<StringDto>('register')))
+      this.registerUrl + token, userCredentials, {observe: 'response'})
   }
 
-  logout(token:String): Observable<StringDto> {
-    return this.http.get<StringDto>(this.loginUrl + token)
-    .pipe(catchError(this.handleError<StringDto>('register')))
-  }
-
-  private handleError<StringDto>(operation = 'operation') {
-    return (error: StringDto): Observable<StringDto> => {
-      var message = { value: "someString" }
-
-      message.value = "${" + operation + "} failed: ${" + error + "}"
-      return of(message as unknown as StringDto)
-    }
+  logout(token:String): Observable<HttpResponse<StringDto>> {
+    return this.http.get<StringDto>(this.loginUrl + token, {observe:'response'})
   }
 }
