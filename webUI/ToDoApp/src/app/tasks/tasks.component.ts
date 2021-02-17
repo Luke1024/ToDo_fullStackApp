@@ -24,10 +24,10 @@ export class TasksComponent implements OnInit {
   }
 
   saveTask(task:Task){
-    this.serverManager.saveTask(task).subscribe(message => this.saveTaskIfMessageCorrect(message,task))
+    this.serverManager.saveTask(task).subscribe(response => this.analyzeSaveTaskResponse(response,task))
   }
 
-  private saveTaskIfMessageCorrect(message:string, task:Task){
+  private analyzeSaveTaskResponse(message:string, task:Task){
     if(message=="Task saved."){
       this.tasks.push(task)
     }

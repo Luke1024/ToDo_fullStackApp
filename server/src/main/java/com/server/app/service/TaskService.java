@@ -69,7 +69,7 @@ public class TaskService {
             if (foundTask.isPresent()) {
                 foundTask.get().setDeleted(true);
                 taskRepository.save(foundTask.get());
-                return ResponseEntity.accepted().build();
+                return new ResponseEntity<>(new StringDto("Task succesfully deleted."), HttpStatus.ACCEPTED);
             } else {
                 LOGGER.warn("Task not found.");
                 return new ResponseEntity<>(new StringDto("Task not found."), HttpStatus.NOT_FOUND);
