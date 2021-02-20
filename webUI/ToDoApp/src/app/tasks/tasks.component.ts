@@ -1,9 +1,11 @@
 import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
+import { Response } from '../Response';
 import { ServerConnectionManagerService } from '../server-connection-manager.service';
 import { StringDto } from '../StringDto';
 import { Task } from '../Task';
 import { TaskServiceService } from '../task-service.service';
+import { Card } from './Card';
 
 @Component({
   selector: 'app-tasks',
@@ -12,41 +14,41 @@ import { TaskServiceService } from '../task-service.service';
 })
 export class TasksComponent implements OnInit {
 
-  tasks:Task[] = []
-
-  cardMessage:string = ''
-  cardMessageShow = false
+  cards:Card[] = []
 
   constructor(private serverManager:ServerConnectionManagerService) { }
 
   ngOnInit(): void {
-    this.tasks.push({frontId:1, name:"new task", description:'task description',done:false})
+    this.cards.push({frontId:1, name:"new task", description:'task description',done:false})
+    this.serverManager.taskPipeline$.subscribe(tasks => this.tasks = tasks)
   }
+
+  private cardFactory()
 
   saveTask(task:Task){
     this.serverManager.saveTask(task).subscribe(response => this.analyzeSaveTaskResponse(response,task))
   }
 
-  private analyzeSaveTaskResponse(message:string, task:Task){
-    if(message=="Task saved."){
+  private analyzeSaveTaskResponse(response:Response, task:Task){
+    if(response.status){
       this.tasks.push(task)
     }
-    this.showCardMessage(message, 2)
+    this.showCardMessage(response, 2)
   }
 
   updateTask(task:Task){
-    this.serverManager.updateTask(task).subscribe(message => this.updateTaskIfMessageCorrect(message, task))
+    this.serverManager.updateTask(task).subscribe(response => this.updateTaskIfMessageCorrect(response, task))
   }
 
-  private updateTaskIfMessageCorrect(message:string, task:Task){
-    if(message=="Task updated."){
+  private updateTaskIfMessageCorrect(response:Response, task:Task){
+    if(response.status){
       for(var i=0; i<this.tasks.length; i++){
         if(this.tasks[i].frontId == task.frontId){
           this.tasks[i] = task
         }
       }
     }
-    this.showCardMessage(message,2)
+    this.showCardMessage(response,2)
   }
 
   deleteTask(task: Task): void {
@@ -73,7 +75,7 @@ export class TasksComponent implements OnInit {
     return maxNum + 1
   }
 
-  private showCardMessage(message:string, timeS:number):void {
+  private showCardMessage(response:Response, timeS:number):void {
     this.cardMessage = message
     this.cardMessageShow = true
     setTimeout(() => this.removeMessage(),timeS*1000)

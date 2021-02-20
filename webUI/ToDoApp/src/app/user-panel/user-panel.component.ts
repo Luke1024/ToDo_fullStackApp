@@ -1,7 +1,5 @@
 import { HttpResponse, HttpResponseBase } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { LoginResponse } from '../LoginResponse';
-import { Response } from '../Response';
 import { ServerConnectionManagerService } from '../server-connection-manager.service';
 import { UserServiceService } from '../user-service.service';
 import { UserCredentials } from '../UserCredentials';
@@ -15,58 +13,55 @@ export class UserPanelComponent implements OnInit {
 
   //visibility variables
   //user subbar
-  logInSignInSet:boolean = true
-  emailLogOutSet:boolean = false
+  logInRegisterBarActive:boolean = true
+  emailLogOutActive:boolean = false
   email:string = ''
 
   //form visibility
-  form:boolean = false
+  formActive:boolean = false
 
   //form button bar
-  logInSet:boolean = false
-  signInSet:boolean = false
+  logInButton:boolean = false
+  signInButton:boolean = false
 
   messageShow:boolean = true
   message:string = "Why this message is invisible?"
+  messageStatus:boolean = true
 
   //user variables
   usercredentials:UserCredentials = {userEmail:'', userPassword:''}
-  tokenSet:boolean = false
+  loggedIn:boolean = false
 
   constructor(private connectionManager:ServerConnectionManagerService) { }
 
   ngOnInit():void {
-    this.establishConnection()
+    this.connectionManager.userPanelMessage$.subscribe(message => this.message = message)
+    this.connectionManager.userPanelMessageVisibilitySwitch$.subscribe(show => this.messageShow = show)
+    this.connectionManager.userPanelMessageStatus$.subscribe(status => this.messageStatus = status)
+    this.connectionManager.userLogInFlag$.subscribe(flag => this.switchLogInView(flag))
   }
 
-  private establishConnection():void {
-    this.messageShow = true
-    this.message="Connecting to server..."
-    this.connectionManager.getToken().subscribe(isTokenSet => this.setConnectionMessage(isTokenSet))
-  }
-
-  private setConnectionMessage(isTokenSet:boolean){
-    if(isTokenSet){
-      this.message="Connected."
-      setTimeout(()=> {
-        this.messageShow = false
-      },4000)
-    } else {
-      this.message="Server not responding."
-    }    
+  private switchLogInView(flag:boolean){
+    if(flag==true){
+      this.loggedIn = true
+      this.switchToLoggedView()
+    }else{
+      this.loggedIn = false
+      this.switchToLoggedOutView()
+    }
   }
 
   loginForm():void {
     //user subbar
-    this.logInSignInSet = false
-    this.emailLogOutSet = false
+    this.logInRegisterBarActive = false
+    this.emailLogOutActive = false
 
     //form visibility
-    this.form = true
+    this.formActive = true
 
     //form button bar
-    this.logInSet = true
-    this.signInSet = false
+    this.logInButton = true
+    this.signInButton = false
 
     this.messageShow = false
     this.message = ''
@@ -74,15 +69,15 @@ export class UserPanelComponent implements OnInit {
 
   signInForm():void {
     //user subbar
-    this.logInSignInSet = false
-    this.emailLogOutSet = false
+    this.logInRegisterBarActive = false
+    this.emailLogOutActive = false
     
     //form visibility
-    this.form = true
+    this.formActive = true
     
     //form button bar
-    this.logInSet = false
-    this.signInSet = true
+    this.logInButton = false
+    this.signInButton = true
     
     this.messageShow = false
     this.message = ''
@@ -90,126 +85,61 @@ export class UserPanelComponent implements OnInit {
 
   cancel():void {
     //user subbar
-    this.logInSignInSet = true
-    this.emailLogOutSet = false
+    this.logInRegisterBarActive = true
+    this.emailLogOutActive = false
     
     //form visibility
-    this.form = false
+    this.formActive = false
     
     //form button bar
-    this.logInSet = false
-    this.signInSet = false
+    this.logInButton = false
+    this.signInButton = false
     
     this.messageShow = false
     this.message = ''
   }
 
   login(userCredentials:UserCredentials):void {
-    this.messageShow = true
-    this.message = "Logging user..."
-    this.connectionManager.loginUser(userCredentials).subscribe(response => {
-       this.loginUserIfResponseCorrect(response, userCredentials)
-    })
+    this.connectionManager.loginUser(userCredentials)
   }
 
-  private loginUserIfResponseCorrect(response:LoginResponse, userCredentials:UserCredentials){
-
-    //send message to server connection manager and next send information to task component to reload tasks
-
-    if(response.status){
-      if(response.tasksHttpResponse === undefined){
-        this.message="User logged in."
-        setTimeout(()=> {
-        this.switchToLoggedView(userCredentials)
-        },3000)
-      } else {
-        
-      }
-    } else {
-      this.messageShow = true
-      this.message = response.message
-    }
-  }
-
-  private switchToLoggedView(userCredentials:UserCredentials){
+  private switchToLoggedView(){
     //user subbar
-    this.logInSignInSet = false
-    this.emailLogOutSet = true
+    this.logInRegisterBarActive = false
+    this.emailLogOutActive = true
     
     //form visibility
-    this.form = false
+    this.formActive = false
     
     //form button bar
-    this.logInSet = false
-    this.signInSet = false
+    this.logInButton = false
+    this.signInButton = false
     
     this.messageShow = false
     this.message = ''
+
+    this.email = this.usercredentials.userEmail
   }
 
-  signin(userCredentials:UserCredentials):void {
-    this.messageShow = true
-    this.message = "Signing in user..."
-    this.connectionManager.registerUser(userCredentials).subscribe(response => this.switchSignInView(response))
-  }
-
-  private switchSignInView(response:Response) {
-    if(response.status){
-      this.messageShow=true
-      this.message=response.message
-      setTimeout(()=> {
-        this.switchToSignInView()
-      },4000)
-    } else {
-      this.message = response.message
-    }
-  }
-
-  private switchToSignInView():void {
-    //user subbar
-    this.logInSignInSet = false
-    this.emailLogOutSet = true
-        
-    //form visibility
-    this.form = false
-        
-    //form button bar
-    this.logInSet = false
-    this.signInSet = false
-
-    this.messageShow=false
-    this.message=''
+  register(userCredentials:UserCredentials):void {
+    this.connectionManager.registerUser(userCredentials)
   }
 
   logOut():void {
-    this.messageShow = true
-    this.message = "Logging out user..."
-    this.connectionManager.logoutUser().subscribe(response => this.switchLogOutView(response))
+    this.connectionManager.logoutUser()
   }
 
-  private switchLogOutView(response:Response){
-    if(response.status){
-      this.messageShow=true
-      this.message=response.message
-      setTimeout(()=> {
-      this.setLogOutView()
-      },4000)
-    }else{
-      this.message = response.message
-    }
-  }
-
-  private setLogOutView() {
+  private switchToLoggedOutView(){
     //user subbar
-    this.logInSignInSet = true
-    this.emailLogOutSet = false
+    this.logInRegisterBarActive = true
+    this.emailLogOutActive = false
             
     //form visibility
-    this.form = false
+    this.formActive = false
             
     //form button bar
-    this.logInSet = false
-    this.signInSet = false
+    this.logInButton = false
+    this.signInButton = false
             
     this.messageShow = false
     this.message = ''
