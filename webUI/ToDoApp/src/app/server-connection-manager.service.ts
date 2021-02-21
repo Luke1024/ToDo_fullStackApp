@@ -34,10 +34,10 @@ export class ServerConnectionManagerService {
   private cardMessageStatusSource = new Subject<boolean>()
 
   private taskPipelineSource = new Subject<Task[]>()
-  //private taskCrudDtoSource = new Subject<TaskCrudDto>()
-  
 
-  constructor(private taskService:TaskServiceService, private userService:UserServiceService) {}
+  constructor(private taskService:TaskServiceService, private userService:UserServiceService) {
+    this.getToken()
+  }
 
   userPanelMessage$ = this.userPanelMessagesSource.asObservable()
   userPanelMessageVisibilitySwitch$ = this.userPanelMessageVisiblitySwitchSource.asObservable()
@@ -45,30 +45,21 @@ export class ServerConnectionManagerService {
 
   userLogInFlag$ = this.userLogInFlagSource.asObservable()
 
-  cardMessage$ = this.cardMessagesSource.asObservable()
-  cardMessageVisibilitySwitch$ = this.cardMessageVisibilitySwitchSource.asObservable()
-  cardMessageStatus$ = this.cardMessageStatusSource.asObservable()
-
   taskPipeline$ = this.taskPipelineSource.asObservable()
-  //taskCrudDtoPipe$ = this.taskCrudDtoSource.asObservable()
-  
-
-  ngOnIInit():void {
-    this.getToken()
-  }
 
   userPanelMessage(message:string):void {
     this.userPanelMessagesSource.next(message)
   }
 
-  messageVisibility(visible:boolean):void{
+  userMessageVisibility(visible:boolean):void{
     this.userPanelMessageVisiblitySwitchSource.next(visible)
   }
 
-  messageStatus(status:boolean):void{
+  userMessageStatus(status:boolean):void{
     this.userLogInFlagSource.next(status)
   }
 
+  /*
   cardMessage(message:string):void {
     this.cardMessagesSource.next(message)
   }
@@ -80,29 +71,20 @@ export class ServerConnectionManagerService {
   cardMessageStatus(status:boolean):void {
     this.cardMessageStatusSource.next(status)
   }
+  */
 
   //messageSendingFunctions
   //if timemout 0 set to infinite
   sendUserPanelMessage(message:string,status:boolean, timeoutS:number){
-    this.messageVisibility(true)
+    this.userMessageVisibility(true)
     this.userPanelMessage(message)
-    this.messageStatus(true)
-    if(timeoutS!=0){
+    this.userMessageStatus(true)
+    /*if(timeoutS!=0){
       setTimeout(()=> {
-        this.messageVisibility(false)
+        this.userMessageVisibility(false)
       },timeoutS*1000)
     }
-  }
-
-  sendCardMessage(message:string,status:boolean,timeoutS:number){
-    this.cardMessageVisibility(true)
-    this.cardMessage(message)
-    this.cardMessageStatus(status)
-    if(timeoutS==0){
-      setTimeout(()=>{
-        this.cardMessageVisibility(false)
-      },timeoutS*1000)
-    }
+    */
   }
 
   setUserLoggedInFlag(flag:boolean){
@@ -112,9 +94,8 @@ export class ServerConnectionManagerService {
     this.taskPipelineSource.next(tasks)
   }
 
-
-
   getToken():void {
+    console.log("Connecting to server.")
     this.sendUserPanelMessage("Connecting to server...",true,0)
     this.userService.getToken().subscribe(token => this.setToken(token))
   }
@@ -137,10 +118,11 @@ export class ServerConnectionManagerService {
           console.log('Token received: ' + this.token)
           this.sendUserPanelMessage("Connected.",true,4)
           this.tokenReceived = true
+          return
         }
       }
     }
-    return this.sendUserPanelMessage("Server not responding.",false,0)
+    this.sendUserPanelMessage("Server not responding.",false,0)
   }
 
   private checkTokenLength(token:string):boolean {
@@ -351,7 +333,6 @@ export class ServerConnectionManagerService {
   private analyzeDeleteResponse(response:HttpResponse<StringDto>){
     return this.crudResponseAnalysis(response,"Problem with task deleting.")
   }
-  
       
   private crudResponseAnalysis(response:HttpResponse<StringDto>, failMessage:string):Response {
     if(response != null){

@@ -25,7 +25,7 @@ export class UserPanelComponent implements OnInit {
   signInButton:boolean = false
 
   messageShow:boolean = true
-  message:string = "Why this message is invisible?"
+  message:string = "asdasdasdasdasd"
   messageStatus:boolean = true
 
   //user variables

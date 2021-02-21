@@ -5,7 +5,8 @@ import { ServerConnectionManagerService } from '../server-connection-manager.ser
 import { StringDto } from '../StringDto';
 import { Task } from '../Task';
 import { TaskServiceService } from '../task-service.service';
-import { Card } from './Card';
+import { Card } from '../Card';
+import { CardFactory } from './CardFactory';
 
 @Component({
   selector: 'app-tasks',
@@ -15,15 +16,17 @@ import { Card } from './Card';
 export class TasksComponent implements OnInit {
 
   cards:Card[] = []
+  cardFactory:CardFactory = new CardFactory()
 
-  constructor(private serverManager:ServerConnectionManagerService) { }
+  private correctMessageTimeS = 4
+  private errorMessageTimeS = 0 //0 is infinite
+
+  constructor(private serverManager:ServerConnectionManagerService) {}
 
   ngOnInit(): void {
-    this.cards.push({frontId:1, name:"new task", description:'task description',done:false})
-    this.serverManager.taskPipeline$.subscribe(tasks => this.tasks = tasks)
+    this.cards.push(this.cardFactory.generate("new task",'task description',this.cards))
+    this.serverManager.taskPipeline$.subscribe(tasks => this.cards = this.cardFactory.generateFromTasks(tasks))
   }
-
-  private cardFactory()
 
   saveTask(task:Task){
     this.serverManager.saveTask(task).subscribe(response => this.analyzeSaveTaskResponse(response,task))
@@ -31,33 +34,39 @@ export class TasksComponent implements OnInit {
 
   private analyzeSaveTaskResponse(response:Response, task:Task){
     if(response.status){
-      this.tasks.push(task)
+      this.cards.push(this.cardFactory.generateFromTask(task))
     }
-    this.showCardMessage(response, 2)
+    this.showCardMessage(response,task)
   }
 
   updateTask(task:Task){
-    this.serverManager.updateTask(task).subscribe(response => this.updateTaskIfMessageCorrect(response, task))
+    this.serverManager.updateTask(task).subscribe(response => this.updateTaskIfStatusCorrect(response, task))
   }
 
-  private updateTaskIfMessageCorrect(response:Response, task:Task){
+  private updateTaskIfStatusCorrect(response:Response, task:Task){
     if(response.status){
-      for(var i=0; i<this.tasks.length; i++){
-        if(this.tasks[i].frontId == task.frontId){
-          this.tasks[i] = task
+      for(var i=0; i<this.cards.length; i++){
+        if(this.cards[i].task.frontId == task.frontId){
+          this.cards[i].task = task
         }
       }
     }
-    this.showCardMessage(response,2)
+    this.showCardMessage(response,task)
   }
 
   deleteTask(task: Task): void {
-      this.serverManager.deleteTask(task).subscribe(message => this.showCardMessage(message,2))
+      this.serverManager.deleteTask(task).subscribe(response => this.analyzeDeleteResponse(response,task))
+  }
+
+  private analyzeDeleteResponse(response:Response, task:Task){
+    if(response.status){
+      this.cards = this.cards.filter(c => c.task !== task)   
+    }
+    this.showCardMessage(response, task)
   }
 
   add(): void {
-    let maxNum:number = this.findNextValue()
-    this.tasks.push({frontId:maxNum, name:"", description:"",done:false})
+    this.cards.push(this.cardFactory.generate("", "",this.cards))
   }
 
   markDone(task: Task): void {
@@ -65,24 +74,22 @@ export class TasksComponent implements OnInit {
     task.done = true
     this.updateTask(task)  }
 
-  private findNextValue():number {
-    let maxNum:number = 0
-    for(let i=0; i<this.tasks.length; i++){
-      if(this.tasks[i].frontId > maxNum){
-        maxNum = this.tasks[i].frontId
+
+  private showCardMessage(response:Response, task:Task):void {
+    for(var i=0; i<this.cards.length; i++){
+      if(this.cards[i].task.frontId = task.frontId){
+        var card = this.cards[i]
+        card.message = response.message
+        card.messageShow = true
+        card.messageStatus = response.status
+        if(response.status){
+          setTimeout(() => card.messageShow = false, this.correctMessageTimeS * 1000)
+        }else{
+          if(this.errorMessageTimeS != 0){
+            setTimeout(() => card.messageShow = false, this.errorMessageTimeS * 1000)
+          }
+        }
       }
     }
-    return maxNum + 1
-  }
-
-  private showCardMessage(response:Response, timeS:number):void {
-    this.cardMessage = message
-    this.cardMessageShow = true
-    setTimeout(() => this.removeMessage(),timeS*1000)
-  }
-
-  private removeMessage(): void {
-    this.cardMessage=''
-    this.cardMessageShow = false
   }
 }

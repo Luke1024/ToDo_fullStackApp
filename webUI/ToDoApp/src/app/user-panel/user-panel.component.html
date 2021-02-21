@@ -1,24 +1,24 @@
 <div id="user_panel">
     <p>ToDo</p>
-    <div *ngIf="logInSignInSet">
+    <div *ngIf="logInRegisterBarActive">
         <button (click)="loginForm()">LogIn</button>
         <button (click)="signInForm()">SingIn</button>
     </div>
-    <div *ngIf="emailLogOutSet">
+    <div *ngIf="emailLogOutActive">
         <p [(ngModel)]="email"></p>
         <button (click)="logOut()">LogOut</button>
     </div>
-    <div *ngIf="form">
+    <div *ngIf="formActive">
         <input [(ngModel)]="usercredentials.userEmail" placeholder="email">
         <input [(ngModel)]="usercredentials.userPassword" placeholder="password">
     </div>
-    <div *ngIf="logInSet">
+    <div *ngIf="logInButton">
         <button (click)="cancel()">Cancel</button>
         <button (click)="login(usercredentials)">Log In</button>
     </div>
-    <div *ngIf="signInSet">
+    <div *ngIf="signInButton">
         <button (click)="cancel()">Cancel</button>
-        <button (click)="signin(usercredentials)">Sign In</button>
+        <button (click)="register(usercredentials)">Register</button>
     </div>
     <div *ngIf="messageShow">
         <p>{{message}}</p>
