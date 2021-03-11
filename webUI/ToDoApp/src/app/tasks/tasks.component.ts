@@ -16,10 +16,10 @@ import { CardFactory } from './CardFactory';
 export class TasksComponent implements OnInit {
 
   cards:Card[] = []
-  cardFactory:CardFactory = new CardFactory()
+  cardFactory:CardFactory = new CardFactory()  
 
-  private correctMessageTimeS = 4
-  private errorMessageTimeS = 0 //0 is infinite
+  private correctMessageTimeS = 2
+  private errorMessageTimeS = 4 //0 is infinite
 
   constructor(private serverManager:ServerConnectionManagerService) {}
 
@@ -28,7 +28,24 @@ export class TasksComponent implements OnInit {
     this.serverManager.taskPipeline$.subscribe(tasks => this.cards = this.cardFactory.generateFromTasks(tasks))
   }
 
-  saveTask(task:Task){
+  saveUpdateCard(card:Card):void {
+    if(this.checkIfSaveCard(card)) this.saveTask(card.task)
+    if(this.checkIfUpdateCard(card)) this.updateTask(card.task)
+  }
+
+  private checkIfSaveCard(card:Card):boolean {
+    return false
+  }
+
+  private checkIfUpdateCard(card:Card):boolean {
+    return false
+  }
+
+  delete(card:Card):void {
+    this.cards = this.cards.filter(c => c.task.frontId !== card.task.frontId)
+  }
+
+  private saveTask(task:Task){
     this.serverManager.saveTask(task).subscribe(response => this.analyzeSaveTaskResponse(response,task))
   }
 
@@ -39,7 +56,7 @@ export class TasksComponent implements OnInit {
     this.showCardMessage(response,task)
   }
 
-  updateTask(task:Task){
+  private updateTask(task:Task){
     this.serverManager.updateTask(task).subscribe(response => this.updateTaskIfStatusCorrect(response, task))
   }
 
@@ -54,7 +71,7 @@ export class TasksComponent implements OnInit {
     this.showCardMessage(response,task)
   }
 
-  deleteTask(task: Task): void {
+  private deleteTask(task: Task): void {
       this.serverManager.deleteTask(task).subscribe(response => this.analyzeDeleteResponse(response,task))
   }
 
@@ -69,15 +86,9 @@ export class TasksComponent implements OnInit {
     this.cards.push(this.cardFactory.generate("", "",this.cards))
   }
 
-  markDone(task: Task): void {
-    console.log(task)
-    task.done = true
-    this.updateTask(task)  }
-
-
   private showCardMessage(response:Response, task:Task):void {
     for(var i=0; i<this.cards.length; i++){
-      if(this.cards[i].task.frontId = task.frontId){
+      if(this.cards[i].task.frontId == task.frontId){
         var card = this.cards[i]
         card.message = response.message
         card.messageShow = true

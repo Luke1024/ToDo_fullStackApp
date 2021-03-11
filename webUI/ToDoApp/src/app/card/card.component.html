@@ -1,1 +1,12 @@
-
+<div>
+    <p>id: <span>{{card.task.frontId}}</span></p>
+    <p>name: <span>{{card.task.name}}</span></p>
+    <p>description: <span>{{card.task.description}}</span></p>
+    <p>done: {{card.task.done}}</p>
+    <input [(ngModel)]="card.task.name" placeholder="name">
+    <input [(ngModel)]="card.task.description" placeholder="description">
+    <button (click)="update(card)">Save</button>
+    <button (click)="delete(card)">Delete</button>
+    <button (click)="update(card)">Done</button>
+    <p *ngIf="card.messageShow">{{card.message}}</p>
+</div>

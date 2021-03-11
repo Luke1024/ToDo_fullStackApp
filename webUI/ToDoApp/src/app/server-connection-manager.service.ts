@@ -278,22 +278,14 @@ export class ServerConnectionManagerService {
     return new Observable(observer => {
 
     if(this.tokenReceived){
-      if(!task.name || !task.description){
-        var message = 'Task name and task description can\'t be blank.'
-        console.log(message) 
-        observer.next(new Response(false,message)); 
-      } else {
-        this.taskService.saveTask(this.token, task)
-        .subscribe(response => { 
-          observer.next(this.analyzeSaveTaskResponse(response))
-        })
-      }
+      this.taskService.saveTask(this.token, task)
+      .subscribe(response => { 
+        observer.next(this.analyzeSaveTaskResponse(response))})
     } else {
       var message = 'Token not found.'
       observer.next(new Response(false,message))
     }
-    })
-  }
+  })}
 
   private analyzeSaveTaskResponse(response:HttpResponse<StringDto>):Response {
     return this.crudResponseAnalysis(response,"Problem with task saving.")
@@ -305,9 +297,6 @@ export class ServerConnectionManagerService {
 
     if(this.tokenReceived){
       if(!task.name || !task.description){
-        var message = 'Task name and task description can\'t be blank.'
-        observer.next(new Response(false,message)); 
-      } else {
         this.taskService.updateTask(this.token, task)
         .subscribe(response => { 
           observer.next(this.analyzeUpdateResponse(response))
@@ -340,7 +329,7 @@ export class ServerConnectionManagerService {
       if(response.body != null){
         var message:string = response.body.value
         if(status==202){
-          
+          return new Response(true,message)
         }else{
           return new Response(false,message)
         }

@@ -1,13 +1,7 @@
 <div *ngFor="let card of cards">
-    <p>id: <span>{{card.task.frontId}}</span></p>
-    <p>name: <span>{{card.task.name}}</span></p>
-    <p>description: <span>{{card.task.description}}</span></p>
-    <p>done: {{card.task.done}}</p>
-    <input [(ngModel)]="card.task.name" placeholder="name">
-    <input [(ngModel)]="card.task.description" placeholder="description">
-    <button (click)="saveTask(card.task)">Save</button>
-    <button (click)="deleteTask(card.task)">Delete</button>
-    <button (click)="markDone(card.task)">Done</button>
-    <p *ngIf="card.messageShow">{{card.message}}</p>
+    <app-card [card]="card"
+    (updateCard)='saveUpdateCard(card)'
+    (deleteCard)='delete(card)'
+    ></app-card>
 </div>
 <button (click)=add()>Add</button>
