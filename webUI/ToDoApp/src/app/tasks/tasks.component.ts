@@ -5,7 +5,6 @@ import { ServerConnectionManagerService } from '../server-connection-manager.ser
 import { StringDto } from '../StringDto';
 import { Task } from '../Task';
 import { TaskServiceService } from '../task-service.service';
-import { Card } from '../Card';
 import { CardFactory } from './CardFactory';
 
 @Component({
@@ -15,7 +14,7 @@ import { CardFactory } from './CardFactory';
 })
 export class TasksComponent implements OnInit {
 
-  cards:Card[] = []
+  tasks:Task[] = []
   cardFactory:CardFactory = new CardFactory()  
 
   private correctMessageTimeS = 2
@@ -24,25 +23,26 @@ export class TasksComponent implements OnInit {
   constructor(private serverManager:ServerConnectionManagerService) {}
 
   ngOnInit(): void {
-    this.cards.push(this.cardFactory.generate("new task",'task description',this.cards))
-    this.serverManager.taskPipeline$.subscribe(tasks => this.cards = this.cardFactory.generateFromTasks(tasks))
+    this.serverManager.taskPipeline$.subscribe(tasks => this.tasks = tasks)
   }
 
-  saveUpdateCard(card:Card):void {
-    if(this.checkIfSaveCard(card)) this.saveTask(card.task)
-    if(this.checkIfUpdateCard(card)) this.updateTask(card.task)
+  saveUpdateTask(task:Task):void {
+    if(this.checkIfSaveTask(task)) this.saveTask(task)
+    if(this.checkIfUpdateTask(task)) this.updateTask(task)
   }
 
-  private checkIfSaveCard(card:Card):boolean {
-    return false
+  private checkIfSaveTask(task:Task):boolean {
+    if(this.tasks.filter(t => t.frontId == task.frontId).length == 0) return true
+    else return false
   }
 
-  private checkIfUpdateCard(card:Card):boolean {
-    return false
+  private checkIfUpdateTask(task:Task):boolean {
+    if(this.tasks.filter(t => t.frontId == t.frontId).length !== 0) return true
+    else return false
   }
 
-  delete(card:Card):void {
-    this.cards = this.cards.filter(c => c.task.frontId !== card.task.frontId)
+  delete(task:Task):void {
+    this.tasks = this.tasks.filter(t => t.frontId !== t.frontId)
   }
 
   private saveTask(task:Task){
@@ -51,9 +51,9 @@ export class TasksComponent implements OnInit {
 
   private analyzeSaveTaskResponse(response:Response, task:Task){
     if(response.status){
-      this.cards.push(this.cardFactory.generateFromTask(task))
+      this.tasks.push((task))
     }
-    this.showCardMessage(response,task)
+    //this.showCardMessage(response,task)
   }
 
   private updateTask(task:Task){
@@ -62,13 +62,13 @@ export class TasksComponent implements OnInit {
 
   private updateTaskIfStatusCorrect(response:Response, task:Task){
     if(response.status){
-      for(var i=0; i<this.cards.length; i++){
-        if(this.cards[i].task.frontId == task.frontId){
-          this.cards[i].task = task
+      for(var i=0; i<this.tasks.length; i++){
+        if(this.tasks[i].frontId == task.frontId){
+          this.tasks[i] = task
         }
       }
     }
-    this.showCardMessage(response,task)
+    //this.showCardMessage(response,task)
   }
 
   private deleteTask(task: Task): void {
@@ -77,19 +77,34 @@ export class TasksComponent implements OnInit {
 
   private analyzeDeleteResponse(response:Response, task:Task){
     if(response.status){
-      this.cards = this.cards.filter(c => c.task !== task)   
+      this.tasks = this.tasks.filter(t => t !== task)   
     }
-    this.showCardMessage(response, task)
+    //this.showCardMessage(response, task)
   }
 
   add(): void {
-    this.cards.push(this.cardFactory.generate("", "",this.cards))
+    var id = this.generateId()
+    var task:Task = {frontId:id,name:"Click to edit task.", description:"Task description", done:false}
+    this.tasks.push(task)
   }
 
+  private generateId():number {
+    if(this.tasks.length==0){
+      return 1
+    }
+    var maxNum:number = 0
+    for(var i=0; i<this.tasks.length; i++){
+      if(this.tasks[i].frontId > maxNum){
+        maxNum = this.tasks[i].frontId
+      }
+    }
+    return maxNum + 1
+  }
+/*
   private showCardMessage(response:Response, task:Task):void {
-    for(var i=0; i<this.cards.length; i++){
-      if(this.cards[i].task.frontId == task.frontId){
-        var card = this.cards[i]
+    for(var i=0; i<this.tasks.length; i++){
+      if(this.tasks[i].task.frontId == task.frontId){
+        var card = this.tasks[i]
         card.message = response.message
         card.messageShow = true
         card.messageStatus = response.status
@@ -103,4 +118,5 @@ export class TasksComponent implements OnInit {
       }
     }
   }
+  */
 }

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Event } from '@angular/router';
-import { Card } from '../Card';
+import { Task } from '../Task';
 
 @Component({
   selector: 'app-card',
@@ -9,28 +9,25 @@ import { Card } from '../Card';
 })
 export class CardComponent implements OnInit {
 
-  @Input('card') card!: Card;
-  @Output() updateCard: EventEmitter<Card>
-  @Output() deleteCard: EventEmitter<Card>
+  message:string = ''
+
+  @Input('task') task!: Task;
+  @Output() updateTask: EventEmitter<Task>
+  @Output() deleteTask: EventEmitter<Task>
 
   constructor() { 
-    this.updateCard = new EventEmitter()
-    this.deleteCard = new EventEmitter()
+    this.updateTask = new EventEmitter()
+    this.deleteTask = new EventEmitter()
   }
 
   ngOnInit(): void {
   }
 
-  update(card:Card){
-    if(!card.task.name || !card.task.description){
-      this.card.messageShow = true
-      this.card.message = 'Task name and task description can\'t be blank.'
-    } else {
-      this.updateCard.emit(card)
-    }
+  update(task:Task){
+    this.updateTask.emit(task)
   }
 
-  delete(card:Card){
-    this.deleteCard.emit(card)
+  delete(card:Task){
+    this.deleteTask.emit(card)
   }
 }

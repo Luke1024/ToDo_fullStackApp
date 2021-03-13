@@ -8,13 +8,15 @@ import { TasksComponent } from './tasks/tasks.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { UserPanelComponent } from './user-panel/user-panel.component';
+import { CardControlPanelComponent } from './card-control-panel/card-control-panel.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CardComponent,
     TasksComponent,
-    UserPanelComponent
+    UserPanelComponent,
+    CardControlPanelComponent
     
   ],
   imports: [
