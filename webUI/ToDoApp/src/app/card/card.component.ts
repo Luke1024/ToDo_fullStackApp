@@ -11,6 +11,7 @@ export class CardComponent implements OnInit {
 
   message:string = ''
 
+
   @Input('task') task!: Task;
   @Output() updateTask: EventEmitter<Task>
   @Output() deleteTask: EventEmitter<Task>
@@ -23,11 +24,15 @@ export class CardComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  foldSwitch(foldSwitch: boolean){
+
+  }
+
   update(task:Task){
     this.updateTask.emit(task)
   }
 
-  delete(card:Task){
-    this.deleteTask.emit(card)
+  delete(task:Task){
+    this.deleteTask.emit(task)
   }
 }

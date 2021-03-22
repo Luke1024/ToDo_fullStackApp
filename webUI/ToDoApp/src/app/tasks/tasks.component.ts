@@ -5,7 +5,6 @@ import { ServerConnectionManagerService } from '../server-connection-manager.ser
 import { StringDto } from '../StringDto';
 import { Task } from '../Task';
 import { TaskServiceService } from '../task-service.service';
-import { CardFactory } from './CardFactory';
 
 @Component({
   selector: 'app-tasks',
@@ -15,14 +14,16 @@ import { CardFactory } from './CardFactory';
 export class TasksComponent implements OnInit {
 
   tasks:Task[] = []
-  cardFactory:CardFactory = new CardFactory()  
 
   private correctMessageTimeS = 2
   private errorMessageTimeS = 4 //0 is infinite
 
+  private task:Task = {frontId:0,name:"Click to edit task.", description:"Task description", done:false}
+
   constructor(private serverManager:ServerConnectionManagerService) {}
 
   ngOnInit(): void {
+    this.tasks.push(this.task)
     this.serverManager.taskPipeline$.subscribe(tasks => this.tasks = tasks)
   }
 

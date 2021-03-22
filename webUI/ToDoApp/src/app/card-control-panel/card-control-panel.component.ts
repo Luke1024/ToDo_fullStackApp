@@ -13,14 +13,29 @@ export class CardControlPanelComponent implements OnInit {
   @Output() updateTask: EventEmitter<Task>
   @Output() deleteTask: EventEmitter<Task>
 
+  fold:boolean = false
+
   constructor() {
     this.folded = new EventEmitter
     this.updateTask = new EventEmitter
     this.deleteTask = new EventEmitter
   }
 
-  update(task:Task):void {
-    this.updateTask.emit(task)
+  setFold(foldInput:boolean){
+    this.fold = foldInput
+    this.foldSwitch()
+  }
+
+  foldSwitch(){
+    this.folded.emit(this.fold)
+  }
+
+  update():void {
+    this.updateTask.emit(this.task)
+  }
+
+  delete():void {
+    this.deleteTask.emit(this.task)
   }
 
   ngOnInit(): void {

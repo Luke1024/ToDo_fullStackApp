@@ -5,6 +5,10 @@
     <p>done: {{task.done}}</p>
     <input [(ngModel)]="task.name" placeholder="name">
     <input [(ngModel)]="task.description" placeholder="description">
-    <app-card-control-panel></app-card-control-panel>
+    <app-card-control-panel
+    [task]="task"
+    (folded)="foldSwitch($event)"
+    (deleteTask)="delete($event)"
+    (updateTask)="update($event)"></app-card-control-panel>
     <p>{{message}}</p>
 </div>

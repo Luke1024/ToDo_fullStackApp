@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { UserPanelComponent } from './user-panel/user-panel.component';
 import { CardControlPanelComponent } from './card-control-panel/card-control-panel.component';
+import { ExperimentalSwitchComponent } from './experimental-switch/experimental-switch.component';
 
 @NgModule({
   declarations: [
@@ -16,13 +17,13 @@ import { CardControlPanelComponent } from './card-control-panel/card-control-pan
     CardComponent,
     TasksComponent,
     UserPanelComponent,
-    CardControlPanelComponent
-    
+    CardControlPanelComponent,
+    ExperimentalSwitchComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

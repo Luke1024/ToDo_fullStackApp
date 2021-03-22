@@ -1,1 +1,8 @@
-<p>card-control-panel works!</p>
+<div>
+    <app-experimental-switch
+    [fold]="fold"
+    (foldSwitchEmitter)="setFold($event)"
+    ></app-experimental-switch>
+    <button (click)="delete()">Delete</button>
+    <button (click)="update()">Update</button>
+</div>
