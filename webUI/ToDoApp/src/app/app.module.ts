@@ -8,22 +8,20 @@ import { TasksComponent } from './tasks/tasks.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { UserPanelComponent } from './user-panel/user-panel.component';
-import { CardControlPanelComponent } from './card-control-panel/card-control-panel.component';
-import { ExperimentalSwitchComponent } from './experimental-switch/experimental-switch.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
     AppComponent,
     CardComponent,
     TasksComponent,
-    UserPanelComponent,
-    CardControlPanelComponent,
-    ExperimentalSwitchComponent
+    UserPanelComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
+    NoopAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

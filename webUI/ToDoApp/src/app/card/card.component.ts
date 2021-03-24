@@ -9,14 +9,16 @@ import { Task } from '../Task';
 })
 export class CardComponent implements OnInit {
 
-  message:string = ''
+  message:string
+  folded:boolean 
 
-
-  @Input('task') task!: Task;
+  @Input() task!: Task;
   @Output() updateTask: EventEmitter<Task>
   @Output() deleteTask: EventEmitter<Task>
 
   constructor() { 
+    this.message = ""
+    this.folded = false
     this.updateTask = new EventEmitter()
     this.deleteTask = new EventEmitter()
   }
@@ -24,15 +26,49 @@ export class CardComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  foldSwitch(foldSwitch: boolean){
-
+  saveAndFold(): void {
+    if(this.saveAllowed()){
+      this.message = ""
+      this.folded = true
+      this.updateTask.emit(this.task)
+    } else {
+      this.message = "Task name can't be blank."
+    }
   }
 
-  update(task:Task){
-    this.updateTask.emit(task)
+  unfold(): void {
+    this.folded = false
   }
 
-  delete(task:Task){
-    this.deleteTask.emit(task)
+  private saveAllowed():boolean {
+    if(this.task.name.length==0){
+      return false
+    }else {
+      return true
+    }
+  }
+
+  markDone():void {
+    if(this.saveAllowed()){
+      this.message = ""
+      this.task.done = true
+      this.updateTask.emit(this.task)
+    }else{
+      this.message = "Task name can't be blank."
+    }
+  }
+
+  markNotDone():void {
+    if(this.saveAllowed()){
+      this.message = ""
+      this.task.done = false
+      this.updateTask.emit(this.task)
+    }else{
+      this.message = "Task name can't be blank."
+    }
+  }
+
+  delete(){
+    this.deleteTask.emit(this.task)
   }
 }
