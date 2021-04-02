@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { UserPanelComponent } from './user-panel/user-panel.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { StoreModule } from '@ngrx/store';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    NoopAnimationsModule
+    NoopAnimationsModule,
+    StoreModule.forRoot({}, {})
   ],
   providers: [],
   bootstrap: [AppComponent]
