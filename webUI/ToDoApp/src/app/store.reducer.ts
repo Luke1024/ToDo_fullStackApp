@@ -1,5 +1,5 @@
-import { createReducer, on, State, Store } from '@ngrx/store'
-import { Task } from '../Task'
+import { Action, createReducer, on, State, Store } from '@ngrx/store'
+import { Task } from './Task'
 import { AppState } from './AppState'
 import { setStatusToFalse, setStatusToTrue, addServerMessage,
      setUserToken, createTask,
@@ -12,7 +12,7 @@ export const initialState:AppState = {
     userToken:'',
     tasks:[]}
 
-const appReducer = createReducer(
+const _appReducer = createReducer(
     initialState,
     on(setStatusToTrue, state => ({
         ...state, connectionStatus:true
@@ -29,10 +29,18 @@ const appReducer = createReducer(
     on(updateTask, (state, {task
     }) => ({...state, tasks:updater(state,task)})),
     on(deleteTask, (state, {task
-    }) => ({...state, tasks:state.tasks.filter(t => t.frontId != task.frontId)}))
+    }) => ({...state, tasks:state.tasks.filter(t => t.frontId !== task.frontId)}))
 )
 
+export function appReducer(state: AppState | undefined, action: Action){
+    return _appReducer(state,action)
+}
+
 var updater = function(state:AppState, task:Task):Task[] {
-    state.tasks[task.frontId] = task
+    for(var i=0; i<state.tasks.length; i++){
+        if(state.tasks[i].frontId==task.frontId){
+            state.tasks[i]=task
+        }
+    }
     return state.tasks 
 }

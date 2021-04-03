@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store'
-import { Task } from '../Task'
+import { Task } from './Task'
 
 export const setStatusToTrue = createAction('[Server Connection] SetStatusTo_True')
 export const setStatusToFalse = createAction('[Server Connection] SetStatusTo_False')
