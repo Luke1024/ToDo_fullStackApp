@@ -1,5 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Event } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { AppState } from '../AppState';
+import { setStatusToFalse, setStatusToTrue, addServerMessage,
+  setUserToken, createTask,
+  updateTask, deleteTask } from '../store-actions';
 import { Task } from '../Task';
 
 @Component({
@@ -12,15 +17,13 @@ export class CardComponent implements OnInit {
   message:string
   folded:boolean 
 
-  @Input() task!: Task;
-  @Output() updateTask: EventEmitter<Task>
-  @Output() deleteTask: EventEmitter<Task>
+  @Input() id:number = 0
+  task:Task
 
-  constructor() { 
+  constructor(private store: Store<{appState:AppState}>) { 
     this.message = ""
     this.folded = false
-    this.updateTask = new EventEmitter()
-    this.deleteTask = new EventEmitter()
+    this.task = {frontId:this.id,name:"Click to edit task.", description:"Task description", done:false}
   }
 
   ngOnInit(): void {
@@ -30,7 +33,7 @@ export class CardComponent implements OnInit {
     if(this.saveAllowed()){
       this.message = ""
       this.folded = true
-      this.updateTask.emit(this.task)
+      this.updateStore()
     } else {
       this.message = "Task name can't be blank."
     }
@@ -52,7 +55,7 @@ export class CardComponent implements OnInit {
     if(this.saveAllowed()){
       this.message = ""
       this.task.done = true
-      this.updateTask.emit(this.task)
+      this.updateStore()
     }else{
       this.message = "Task name can't be blank."
     }
@@ -62,13 +65,17 @@ export class CardComponent implements OnInit {
     if(this.saveAllowed()){
       this.message = ""
       this.task.done = false
-      this.updateTask.emit(this.task)
+      this.updateStore()
     }else{
       this.message = "Task name can't be blank."
     }
   }
 
+  private updateStore(){
+    this.store.dispatch(updateTask({task:this.task}))
+  }
+
   delete(){
-    this.deleteTask.emit(this.task)
+    this.store.dispatch(deleteTask({task:this.task}))
   }
 }

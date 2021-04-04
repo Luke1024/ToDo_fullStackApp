@@ -35,21 +35,12 @@ export class TasksComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    //this.tasks.push(this.task)
-    //this.serverManager.taskPipeline$.subscribe(tasks => this.tasks = tasks)
-  }
 
-  saveUpdateTask(task:Task):void {
-    this.store.dispatch(updateTask({task}))
-  }
-
-  delete(task:Task):void {
-    this.store.dispatch(deleteTask({task}))
   }
 
   add(): void {
     var id = this.generateId()
-    var task:Task = {frontId:id,name:"Click to edit task.", description:"Task description", done:false}
+    var task:Task = {frontId:id,name:"", description:"", done:false}
     this.store.dispatch(createTask({task}))
   }
 
@@ -65,23 +56,4 @@ export class TasksComponent implements OnInit {
     }
     return maxNum + 1
   }
-/*
-  private showCardMessage(response:Response, task:Task):void {
-    for(var i=0; i<this.tasks.length; i++){
-      if(this.tasks[i].task.frontId == task.frontId){
-        var card = this.tasks[i]
-        card.message = response.message
-        card.messageShow = true
-        card.messageStatus = response.status
-        if(response.status){
-          setTimeout(() => card.messageShow = false, this.correctMessageTimeS * 1000)
-        }else{
-          if(this.errorMessageTimeS != 0){
-            setTimeout(() => card.messageShow = false, this.errorMessageTimeS * 1000)
-          }
-        }
-      }
-    }
-  }
-  */
 }

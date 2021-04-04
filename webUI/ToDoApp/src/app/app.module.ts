@@ -11,6 +11,8 @@ import { UserPanelComponent } from './user-panel/user-panel.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { StoreModule } from '@ngrx/store';
 import { appReducer } from './store.reducer';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment'; 
 
 @NgModule({
   declarations: [
@@ -24,6 +26,7 @@ import { appReducer } from './store.reducer';
     FormsModule,
     HttpClientModule,
     NoopAnimationsModule,
+    StoreDevtoolsModule.instrument(),
     StoreModule.forRoot({appState: appReducer})],
   providers: [],
   bootstrap: [AppComponent]

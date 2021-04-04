@@ -1,6 +1,4 @@
 <div *ngFor="let task of tasks">
-    <app-card [task]="task"
-    (updateTask)="saveUpdateTask($event)"
-    (deleteTask)="delete($event)"></app-card>
+    <app-card [id]="task.frontId"></app-card>
 </div>
 <button (click)=add()>Add</button>
