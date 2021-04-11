@@ -1,4 +1,4 @@
 <div *ngFor="let task of tasks">
-    <app-card [id]="task.frontId"></app-card>
+    <app-card [task]="task"></app-card>
 </div>
 <button (click)=add()>Add</button>

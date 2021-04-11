@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Event } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { takeLast } from 'rxjs/operators';
 import { AppState } from '../AppState';
 import { setStatusToFalse, setStatusToTrue, addServerMessage,
   setUserToken, createTask,
@@ -17,23 +18,26 @@ export class CardComponent implements OnInit {
   message:string
   folded:boolean 
 
-  @Input() id:number = 0
-  task:Task
+  name:string = ''
+  description:string = ''
+
+  @Input() task!:Task
 
   constructor(private store: Store<{appState:AppState}>) { 
     this.message = ""
     this.folded = false
-    this.task = {frontId:this.id,name:"Click to edit task.", description:"Task description", done:false}
   }
 
   ngOnInit(): void {
+    this.name = this.task.name
+    this.description = this.task.description
   }
 
-  saveAndFold(): void {
-    if(this.saveAllowed()){
+  saveAndFold(name:string, description:string): void {
+    if(this.saveAllowed(name)){
       this.message = ""
       this.folded = true
-      this.updateStore()
+      this.updateStore(name, description)
     } else {
       this.message = "Task name can't be blank."
     }
@@ -43,36 +47,39 @@ export class CardComponent implements OnInit {
     this.folded = false
   }
 
-  private saveAllowed():boolean {
-    if(this.task.name.length==0){
+  private saveAllowed(name:string):boolean {
+    if(name.length==0){
       return false
     }else {
       return true
     }
   }
 
-  markDone():void {
-    if(this.saveAllowed()){
+  markDone(name:string, description:string):void {
+    if(this.saveAllowed(name)){
       this.message = ""
       this.task.done = true
-      this.updateStore()
+      this.updateStore(name, description)
     }else{
       this.message = "Task name can't be blank."
     }
   }
 
-  markNotDone():void {
-    if(this.saveAllowed()){
+  markNotDone(name:string, description:string):void {
+    if(this.saveAllowed(name)){
       this.message = ""
       this.task.done = false
-      this.updateStore()
+      this.updateStore(name, description)
     }else{
       this.message = "Task name can't be blank."
     }
   }
 
-  private updateStore(){
-    this.store.dispatch(updateTask({task:this.task}))
+  private updateStore(name:string, description:string){
+    var task = Object.assign({},this.task)
+    task.name = name
+    task.description = description
+    this.store.dispatch(updateTask({task:task}))
   }
 
   delete(){

@@ -26,8 +26,8 @@ import { environment } from '../environments/environment';
     FormsModule,
     HttpClientModule,
     NoopAnimationsModule,
-    StoreDevtoolsModule.instrument(),
-    StoreModule.forRoot({appState: appReducer})],
+    StoreModule.forRoot({appState: appReducer}),
+    StoreDevtoolsModule.instrument()],
   providers: [],
   bootstrap: [AppComponent]
 })

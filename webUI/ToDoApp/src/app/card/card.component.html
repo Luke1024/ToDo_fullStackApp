@@ -7,18 +7,18 @@
         <p>name: <span>{{task.name}}</span></p>
         <p>description: <span>{{task.description}}</span></p>
         <p>done: {{task.done}}</p>
-        <input [(ngModel)]="task.name" placeholder="name">
-        <input [(ngModel)]="task.description" placeholder="description">
+        <input [(ngModel)]="name" placeholder="name">
+        <input [(ngModel)]="description" placeholder="description">
     </div>
     <div>
         <div>
-            <button *ngIf="!folded" (click)="saveAndFold()">Save</button>
+            <button *ngIf="!folded" (click)="saveAndFold(name,description)">Save</button>
             <button *ngIf="folded" (click)="unfold()">Unfold</button>
         </div>
         <button (click)="delete()">Delete</button>
         <div>
-            <button *ngIf="!task.done" (click)="markDone()">Make Done</button>
-            <button *ngIf="task.done" (click)="markNotDone()">Make not done</button>
+            <button *ngIf="!task.done" (click)="markDone(name,description)">Make Done</button>
+            <button *ngIf="task.done" (click)="markNotDone(name,description)">Make not done</button>
         </div>
     </div>
     <p>{{message}}</p>

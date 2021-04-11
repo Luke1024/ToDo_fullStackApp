@@ -37,10 +37,11 @@ export function appReducer(state: AppState | undefined, action: Action){
 }
 
 var updater = function(state:AppState, task:Task):Task[] {
-    for(var i=0; i<state.tasks.length; i++){
-        if(state.tasks[i].frontId==task.frontId){
-            state.tasks[i]=task
+    var newTasks = state.tasks.slice()
+    for(var i=0; i<newTasks.length; i++){
+        if(newTasks[i].frontId==task.frontId){
+            newTasks[i]=task
         }
     }
-    return state.tasks 
+    return newTasks
 }
