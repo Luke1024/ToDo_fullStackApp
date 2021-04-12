@@ -1,25 +1,24 @@
 <div>
-    <div *ngIf="folded">
-        <p><span>{{task.name}}</span></p>
-    </div>
-    <div *ngIf="!folded">
-        <p>id: <span>{{task.frontId}}</span></p>
-        <p>name: <span>{{task.name}}</span></p>
-        <p>description: <span>{{task.description}}</span></p>
-        <p>done: {{task.done}}</p>
-        <input [(ngModel)]="name" placeholder="name">
-        <input [(ngModel)]="description" placeholder="description">
-    </div>
+<div *ngIf="card.folded">
+    <p>{{card.task.taskName}}</p>
+</div>
+<div *ngIf="!card.folded">
+    <p>id: <span>{{card.task.frontId}}</span></p>
+    <p>name: <span>{{card.task.taskName}}</span></p>
+    <p>description: <span>{{card.task.description}}</span></p>
+    <p>done: {{card.task.done}}</p>
+    <input [(ngModel)]="name" placeholder="name">
+    <input [(ngModel)]="description" placeholder="description">
+</div>
+<div>
     <div>
-        <div>
-            <button *ngIf="!folded" (click)="saveAndFold(name,description)">Save</button>
-            <button *ngIf="folded" (click)="unfold()">Unfold</button>
-        </div>
-        <button (click)="delete()">Delete</button>
-        <div>
-            <button *ngIf="!task.done" (click)="markDone(name,description)">Make Done</button>
-            <button *ngIf="task.done" (click)="markNotDone(name,description)">Make not done</button>
-        </div>
+        <button *ngIf="!card.folded" (click)="saveAndFold(name,description)">Save</button>
+        <button *ngIf="card.folded" (click)="unfold()">Unfold</button>
     </div>
-    <p>{{message}}</p>
+    <button (click)="delete()">Delete</button>
+    <div>
+        <button *ngIf="!card.task.done" (click)="markDone(name,description)">Make Done</button>
+        <button *ngIf="card.task.done" (click)="markNotDone(name,description)">Make not done</button>
+    </div>
+</div>
 </div>

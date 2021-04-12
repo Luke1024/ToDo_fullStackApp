@@ -4,5 +4,5 @@ export interface Card {
     task:Task
     message:string
     messageShow:boolean
-    messageStatus:boolean
+    folded:boolean
 }

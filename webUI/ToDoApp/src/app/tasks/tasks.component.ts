@@ -9,8 +9,8 @@ import { Task } from '../Task';
 import { TaskServiceService } from '../task-service.service';
 import { AppState } from '../AppState';
 import { setStatusToFalse, setStatusToTrue, addServerMessage,
-  setUserToken, createTask,
-  updateTask, deleteTask } from '../store-actions'
+  setUserToken, createCard } from '../store-actions'
+import { Card } from '../Card';
 
 @Component({
   selector: 'app-tasks',
@@ -19,19 +19,14 @@ import { setStatusToFalse, setStatusToTrue, addServerMessage,
 })
 export class TasksComponent implements OnInit {
 
-  tasks:Task[] = []
+  cards:Card[] = []
 
   appState$:Observable<any>
-
-  private correctMessageTimeS = 2
-  private errorMessageTimeS = 4 //0 is infinite
-
-  private task:Task = {frontId:0,name:"Click to edit task.", description:"Task description", done:false}
 
   constructor(private serverManager:ServerConnectionManagerService, 
     private store: Store<{appState:AppState}>) {
       this.appState$ = store.select('appState')
-      this.appState$.subscribe(app => this.tasks = app.tasks)
+      this.appState$.subscribe(app => this.cards = app.cards)
     }
 
   ngOnInit(): void {
@@ -40,18 +35,19 @@ export class TasksComponent implements OnInit {
 
   add(): void {
     var id = this.generateId()
-    var task:Task = {frontId:id,name:"", description:"", done:false}
-    this.store.dispatch(createTask({task}))
+    var task:Task = {frontId:id,taskName:"", description:"", done:false}
+    var card:Card = {task, message:"", messageShow:false, folded:false}
+    this.store.dispatch(createCard({card}))
   }
 
   private generateId():number {
-    if(this.tasks.length==0){
+    if(this.cards.length==0){
       return 0
     }
     var maxNum:number = 0
-    for(var i=0; i<this.tasks.length; i++){
-      if(this.tasks[i].frontId > maxNum){
-        maxNum = this.tasks[i].frontId
+    for(var i=0; i<this.cards.length; i++){
+      if(this.cards[i].task.frontId > maxNum){
+        maxNum = this.cards[i].task.frontId
       }
     }
     return maxNum + 1

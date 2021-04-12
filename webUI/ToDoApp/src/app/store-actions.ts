@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store'
-import { Task } from './Task'
+import { Card } from './Card'
 
 export const setStatusToTrue = createAction('[Server Connection] SetStatusTo_True')
 export const setStatusToFalse = createAction('[Server Connection] SetStatusTo_False')
@@ -11,14 +11,14 @@ export const setUserToken = createAction(
     '[Server Connection] SetUserToken',
     props<{token:string}>())
 
-export const createTask = createAction(
-    '[Tasks Component] CreateTask',
-    props<{task:Task}>())
-export const updateTask = createAction(
-    '[Tasks Component] UpdateTask',
-    props<{task:Task}>())
-export const deleteTask = createAction(
-    '[Tasks Component] DeleteTask',
-    props<{task:Task}>())
+export const createCard = createAction(
+    '[Tasks Component] CreateCard',
+    props<{card:Card}>())
+export const updateCard = createAction(
+    '[Tasks Component] UpdateCard',
+    props<{card:Card}>())
+export const deleteCard = createAction(
+    '[Tasks Component] DeleteCard',
+    props<{card:Card}>())
 
 

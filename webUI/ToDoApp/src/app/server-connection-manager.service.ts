@@ -296,7 +296,7 @@ export class ServerConnectionManagerService {
     return new Observable(observer => {
 
     if(this.tokenReceived){
-      if(!task.name || !task.description){
+      if(!task.taskName || !task.description){
         this.taskService.updateTask(this.token, task)
         .subscribe(response => { 
           observer.next(this.analyzeUpdateResponse(response))

@@ -3,48 +3,51 @@ import { Event } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { takeLast } from 'rxjs/operators';
 import { AppState } from '../AppState';
+import { Card } from '../Card';
 import { setStatusToFalse, setStatusToTrue, addServerMessage,
-  setUserToken, createTask,
-  updateTask, deleteTask } from '../store-actions';
-import { Task } from '../Task';
+  setUserToken, createCard,
+  updateCard, deleteCard } from '../store-actions';
 
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.css']
 })
-export class CardComponent implements OnInit {
-
-  message:string
-  folded:boolean 
+export class CardComponent implements OnInit { 
 
   name:string = ''
   description:string = ''
 
-  @Input() task!:Task
+  @Input() card!:Card
 
   constructor(private store: Store<{appState:AppState}>) { 
-    this.message = ""
-    this.folded = false
+    
   }
 
   ngOnInit(): void {
-    this.name = this.task.name
-    this.description = this.task.description
+    this.name = this.card.task.taskName
+    this.description = this.card.task.description
   }
 
   saveAndFold(name:string, description:string): void {
     if(this.saveAllowed(name)){
-      this.message = ""
-      this.folded = true
-      this.updateStore(name, description)
+      var card = Object.assign({}, this.card)
+      var task = Object.assign({}, this.card.task)
+      card.message = ""
+      card.folded = true
+      task.taskName = name
+      task.description = description
+      card.task = task
+      this.updateStore(card)
     } else {
-      this.message = "Task name can't be blank."
+      this.card.message = "Task name can't be blank."
     }
   }
 
   unfold(): void {
-    this.folded = false
+    var card = Object.assign({}, this.card)
+    card.folded = false
+    this.updateStore(card)
   }
 
   private saveAllowed(name:string):boolean {
@@ -57,32 +60,39 @@ export class CardComponent implements OnInit {
 
   markDone(name:string, description:string):void {
     if(this.saveAllowed(name)){
-      this.message = ""
-      this.task.done = true
-      this.updateStore(name, description)
+      var card = Object.assign({}, this.card)
+      var task = Object.assign({}, this.card.task)
+      card.message = ""
+      task.done = true
+      task.taskName = name
+      task.description = description
+      card.task = task
+      this.updateStore(card)
     }else{
-      this.message = "Task name can't be blank."
+      this.card.message = "Task name can't be blank."
     }
   }
 
   markNotDone(name:string, description:string):void {
     if(this.saveAllowed(name)){
-      this.message = ""
-      this.task.done = false
-      this.updateStore(name, description)
+      var card = Object.assign({}, this.card)
+      var task = Object.assign({}, this.card.task)
+      card.message = ""
+      task.done = false
+      task.taskName = name
+      task.description = description
+      card.task = task
+      this.updateStore(card)
     }else{
-      this.message = "Task name can't be blank."
+      this.card.message = "Task name can't be blank."
     }
   }
 
-  private updateStore(name:string, description:string){
-    var task = Object.assign({},this.task)
-    task.name = name
-    task.description = description
-    this.store.dispatch(updateTask({task:task}))
+  private updateStore(card:Card){
+    this.store.dispatch(updateCard({card:card}))
   }
 
   delete(){
-    this.store.dispatch(deleteTask({task:this.task}))
+    this.store.dispatch(deleteCard({card:this.card}))
   }
 }
