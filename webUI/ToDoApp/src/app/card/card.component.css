@@ -1,0 +1,51 @@
+#card {
+    background-color: brown;
+    position:relative;
+    margin:auto;
+    margin-top: 15px;
+    min-width: 400px;
+    max-width: 800px;
+    position: relative;
+    border-radius: 10px;
+    height:110px;
+}
+
+#name {
+    position:absolute;
+    top:5px;
+    left:5px;
+}
+
+#nameInput {
+    position:absolute;
+    top:10px;
+    left:10px;
+    width:70%;
+}
+
+#descriptionInput {
+    position:absolute;
+    top:40px;
+    left:10px;
+    width:95%;
+    height:50px;
+    resize: none;
+}
+
+#saveAndFold {
+    position:absolute;
+    top:10px;
+    right:160px;
+}
+
+#deleteButton {
+    position:absolute;
+    top:10px;
+    right:100px;
+}
+
+#doneButton {
+    position:absolute;
+    top:10px;
+    right:10px;
+}

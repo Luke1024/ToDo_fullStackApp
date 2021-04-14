@@ -30,9 +30,12 @@ export class CardComponent implements OnInit {
   }
 
   saveAndFold(name:string, description:string): void {
+    var card = Object.assign({}, this.card)
+    var task = Object.assign({}, this.card.task)
     if(this.saveAllowed(name)){
       var card = Object.assign({}, this.card)
       var task = Object.assign({}, this.card.task)
+      card.messageShow = false
       card.message = ""
       card.folded = true
       task.taskName = name
@@ -40,7 +43,9 @@ export class CardComponent implements OnInit {
       card.task = task
       this.updateStore(card)
     } else {
-      this.card.message = "Task name can't be blank."
+      card.messageShow = true
+      card.message = "Task name can't be blank."
+      this.updateStore(card)
     }
   }
 
@@ -59,9 +64,10 @@ export class CardComponent implements OnInit {
   }
 
   markDone(name:string, description:string):void {
+    var card = Object.assign({}, this.card)
+    var task = Object.assign({}, this.card.task)
     if(this.saveAllowed(name)){
-      var card = Object.assign({}, this.card)
-      var task = Object.assign({}, this.card.task)
+      card.messageShow = false
       card.message = ""
       task.done = true
       task.taskName = name
@@ -69,14 +75,16 @@ export class CardComponent implements OnInit {
       card.task = task
       this.updateStore(card)
     }else{
-      this.card.message = "Task name can't be blank."
+      card.messageShow = true
+      card.message = "Task name can't be blank."
+      this.updateStore(card)
     }
   }
 
   markNotDone(name:string, description:string):void {
+    var card = Object.assign({}, this.card)
+    var task = Object.assign({}, this.card.task)
     if(this.saveAllowed(name)){
-      var card = Object.assign({}, this.card)
-      var task = Object.assign({}, this.card.task)
       card.message = ""
       task.done = false
       task.taskName = name
@@ -84,7 +92,9 @@ export class CardComponent implements OnInit {
       card.task = task
       this.updateStore(card)
     }else{
-      this.card.message = "Task name can't be blank."
+      card.messageShow = true
+      card.message = "Task name can't be blank."
+      this.updateStore(card)
     }
   }
 
