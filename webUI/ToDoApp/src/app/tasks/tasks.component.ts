@@ -30,15 +30,13 @@ export class TasksComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    var task:Task = {frontId:0,taskName:"", description:"", done:false}
-    var card:Card = {task, message:"", messageShow:false, folded:false}
+    var card:Card = {frontId:0,taskName:"", description:"", done:false, message:"", messageShow:false, folded:false}
     this.store.dispatch(createCard({card}))
   }
 
   add(): void {
     var id = this.generateId()
-    var task:Task = {frontId:id,taskName:"", description:"", done:false}
-    var card:Card = {task, message:"", messageShow:false, folded:false}
+    var card:Card = {frontId:id,taskName:"", description:"", done:false, message:"", messageShow:false, folded:false}
     this.store.dispatch(createCard({card}))
   }
 
@@ -48,8 +46,8 @@ export class TasksComponent implements OnInit {
     }
     var maxNum:number = 0
     for(var i=0; i<this.cards.length; i++){
-      if(this.cards[i].task.frontId > maxNum){
-        maxNum = this.cards[i].task.frontId
+      if(this.cards[i].frontId > maxNum){
+        maxNum = this.cards[i].frontId
       }
     }
     return maxNum + 1

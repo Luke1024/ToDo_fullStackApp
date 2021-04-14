@@ -29,7 +29,7 @@ const _appReducer = createReducer(
     on(updateCard, (state, {card
     }) => ({...state, cards:updater(state,card)})),
     on(deleteCard, (state, {card
-    }) => ({...state, cards:state.cards.filter(c => c.task.frontId !== card.task.frontId)}))
+    }) => ({...state, cards:state.cards.filter(c => c.frontId !== card.frontId)}))
 )
 
 export function appReducer(state: AppState | undefined, action: Action){
@@ -39,7 +39,7 @@ export function appReducer(state: AppState | undefined, action: Action){
 var updater = function(state:AppState, card:Card):Card[] {
     var cards = state.cards.slice()
     for(var i=0; i<cards.length; i++){
-        if(cards[i].task.frontId == card.task.frontId){
+        if(cards[i].frontId == card.frontId){
             cards[i]=card
         }
     }

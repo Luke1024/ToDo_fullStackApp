@@ -13,6 +13,8 @@ import { StoreModule } from '@ngrx/store';
 import { appReducer } from './store.reducer';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment'; 
+import {MatButtonModule} from '@angular/material/button';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle'; 
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { environment } from '../environments/environment';
     FormsModule,
     HttpClientModule,
     NoopAnimationsModule,
+    MatButtonModule,
+    MatSlideToggleModule,
     StoreModule.forRoot({appState: appReducer}),
     StoreDevtoolsModule.instrument()],
   providers: [],

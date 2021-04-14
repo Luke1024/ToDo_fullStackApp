@@ -1,17 +1,14 @@
-<div id="card">
-    <p id="name" *ngIf="card.folded">{{card.task.taskName}}</p>
+<div (keyup.enter)="updater()" id="card">
+    <p id="name" *ngIf="card.folded">{{card.taskName}}</p>
     <div *ngIf="!card.folded">
-        <input id="nameInput" [(ngModel)]="name" placeholder="name">
-        <textarea id="descriptionInput" [(ngModel)]="description" placeholder="description"></textarea>
+        <input id="nameInput" [(ngModel)]="card.taskName" (change)="updater()"  placeholder="name">
+        <textarea id="descriptionInput" [(ngModel)]="card.description" (change)="updater()" placeholder="description"></textarea>
     </div>
     <div id="saveAndFold">
-        <button *ngIf="!card.folded" (click)="saveAndFold(name,description)">Save</button>
+        <button *ngIf="!card.folded" (click)="save()">Save</button>
         <button *ngIf="card.folded" (click)="unfold()">Unfold</button>
     </div>
-    <button id="deleteButton" (click)="delete()">Delete</button>
-    <div id="doneButton">
-        <button *ngIf="!card.task.done" (click)="markDone(name,description)">Make Done</button>
-        <button *ngIf="card.task.done" (click)="markNotDone(name,description)">Make not done</button>
-    </div>
+    <button mat-raised-button color="warn" id="deleteButton" (click)="delete()">Delete</button>
+    <mat-slide-toggle id="doneButton" [(ngModel)]="card.done" (change)="updater()">Done</mat-slide-toggle>
     <p id="cardMessage" *ngIf="card.messageShow">{{card.message}}</p>
 </div>
