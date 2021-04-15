@@ -15,13 +15,16 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment'; 
 import {MatButtonModule} from '@angular/material/button';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle'; 
+import {MatIconModule} from '@angular/material/icon';
+import { CardFilterComponent } from './card-filter/card-filter.component'; 
 
 @NgModule({
   declarations: [
     AppComponent,
     CardComponent,
     TasksComponent,
-    UserPanelComponent
+    UserPanelComponent,
+    CardFilterComponent
   ],
   imports: [
     BrowserModule,
@@ -30,6 +33,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     NoopAnimationsModule,
     MatButtonModule,
     MatSlideToggleModule,
+    MatIconModule,
     StoreModule.forRoot({appState: appReducer}),
     StoreDevtoolsModule.instrument()],
   providers: [],

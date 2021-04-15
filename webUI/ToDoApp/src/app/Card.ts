@@ -7,5 +7,6 @@ export interface Card {
     done: boolean;
     message:string
     messageShow:boolean
+    editMode:boolean
     folded:boolean
 }

@@ -32,6 +32,7 @@ export class CardComponent implements OnInit {
     if(this.saveAllowed()){
       this.card.messageShow = false
       this.card.message = ""
+      this.card.editMode = false
       this.updateStore()
     } else {
       this.card.messageShow = true
@@ -40,10 +41,31 @@ export class CardComponent implements OnInit {
     }
   }
 
-  unfold(): void {
-    var card = Object.assign({}, this.cardInput)
-    card.folded = false
+  edit():void {
+    this.card.editMode = true
     this.updateStore()
+  }
+
+  fold(): void {
+    this.card.folded = true
+    this.updateStore()
+  }
+
+  unfold(): void {
+    this.card.folded = false
+    this.updateStore()
+  }
+
+  update():void {
+    if(this.saveAllowed()){
+      this.card.messageShow = false
+      this.card.message = ""
+      this.updateStore()
+    } else {
+      this.card.messageShow = true
+      this.card.message = "Task name can't be blank."
+      this.updateStore()
+    }
   }
 
   private saveAllowed():boolean {
@@ -63,6 +85,6 @@ export class CardComponent implements OnInit {
   }
 
   updater(){
-    this.save()
+    this.update()
   }
 }

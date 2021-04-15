@@ -30,13 +30,13 @@ export class TasksComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    var card:Card = {frontId:0,taskName:"", description:"", done:false, message:"", messageShow:false, folded:false}
+    var card:Card = {frontId:0,taskName:"", description:"", done:false, message:"", messageShow:false, editMode:true, folded:false}
     this.store.dispatch(createCard({card}))
   }
 
   add(): void {
     var id = this.generateId()
-    var card:Card = {frontId:id,taskName:"", description:"", done:false, message:"", messageShow:false, folded:false}
+    var card:Card = {frontId:id,taskName:"", description:"", done:false, message:"", messageShow:false, editMode:true, folded:false}
     this.store.dispatch(createCard({card}))
   }
 

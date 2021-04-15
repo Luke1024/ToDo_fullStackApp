@@ -1,4 +1,7 @@
+<app-card-filter></app-card-filter>
 <div *ngFor="let card of cards">
     <app-card [cardInput]="card"></app-card>
 </div>
-<button (click)=add()>Add</button>
+<button mat-icon-button (click)=add()>
+    <mat-icon>add</mat-icon>
+</button>
