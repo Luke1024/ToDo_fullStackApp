@@ -5,11 +5,12 @@ import { setStatusToFalse, setStatusToTrue, addServerMessage,
      setUserToken, createCard,
      updateCard, deleteCard } from './store-actions'
 import { Card } from './Card'
+import { FormPanelMode } from './form-panel-mode'
 
 export const initialState:AppState = {
-    connectionStatus:false,
-    serverMessages:[], 
-    userToken:'',
+    topBar:{loggedIn:false, disableButtons:false, message:"ToDo", connectionStatus:false},
+    formPanel:{visible:false, mode:FormPanelMode.LOG_IN, message:""},
+    serverManagement:{connected:false, token:"", userLogged:false, messages:[]},
     cards:[]}
 
 const _appReducer = createReducer(
@@ -20,8 +21,8 @@ const _appReducer = createReducer(
     on(setStatusToFalse, state => ({
         ...state, connectionStatus:false
     })),
-    on(addServerMessage, (state, { message
-    }) => ({...state,serverMessages:state.serverMessages.concat(message)})),
+    
+    
     on(setUserToken, (state, { token
     }) => ({...state,userToken:token})),
     on(createCard, (state, { card

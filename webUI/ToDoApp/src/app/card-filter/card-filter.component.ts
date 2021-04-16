@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState } from '../AppState';
 
 @Component({
   selector: 'app-card-filter',
@@ -7,9 +9,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CardFilterComponent implements OnInit {
 
-  constructor() { }
+  constructor(private store: Store<{appState:AppState}>) { }
 
   ngOnInit(): void {
   }
 
+  all():void {
+
+  }
+
+  toDo():void {
+
+  }
+
+  done():void {
+
+  }
+
+  archived():void {
+
+  }
 }

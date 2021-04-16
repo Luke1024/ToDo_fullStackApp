@@ -16,7 +16,9 @@ import { environment } from '../environments/environment';
 import {MatButtonModule} from '@angular/material/button';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle'; 
 import {MatIconModule} from '@angular/material/icon';
-import { CardFilterComponent } from './card-filter/card-filter.component'; 
+import { CardFilterComponent } from './card-filter/card-filter.component';
+import { TopBarComponent } from './top-bar/top-bar.component';
+import { FormPanelComponent } from './form-panel/form-panel.component'; 
 
 @NgModule({
   declarations: [
@@ -24,7 +26,9 @@ import { CardFilterComponent } from './card-filter/card-filter.component';
     CardComponent,
     TasksComponent,
     UserPanelComponent,
-    CardFilterComponent
+    CardFilterComponent,
+    TopBarComponent,
+    FormPanelComponent
   ],
   imports: [
     BrowserModule,
