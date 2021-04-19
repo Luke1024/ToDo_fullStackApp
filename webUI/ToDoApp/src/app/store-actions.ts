@@ -1,15 +1,34 @@
 import { createAction, props } from '@ngrx/store'
 import { Card } from './Card'
+import { FormPanelMode } from './form-panel-mode'
+import { ServerMessage } from './server-message'
 
-export const setStatusToTrue = createAction('[Server Connection] SetStatusTo_True')
-export const setStatusToFalse = createAction('[Server Connection] SetStatusTo_False')
-
-export const addServerMessage = createAction(
-    '[Server Connection] SetStatus',
+//TopBar component actions
+export const setDisableButtonsToTrue = createAction("[TopBar Component] Set disableButtons to true. ")
+export const setDisableButtonsToFalse = createAction("[TopBar Component] Set disableButtons to false.")
+export const setTopBarMessage = createAction(
+    "[TopBar Component] Set message.",
     props<{message:string}>())
-export const setUserToken = createAction(
-    '[Server Connection] SetUserToken',
+
+//FormPanel component actions
+export const setFormPanelVisibleToTrue = createAction("[FormPanel Component] Set visible to true.")
+export const setFormPanelVisibleToFalse = createAction("[FormPanel Component] Set visible to false.")
+export const setFormPanelMode = createAction(
+    "[FormPanel Component] Set mode.",
+    props<{mode:FormPanelMode}>())
+export const setFormPanelMessage = createAction(
+    "[FormPanel Component] Set message.",
+    props<{message:string}>())
+
+//ServerManagement actions
+export const setConnectedToTrue = createAction("[ServerManagement] Set connected to true.")
+export const setConnectedToFalse = createAction("[ServerManagement] Set connected to false.")
+export const setToken = createAction("[ServerManagement] Set token.",
     props<{token:string}>())
+export const setUserLoggedToTrue = createAction("[ServerManagement] Set user logged to true.")
+export const setUserLoggedToFalse = createAction("[ServerManagement] Set user logged to false.")
+export const addServerManagementMessage = createAction("[ServerManagement] Add message.",
+    props<{message:ServerMessage}>())
 
 export const createCard = createAction(
     '[Tasks Component] CreateCard',

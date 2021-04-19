@@ -1,34 +1,60 @@
-import { Action, createReducer, on, State, Store } from '@ngrx/store'
+import { Action, createReducer, createReducerFactory, on, State, Store } from '@ngrx/store'
 import { Task } from './Task'
 import { AppState } from './AppState'
-import { setStatusToFalse, setStatusToTrue, addServerMessage,
-     setUserToken, createCard,
-     updateCard, deleteCard } from './store-actions'
+import { createCard,
+     updateCard,
+      deleteCard,
+       setDisableButtonsToTrue,
+        setDisableButtonsToFalse,
+         setTopBarMessage,
+        setFormPanelVisibleToTrue,
+    setFormPanelVisibleToFalse,
+setFormPanelMode,
+setFormPanelMessage,
+setConnectedToFalse,
+setConnectedToTrue,
+setToken,
+setUserLoggedToFalse,
+setUserLoggedToTrue,
+addServerManagementMessage
+} from './store-actions'
 import { Card } from './Card'
 import { FormPanelMode } from './form-panel-mode'
+import { TopBar } from './top-bar'
+import { createReadStream } from 'fs'
+import { ServerMessage } from './server-message'
 
 export const initialState:AppState = {
-    topBar:{loggedIn:false, disableButtons:false, message:"ToDo", connectionStatus:false},
-    formPanel:{visible:false, mode:FormPanelMode.LOG_IN, message:""},
-    serverManagement:{connected:false, token:"", userLogged:false, messages:[]},
+    topBarDisableButtons:false,
+    topBarMessage:"ToDo",
+    formPanelVisible:false,
+    formPanelMode:FormPanelMode.LOG_IN,
+    formPanelMessage:"",
+    connected:false,
+    token:"",
+    userLogged:false,
+    serverMessages:[],
     cards:[]}
 
 const _appReducer = createReducer(
     initialState,
-    on(setStatusToTrue, state => ({
-        ...state, connectionStatus:true
-    })),
-    on(setStatusToFalse, state => ({
-        ...state, connectionStatus:false
-    })),
+    //TopBar actions
+    on(setDisableButtonsToTrue, state => ({...state, topBarDisableButtons:true})),
+    on(setDisableButtonsToFalse, state => ({...state, topBarDisableButtons:false})),
+    on(setTopBarMessage, (state,{message}) => ({...state, topBarMessage:message})),
+    on(setFormPanelVisibleToTrue, state => ({...state, formPanelVisible:true})),
+    on(setFormPanelVisibleToFalse, state => ({...state, formPanelVisible:false})),
+    on(setFormPanelMode, (state,{mode}) => ({...state, formPanelMode:mode})),
+    on(setFormPanelMessage, (state,{message}) => ({...state,formPanelMessage:message})),
+    on(setConnectedToTrue, state => ({...state,connected:true})),
+    on(setConnectedToFalse, state => ({...state,connected:false})),
+    on(setToken, (state,{token}) => ({...state, token:token})),
+    on(setUserLoggedToTrue, state => ({...state, userLogged:true})),
+    on(setUserLoggedToFalse, state => ({...state, userLogged:false})),
+    on(addServerManagementMessage, (state,{message}) => ({...state, serverMessages:messageAdder(state,message)})),
     
-    
-    on(setUserToken, (state, { token
-    }) => ({...state,userToken:token})),
-    on(createCard, (state, { card
-    }) => ({...state,cards:state.cards.concat(card)})),
-    on(updateCard, (state, {card
-    }) => ({...state, cards:updater(state,card)})),
+    on(createCard, (state, {card}) => ({...state, cards:cardCreator(state,card)})),
+    on(updateCard, (state, {card}) => ({...state, cards:cardUpdater(state,card)})),
     on(deleteCard, (state, {card
     }) => ({...state, cards:state.cards.filter(c => c.frontId !== card.frontId)}))
 )
@@ -37,7 +63,19 @@ export function appReducer(state: AppState | undefined, action: Action){
     return _appReducer(state,action)
 }
 
-var updater = function(state:AppState, card:Card):Card[] {
+var messageAdder = function(state:AppState, message:ServerMessage):ServerMessage[] {
+    var messages = state.serverMessages.slice()
+    messages.push(message)
+    return messages
+}
+
+var cardCreator = function(state:AppState, card:Card):Card[] {
+    var cards = state.cards.slice()
+    cards.push(card)
+    return cards
+}
+
+var cardUpdater = function(state:AppState, card:Card):Card[] {
     var cards = state.cards.slice()
     for(var i=0; i<cards.length; i++){
         if(cards[i].frontId == card.frontId){
