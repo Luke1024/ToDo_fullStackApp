@@ -8,8 +8,7 @@ import { StringDto } from '../StringDto';
 import { Task } from '../Task';
 import { TaskServiceService } from '../task-service.service';
 import { AppState } from '../AppState';
-import { setStatusToFalse, setStatusToTrue, addServerMessage,
-  setUserToken, createCard } from '../store-actions'
+import { createCard } from '../store-actions'
 import { Card } from '../Card';
 
 @Component({

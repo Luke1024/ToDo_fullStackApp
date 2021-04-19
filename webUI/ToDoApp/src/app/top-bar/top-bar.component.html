@@ -1,10 +1,10 @@
 <div id="topBar">
     <p>{{barMessage}}</p>
-    <div id="leftButton">
-        <button *ngIf="logInVisible" (click)="logIn()">Log In</button>
+    <div *ngIf="logInSignInVisible" id="logInSignInButtons">
+        <button (click)="logIn()">Log In</button>
+        <button (click)="signIn()">Sign In</button>
     </div>
-    <div id="rightButton">
-        <button *ngIf="signInVisible" (click)="signIn()">Sign In</button>
+    <div *ngIf="logOutVisible" id="logOutButtons">
         <button *ngIf="logOutVisible" (click)="logOut()">Log Out</button>
     </div>
     <div id="connectionIcon">

@@ -1,1 +1,12 @@
-<p>form-panel works!</p>
+<div *ngIf="panelVisible">
+    <div *ngIf="formVisibility">
+        <input [(ngModel)]="email" placeholder="email">
+        <input [(ngModel)]="password" placeholder="password">
+        <button id="cancelButton" (click)="cancel()">Cancel</button>
+        <div id="logInSignInButton">
+            <button *ngIf="logInButton" (click)="logIn()">Log In</button>
+            <button *ngIf="signInButton" (click)="signIn()">Sign In</button>
+        </div>
+    </div>
+    <p *ngIf="messageVisibility" id="message">{{message}}</p>
+</div>

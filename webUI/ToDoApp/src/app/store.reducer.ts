@@ -21,7 +21,6 @@ addServerManagementMessage
 import { Card } from './Card'
 import { FormPanelMode } from './form-panel-mode'
 import { TopBar } from './top-bar'
-import { createReadStream } from 'fs'
 import { ServerMessage } from './server-message'
 
 export const initialState:AppState = {

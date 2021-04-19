@@ -7,7 +7,6 @@ import { TasksComponent } from './tasks/tasks.component';
 
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { UserPanelComponent } from './user-panel/user-panel.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { StoreModule } from '@ngrx/store';
 import { appReducer } from './store.reducer';
@@ -25,7 +24,6 @@ import { FormPanelComponent } from './form-panel/form-panel.component';
     AppComponent,
     CardComponent,
     TasksComponent,
-    UserPanelComponent,
     CardFilterComponent,
     TopBarComponent,
     FormPanelComponent

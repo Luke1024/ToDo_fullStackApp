@@ -4,8 +4,7 @@ import { Store } from '@ngrx/store';
 import { takeLast } from 'rxjs/operators';
 import { AppState } from '../AppState';
 import { Card } from '../Card';
-import { setStatusToFalse, setStatusToTrue, addServerMessage,
-  setUserToken, createCard,
+import { createCard,
   updateCard, deleteCard } from '../store-actions';
 import { Task } from '../Task';
 
