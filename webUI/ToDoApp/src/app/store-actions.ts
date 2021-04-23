@@ -33,6 +33,13 @@ export const addServerManagementMessage = createAction("[ServerManagement] Add m
 export const createCard = createAction(
     '[Tasks Component] CreateCard',
     props<{card:Card}>())
+export const createCardSuccess = createAction(
+    '[Tasks Component] CreateCard success'
+)
+export const createCardFailure = createAction(
+    '[Tasks Component] CreateCard failure'
+)
+
 export const updateCard = createAction(
     '[Tasks Component] UpdateCard',
     props<{card:Card}>())

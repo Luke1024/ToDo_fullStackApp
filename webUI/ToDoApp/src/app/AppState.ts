@@ -17,7 +17,6 @@ export interface AppState {
     formPanelMessage: string
 
     //ServerManagement
-    connected:boolean
     token:string
     userLogged:boolean
     serverMessages:ServerMessage[]
