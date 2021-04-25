@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Response } from '../Response';
-import { ServerConnectionManagerService } from '../server-connection-manager.service';
 import { StringDto } from '../StringDto';
 import { Task } from '../Task';
 import { TaskServiceService } from '../task-service.service';
@@ -22,8 +21,7 @@ export class TasksComponent implements OnInit {
 
   appState$:Observable<any>
 
-  constructor(private serverManager:ServerConnectionManagerService, 
-    private store: Store<{appState:AppState}>) {
+  constructor(private store: Store<{appState:AppState}>) {
       this.appState$ = store.select('appState')
       this.appState$.subscribe(app => this.cards = app.cards)
     }

@@ -4,17 +4,17 @@ import { Store } from "@ngrx/store";
 import { Observable } from "rxjs";
 import { AppState } from "../AppState";
 import { ServerMessage } from "../server-message";
+import { ServicesSettingsAndTools } from "../services.settings.tools";
 import { addServerManagementMessage, setToken } from "../store-actions";
 import { StringDto } from "../StringDto";
 import { UserServiceService } from "../user-service.service";
-import { UserServiceSettings } from "./user.service.settings";
 
 @Injectable({
     providedIn: 'root'
 })
 export class TokenService {
 
-    userServiceSettings:UserServiceSettings = new UserServiceSettings
+    serviceSettings:ServicesSettingsAndTools = new ServicesSettingsAndTools
 
     token:string = ""
 
@@ -28,7 +28,7 @@ export class TokenService {
 
     private getToken(): void {
         this.addServerManagementMessage("Connecting to server...", true, 0)
-        this.http.get<StringDto>(this.userServiceSettings.tokenUrl, {observe:'response'}).subscribe(token => this.setToken(token))
+        this.http.get<StringDto>(this.serviceSettings.tokenUrl, {observe:'response'}).subscribe(token => this.setToken(token))
         //.pipe(catchError(this.handleError<HttpResponse>()))
     }
 
@@ -46,11 +46,13 @@ export class TokenService {
           }
         }
         this.addServerManagementMessage("Server not responding.",false,0)
+        //this.addServerManagementMessage("Reestablishing connection to server..", false, 0)
+        //this.getToken()
       }
     
       private checkTokenLength(token:string):boolean {
         if(token!=null){
-          if(token.length==this.userServiceSettings.acceptedTokenLength) {
+          if(token.length==this.serviceSettings.acceptedTokenLength) {
             return true
           }
         }
