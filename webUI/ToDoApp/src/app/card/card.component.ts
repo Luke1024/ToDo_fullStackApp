@@ -7,6 +7,8 @@ import { Card } from '../Card';
 import { createCard,
   updateCard, deleteCard } from '../store-actions';
 import { Task } from '../Task';
+import { DeleteService } from '../task_service/delete.service';
+import { UpdateService } from '../task_service/update.service';
 
 @Component({
   selector: 'app-card',
@@ -19,7 +21,9 @@ export class CardComponent implements OnInit {
 
   card!:Card
 
-  constructor(private store: Store<{appState:AppState}>) { 
+  constructor(private store: Store<{appState:AppState}>,
+    private updateService:UpdateService,
+    private deleteService:DeleteService) { 
     
   }
 
@@ -76,11 +80,11 @@ export class CardComponent implements OnInit {
   }
 
   private updateStore(){
-    this.store.dispatch(updateCard({card:this.card}))
+    this.updateService.updateTask(this.card)
   }
 
   delete(){
-    this.store.dispatch(deleteCard({card:this.cardInput}))
+    this.deleteService.deleteTask(this.cardInput)
   }
 
   updater(){

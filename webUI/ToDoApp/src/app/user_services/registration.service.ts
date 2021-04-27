@@ -5,9 +5,8 @@ import { Observable } from "rxjs"
 import { AppState } from "../AppState"
 import { ServerMessage } from "../server-message"
 import { ServicesSettingsAndTools } from "../services.settings.tools"
-import { addServerManagementMessage, setTopBarMessage } from "../store-actions"
+import { addServerMessage, setTopBarMessage } from "../store-actions"
 import { StringDto } from "../StringDto"
-import { UserServiceService } from "../user-service.service"
 import { UserCredentials } from "../UserCredentials"
 
 @Injectable({
@@ -75,6 +74,6 @@ export class RegistrationService {
 
     private addServerManagementMessage(message:string, status:boolean, statusCode:number){
         var serverMessage:ServerMessage = {message:message, messageStatusCode:statusCode, messageStatus:status}
-        this.store.dispatch(addServerManagementMessage({message:serverMessage}))
+        this.store.dispatch(addServerMessage({message:serverMessage}))
     }
 }

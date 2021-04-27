@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { AppState } from '../AppState';
 import { FormPanelMode } from '../form-panel-mode';
 import { setFormPanelVisibleToFalse } from '../store-actions';
+import { UserCredentials } from '../UserCredentials';
+import { LoginService } from '../user_services/login.service';
+import { LogOutService } from '../user_services/logOut.service';
 
 @Component({
   selector: 'app-form-panel',
@@ -25,7 +28,9 @@ export class FormPanelComponent implements OnInit {
 
   appState$:Observable<any>
 
-  constructor(private store:Store<{appState:AppState}>) {
+  constructor(private store:Store<{appState:AppState}>,
+    private logInService:LoginService,
+    private logOutService:LogOutService) {
     this.appState$ = store.select('appState')
     this.appState$.subscribe(app => this.setStates(app))
   }
@@ -56,11 +61,13 @@ export class FormPanelComponent implements OnInit {
   }
 
   logIn() {
-
+    var credentials:UserCredentials = {userEmail:this.email, userPassword:this.password}
+    this.logInService.loginUser(credentials)
   }
 
   signIn() {
-
+    var credentials:UserCredentials = {userEmail:this.email, userPassword:this.password}
+    this.logInService.loginUser(credentials)
   }
 
   cancel() {

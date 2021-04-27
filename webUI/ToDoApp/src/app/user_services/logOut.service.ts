@@ -5,7 +5,7 @@ import { Observable } from "rxjs"
 import { AppState } from "../AppState"
 import { ServerMessage } from "../server-message"
 import { ServicesSettingsAndTools } from "../services.settings.tools"
-import { addServerManagementMessage, setUserLoggedToFalse } from "../store-actions"
+import { addServerMessage, setUserLoggedToFalse } from "../store-actions"
 import { StringDto } from "../StringDto"
 
 @Injectable({
@@ -63,7 +63,7 @@ export class LogOutService {
 
     private addServerManagementMessage(message:string, status:boolean, statusCode:number){
       var serverMessage:ServerMessage = {message:message, messageStatusCode:statusCode, messageStatus:status}
-      this.store.dispatch(addServerManagementMessage({message:serverMessage}))
+      this.store.dispatch(addServerMessage({message:serverMessage}))
     }
 
     private tokenReceived(): boolean {

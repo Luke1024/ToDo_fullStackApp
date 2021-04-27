@@ -16,7 +16,7 @@ setConnectedToTrue,
 setToken,
 setUserLoggedToFalse,
 setUserLoggedToTrue,
-addServerManagementMessage
+addServerMessage
 } from './store-actions'
 import { Card } from './Card'
 import { FormPanelMode } from './form-panel-mode'
@@ -47,7 +47,7 @@ const _appReducer = createReducer(
     on(setToken, (state,{token}) => ({...state, token:token})),
     on(setUserLoggedToTrue, state => ({...state, userLogged:true})),
     on(setUserLoggedToFalse, state => ({...state, userLogged:false})),
-    on(addServerManagementMessage, (state,{message}) => ({...state, serverMessages:messageAdder(state,message)})),
+    on(addServerMessage, (state,{message}) => ({...state, serverMessages:messageAdder(state,message)})),
     
     on(createCard, (state, {card}) => ({...state, cards:cardCreator(state,card)})),
     on(updateCard, (state, {card}) => ({...state, cards:cardUpdater(state,card)})),

@@ -5,9 +5,8 @@ import { Observable } from "rxjs";
 import { AppState } from "../AppState";
 import { ServerMessage } from "../server-message";
 import { ServicesSettingsAndTools } from "../services.settings.tools";
-import { addServerManagementMessage, setToken } from "../store-actions";
+import { addServerMessage, setToken } from "../store-actions";
 import { StringDto } from "../StringDto";
-import { UserServiceService } from "../user-service.service";
 
 @Injectable({
     providedIn: 'root'
@@ -23,10 +22,9 @@ export class TokenService {
     constructor(private http:HttpClient, private store:Store<{appState:AppState}>) {
         this.appState$ = store.select('appState')
         this.appState$.subscribe(app => this.token = app.token)
-        this.getToken()
     }
 
-    private getToken(): void {
+    getToken(): void {
         this.addServerManagementMessage("Connecting to server...", true, 0)
         this.http.get<StringDto>(this.serviceSettings.tokenUrl, {observe:'response'}).subscribe(token => this.setToken(token))
         //.pipe(catchError(this.handleError<HttpResponse>()))
@@ -61,6 +59,6 @@ export class TokenService {
 
     private addServerManagementMessage(message:string, status:boolean, statusCode:number){
         var serverMessage:ServerMessage = {message:message, messageStatusCode:statusCode, messageStatus:status}
-        this.store.dispatch(addServerManagementMessage({message:serverMessage}))
+        this.store.dispatch(addServerMessage({message:serverMessage}))
       }
 }

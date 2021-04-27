@@ -5,6 +5,7 @@ import { AppState } from '../AppState';
 import { FormPanelMode } from '../form-panel-mode';
 import { setDisableButtonsToTrue, setFormPanelMode, setFormPanelVisibleToTrue } from '../store-actions';
 import { TopBar } from '../top-bar';
+import { LogOutService } from '../user_services/logOut.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -19,7 +20,8 @@ export class TopBarComponent implements OnInit {
 
   appState$:Observable<any>
 
-  constructor(private store:Store<{appState:AppState}>) {
+  constructor(private store:Store<{appState:AppState}>,
+    private logOutService:LogOutService) {
     this.appState$ = store.select('appState')
     this.appState$.subscribe(app => this.setStates(app))
   }
@@ -58,6 +60,6 @@ export class TopBarComponent implements OnInit {
   }
 
   logOut(): void {
-
+    this.logOutService.logoutUser()
   }
 }

@@ -4,7 +4,7 @@ import { Store } from "@ngrx/store"
 import { AppState } from "./AppState"
 import { Card } from "./Card"
 import { ServerMessage } from "./server-message"
-import { addServerManagementMessage } from "./store-actions"
+import { addServerMessage } from "./store-actions"
 import { StringDto } from "./StringDto"
 import { Task } from "./Task"
 
@@ -14,7 +14,7 @@ import { Task } from "./Task"
 export class ServicesSettingsAndTools {
     rootUrl = 'http://localhost:8080/toDo'
     tokenUrl = this.rootUrl + '/token'
-    loginUrl = this.rootUrl + 'login'
+    loginUrl = this.rootUrl + '/login'
     registerUrl = this.rootUrl + '/register'
     tasksUrl = this.rootUrl + '/tasks/'
     acceptedTokenLength = 15
@@ -25,7 +25,7 @@ export class ServicesSettingsAndTools {
 
     addServerManagementMessage(message:string, status:boolean, statusCode:number, store:Store){
       var serverMessage:ServerMessage = {message:message, messageStatusCode:statusCode, messageStatus:status}
-      store.dispatch(addServerManagementMessage({message:serverMessage}))
+      store.dispatch(addServerMessage({message:serverMessage}))
     }
 
     cardToTaskConverter(card:Card):Task {

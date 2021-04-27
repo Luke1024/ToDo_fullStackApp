@@ -9,6 +9,7 @@ import { TaskServiceService } from '../task-service.service';
 import { AppState } from '../AppState';
 import { createCard } from '../store-actions'
 import { Card } from '../Card';
+import { SaveService } from '../task_service/save.service';
 
 @Component({
   selector: 'app-tasks',
@@ -21,7 +22,7 @@ export class TasksComponent implements OnInit {
 
   appState$:Observable<any>
 
-  constructor(private store: Store<{appState:AppState}>) {
+  constructor(private store: Store<{appState:AppState}>, private saveService:SaveService) {
       this.appState$ = store.select('appState')
       this.appState$.subscribe(app => this.cards = app.cards)
     }
@@ -34,7 +35,7 @@ export class TasksComponent implements OnInit {
   add(): void {
     var id = this.generateId()
     var card:Card = {frontId:id,taskName:"", description:"", done:false, message:"", messageShow:false, editMode:true, folded:false}
-    this.store.dispatch(createCard({card}))
+    this.saveService.saveTask(card)
   }
 
   private generateId():number {

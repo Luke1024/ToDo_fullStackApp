@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TokenService } from './user_services/token.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'ToDoApp';
+
+  constructor(private tokenService:TokenService) {
+    tokenService.getToken()
+  } 
 }
