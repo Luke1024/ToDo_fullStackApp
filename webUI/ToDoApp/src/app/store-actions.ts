@@ -30,6 +30,10 @@ export const setUserLoggedToFalse = createAction("[ServerManagement] Set user lo
 export const addServerMessage = createAction("[ServerManagement] Add message.",
     props<{message:ServerMessage}>())
 
+export const createMultipleCards = createAction(
+    '[Tasks Component] Create multiple cards',
+    props<{cards:Card[]}>())
+
 export const createCard = createAction(
     '[Tasks Component] CreateCard',
     props<{card:Card}>())

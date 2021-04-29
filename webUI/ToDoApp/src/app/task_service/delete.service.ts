@@ -8,6 +8,7 @@ import { Task } from "../Task"
 import { ServicesSettingsAndTools } from "../services.settings.tools"
 import { deleteCard } from "../store-actions"
 import { Card } from "../Card"
+import { catchError } from "rxjs/operators"
 
 @Injectable({
     providedIn: 'root'
@@ -19,10 +20,9 @@ export class DeleteService {
 
     appState$:Observable<any>
 
-    serviceSettings:ServicesSettingsAndTools = new ServicesSettingsAndTools()
-
     constructor(private store: Store<{appState:AppState}>,
-      private http:HttpClient) {
+      private http:HttpClient,
+      private serviceSettings:ServicesSettingsAndTools) {
         this.appState$ = store.select('appState')
         this.appState$.subscribe(app => this.setState(app))
     }
@@ -33,22 +33,28 @@ export class DeleteService {
     }
 
     deleteTask(card: Card): void {
-      const id = card.frontId;
-      const url = `${this.serviceSettings.tasksUrl + this.token}/${id}`
-      this.http.delete<StringDto>(url, {observe:'response'})
-      .subscribe(response => this.analyzeDeleteResponse(card,response))
+      if(this.serviceSettings.tokenReceived()){
+        const id = card.frontId;
+        const url = `${this.serviceSettings.tasksUrl + this.token}/${id}`
+        this.http.delete<StringDto>(url, {observe:'response'})
+        .pipe(catchError(error => this.serviceSettings.handleHttpError(error)))
+        .subscribe(response => this.analyzeDeleteResponse(card,response))
+      }
     }
     
-    private analyzeDeleteResponse(card:Card, response:HttpResponse<StringDto>){
+    private analyzeDeleteResponse(card:Card, response:any){
       if(response != null){
-        if(response.status==202){
-          this.store.dispatch(deleteCard({card}))
-          if(response.body != null && response.status != null){
-            this.serviceSettings.addServerManagementMessage(response.body.value, false, response.status, this.store)
+        var status = response.status
+        if(response.body != null){
+          if(status==202){
+            this.store.dispatch(deleteCard({card}))
+            this.addMessage(response.body.value, false, response.status)
           }
         }
-      } else {
-        this.serviceSettings.addServerManagementMessage("Response did not received.", false, 0, this.store)
       }
+    }
+
+    private addMessage(message:string, messageStatus:boolean, messageStatusCode:number):void {
+      this.serviceSettings.addServerManagementMessage(message, messageStatus, messageStatusCode)
     }
 }

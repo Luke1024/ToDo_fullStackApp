@@ -2,11 +2,12 @@ import { HttpClient, HttpResponse } from "@angular/common/http"
 import { Injectable } from "@angular/core"
 import { Store } from "@ngrx/store"
 import { Observable } from "rxjs"
+import { catchError } from "rxjs/operators"
 import { AppState } from "../AppState"
-import { ServerMessage } from "../server-message"
 import { ServicesSettingsAndTools } from "../services.settings.tools"
-import { addServerMessage, setUserLoggedToFalse } from "../store-actions"
+import { addServerMessage, setToken, setUserLoggedToFalse } from "../store-actions"
 import { StringDto } from "../StringDto"
+import { TokenService } from "./token.service"
 
 @Injectable({
     providedIn: 'root'
@@ -17,10 +18,10 @@ export class LogOutService {
 
     appState$:Observable<any>
 
-    serviceSettings:ServicesSettingsAndTools = new ServicesSettingsAndTools()
-
     constructor(private store: Store<{appState:AppState}>,
-      private http:HttpClient) {
+      private http:HttpClient,
+      private serviceSettings:ServicesSettingsAndTools,
+      private tokenService:TokenService) {
         this.appState$ = store.select('appState')
         this.appState$.subscribe(app => this.setState(app))
     }
@@ -31,42 +32,41 @@ export class LogOutService {
     }
 
     logoutUser():void {
-        this.addServerManagementMessage("Logging out user...",true,0)
-        if(this.tokenReceived()){
-          this.http.get<StringDto>(this.serviceSettings.loginUrl + this.token, {observe:'response'}).subscribe(
-            response => {
-              this.analyzeLogoutResponse(response)
-            }
-          )
-        } else {
-          var message = 'Token not found.'
-          this.addServerManagementMessage(message,false,0)
-        }
+      this.addMessage("Logging out user...",true,0)
+      if(this.serviceSettings.tokenReceived()){
+        this.http.get<StringDto>(this.serviceSettings.loginUrl + this.token, {observe:'response'})
+        .pipe(catchError(error => this.serviceSettings.handleHttpError(error)))
+        .subscribe(
+          response => {
+            this.analyzeLogoutResponse(response)
+          }
+        )
+      } else {
+        var message = 'Token not found.'
+        this.addMessage(this.serviceSettings.tokenNotFoundMessage,false,0)
       }
+    }
     
-    private analyzeLogoutResponse(response:HttpResponse<StringDto>):void {
-      //202
+    private analyzeLogoutResponse(response:any):void {
       if(response != null){
         var status = response.status
         if(response.body != null){
           var message:string = response.body.value
           if(status==202){
-            this.addServerManagementMessage(message,true,status)
-            this.store.dispatch(setUserLoggedToFalse())
-          }else{
-            this.addServerManagementMessage(message,false,10)
+            this.executeLogOutOperations(message, status)
           }
         }
       }
-      this.addServerManagementMessage("There is a problem with logging out user.",false,5)
     }
 
-    private addServerManagementMessage(message:string, status:boolean, statusCode:number){
-      var serverMessage:ServerMessage = {message:message, messageStatusCode:statusCode, messageStatus:status}
-      this.store.dispatch(addServerMessage({message:serverMessage}))
+    private executeLogOutOperations(message:string, status:number){
+      this.addMessage(message,true,status)
+      this.store.dispatch(setUserLoggedToFalse())
+      this.store.dispatch(setToken({token:""}))
+      this.tokenService.getToken()
     }
 
-    private tokenReceived(): boolean {
-      return this.token.length==this.serviceSettings.acceptedTokenLength
+    private addMessage(message:string, status:boolean, statusCode:number){
+      this.serviceSettings.addServerManagementMessage(message, status, statusCode)
     }
 }

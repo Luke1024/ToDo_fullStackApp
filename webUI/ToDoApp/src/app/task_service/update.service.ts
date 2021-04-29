@@ -2,6 +2,7 @@ import { HttpClient, HttpResponse } from "@angular/common/http"
 import { Injectable } from "@angular/core"
 import { Store } from "@ngrx/store"
 import { Observable } from "rxjs"
+import { catchError } from "rxjs/operators"
 import { AppState } from "../AppState"
 import { Card } from "../Card"
 import { ServicesSettingsAndTools } from "../services.settings.tools"
@@ -19,10 +20,9 @@ export class UpdateService {
 
     appState$:Observable<any>
 
-    serviceSettings:ServicesSettingsAndTools = new ServicesSettingsAndTools()
-
     constructor(private store: Store<{appState:AppState}>,
-      private http:HttpClient) {
+      private http:HttpClient,
+      private serviceSettings:ServicesSettingsAndTools) {
         this.appState$ = store.select('appState')
         this.appState$.subscribe(app => this.setState(app))
     }
@@ -33,29 +33,31 @@ export class UpdateService {
     }
 
     updateTask(card: Card): void {
-      if(this.tokenReceived()){
+      if(this.serviceSettings.tokenReceived()){
         this.http.put<StringDto>(this.serviceSettings.tasksUrl + this.token, 
           this.serviceSettings.cardToTaskConverter(card), {observe:'response'})
+          .pipe(catchError(error => this.serviceSettings.handleHttpError(error)))
           .subscribe(response => this.analyzeUpdateResponse(card,response))
       } else {
-        this.serviceSettings.addServerManagementMessage('Token not found.',false,0,this.store)
+        this.addMessage(this.serviceSettings.tokenNotFoundMessage,false,0)
       }
     }
 
-    private analyzeUpdateResponse(card:Card, response:HttpResponse<StringDto>):void {
+    private analyzeUpdateResponse(card:Card, response:any):void {
       if(response != null){
-        if(response.status==202){
-          this.store.dispatch(updateCard({card}))
-          if(response.body != null && response.status != null){
-            this.serviceSettings.addServerManagementMessage(response.body.value, false, response.status, this.store)
+        var status = response.status
+        if(response.body != null){  
+          if(status==202){
+            this.store.dispatch(updateCard({card}))
+            if(response.body != null && response.status != null){
+              this.addMessage(response.body.value, false, response.status)
+            }
           }
         }
-      } else {
-        this.serviceSettings.addServerManagementMessage("Response did not received.", false, 0, this.store)
       }
     }
 
-    private tokenReceived(): boolean {
-      return this.token.length==this.serviceSettings.acceptedTokenLength
+    private addMessage(message:string, messageStatus:boolean, messageStatusCode:number):void {
+      this.serviceSettings.addServerManagementMessage(message, messageStatus, messageStatusCode)
     }
 }
