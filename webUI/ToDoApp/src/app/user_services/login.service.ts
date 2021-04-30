@@ -55,18 +55,12 @@ export class LoginService {
       if(response.body != null){  
         if(status==202){
           var token = response.body.value
-          if(this.checkTokenLength(token)){
+          if(this.serviceSettings.checkTokenLength(token)){
             this.executeLoginOperations(response, userCredentials)
           }
         }      
       }
     }
-  }
-
-  private checkTokenLength(token:string):boolean {
-    if(token != null){
-      return this.token.length==this.serviceSettings.acceptedTokenLength
-    } else return false
   }
 
   private executeLoginOperations(response:HttpResponse<StringDto>, userCredentials:UserCredentials) {

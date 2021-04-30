@@ -26,6 +26,7 @@ export class TokenService {
     }
 
     getToken(): void {
+      console.log("get token called")
         this.addServerManagementMessage("Connecting to server...", true, 0)
         this.http.get<StringDto>(this.serviceSettings.tokenUrl, {observe:'response'})
         .pipe(catchError(error => this.serviceSettings.handleHttpError(error)))
@@ -39,7 +40,6 @@ export class TokenService {
           if(status==200){
             if(response.body?.value != null){
               if(this.serviceSettings.checkTokenLength(response.body.value)){
-                console.log('Token received: ' + this.token)
                 this.addServerManagementMessage("Connected", true,0)
                 this.store.dispatch(setToken({token:response.body.value}))
                 return

@@ -90,15 +90,19 @@ export class ServicesSettingsAndTools {
 
   tokenReceived(): boolean {
     if(this.token != null){
-      return this.token.length==this.acceptedTokenLength      
-    } else return false
+      if(this.token.length==this.acceptedTokenLength) {
+        return true
+      }      
+    }
+    return false
   }
 
   checkTokenLength(token:string): boolean {
-    if(this.token != null){
-      return this.token.length==this.acceptedTokenLength      
-    } else return false
+    if(token != null){
+      if(token.length == this.acceptedTokenLength) {
+        return true
+      }      
+    }
+    return false
   }
-
-
 }
