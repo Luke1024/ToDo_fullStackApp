@@ -19,6 +19,7 @@ import { CardFilterComponent } from './card-filter/card-filter.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
 import { FormPanelComponent } from './form-panel/form-panel.component';
 import { EffectsModule } from '@ngrx/effects';
+import { MessageBarComponent } from './message-bar/message-bar.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { EffectsModule } from '@ngrx/effects';
     TasksComponent,
     CardFilterComponent,
     TopBarComponent,
-    FormPanelComponent
+    FormPanelComponent,
+    MessageBarComponent
   ],
   imports: [
     BrowserModule,

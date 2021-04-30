@@ -1,0 +1,7 @@
+<div id="basicContainer">
+    <div id="panel">
+        <div *ngFor="let serverMessage of messages">
+            <p><span id="statusCode">{{serverMessage.messageStatusCode}}</span><span id="message">{{serverMessage.message}}</span></p>
+        </div>
+    </div>
+</div>

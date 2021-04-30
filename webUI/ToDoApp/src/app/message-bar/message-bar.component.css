@@ -1,4 +1,4 @@
-#topBar {
+#panel {
     background-color: rgb(255, 255, 255);
     margin-top: 15px;
     position: relative;
@@ -6,4 +6,6 @@
     border-color: black;
     border-width: 1px;
     border-style:solid;
+    max-height:100px;
+    overflow-y:scroll;
 }

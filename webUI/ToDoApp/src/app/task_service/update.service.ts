@@ -33,6 +33,7 @@ export class UpdateService {
     }
 
     updateTask(card: Card): void {
+      console.log(card)
       if(this.serviceSettings.tokenReceived()){
         this.http.put<StringDto>(this.serviceSettings.tasksUrl + this.token, 
           this.serviceSettings.cardToTaskConverter(card), {observe:'response'})
