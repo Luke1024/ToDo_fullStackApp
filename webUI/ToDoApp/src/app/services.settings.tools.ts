@@ -47,7 +47,7 @@ export class ServicesSettingsAndTools {
     }
 
     cardToTaskConverter(card:Card):Task {
-      var task:Task = {frontId:card.frontId,taskName:card.taskName, description:card.description, done:card.done}
+      var task:Task = {frontId:card.frontId,name:card.taskName, description:card.description, done:card.done}
       return task
     }
 
@@ -56,7 +56,7 @@ export class ServicesSettingsAndTools {
       for(var i=0; i<tasks.length; i++) {
         var card:Card = {
           frontId:tasks[i].frontId,
-          taskName:tasks[i].taskName,
+          taskName:tasks[i].name,
           description:tasks[i].description,
           done:tasks[i].done,
           message:"",

@@ -1,6 +1,6 @@
 export interface Task {
     frontId: number;
-    taskName: string;
+    name: string;
     description: string;
     done: boolean;
 }
