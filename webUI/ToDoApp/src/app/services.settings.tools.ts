@@ -16,8 +16,9 @@ export class ServicesSettingsAndTools {
     rootUrl = 'http://localhost:8080/toDo'
     tokenUrl = this.rootUrl + '/token'
     loginUrl = this.rootUrl + '/login'
-    registerUrl = this.rootUrl + '/register'
+    registerUrl = this.rootUrl + '/register/'
     tasksUrl = this.rootUrl + '/tasks/'
+    logOutUrl = this.rootUrl + '/logout/'
     acceptedTokenLength = 15
 
     httpOptions = {

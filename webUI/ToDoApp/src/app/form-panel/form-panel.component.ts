@@ -7,6 +7,7 @@ import { setFormPanelVisibleToFalse } from '../store-actions';
 import { UserCredentials } from '../UserCredentials';
 import { LoginService } from '../user_services/login.service';
 import { LogOutService } from '../user_services/logOut.service';
+import { RegistrationService } from '../user_services/registration.service';
 
 @Component({
   selector: 'app-form-panel',
@@ -30,6 +31,7 @@ export class FormPanelComponent implements OnInit {
 
   constructor(private store:Store<{appState:AppState}>,
     private logInService:LoginService,
+    private registrationService:RegistrationService,
     private logOutService:LogOutService) {
     this.appState$ = store.select('appState')
     this.appState$.subscribe(app => this.setStates(app))
@@ -67,7 +69,7 @@ export class FormPanelComponent implements OnInit {
 
   signIn() {
     var credentials:UserCredentials = {userEmail:this.email, userPassword:this.password}
-    this.logInService.loginUser(credentials)
+    this.registrationService.registerUser(credentials)
   }
 
   cancel() {

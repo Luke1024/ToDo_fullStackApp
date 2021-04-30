@@ -5,7 +5,7 @@ import { Observable } from "rxjs"
 import { catchError } from "rxjs/operators"
 import { AppState } from "../AppState"
 import { ServicesSettingsAndTools } from "../services.settings.tools"
-import { addServerMessage, setToken, setUserLoggedToFalse } from "../store-actions"
+import { addServerMessage, createMultipleCards, setToken, setUserLoggedToFalse } from "../store-actions"
 import { StringDto } from "../StringDto"
 import { TokenService } from "./token.service"
 
@@ -34,7 +34,7 @@ export class LogOutService {
     logoutUser():void {
       this.addMessage("Logging out user...",true,0)
       if(this.serviceSettings.tokenReceived()){
-        this.http.get<StringDto>(this.serviceSettings.loginUrl + this.token, {observe:'response'})
+        this.http.post<StringDto>(this.serviceSettings.logOutUrl + this.token, {observe:'response'})
         .pipe(catchError(error => this.serviceSettings.handleHttpError(error)))
         .subscribe(
           response => {
@@ -63,6 +63,7 @@ export class LogOutService {
       this.addMessage(message,true,status)
       this.store.dispatch(setUserLoggedToFalse())
       this.store.dispatch(setToken({token:""}))
+      this.store.dispatch(createMultipleCards({cards:[]}))
       this.tokenService.getToken()
     }
 
