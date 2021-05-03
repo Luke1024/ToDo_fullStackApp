@@ -34,7 +34,7 @@ export class LogOutService {
     logoutUser():void {
       this.addMessage("Logging out user...",true,0)
       if(this.serviceSettings.tokenReceived()){
-        this.http.post<StringDto>(this.serviceSettings.logOutUrl + this.token, {observe:'response'})
+        this.http.get<StringDto>(this.serviceSettings.logOutUrl + this.token, {observe:'response'})
         .pipe(catchError(error => this.serviceSettings.handleHttpError(error)))
         .subscribe(
           response => {
@@ -60,6 +60,7 @@ export class LogOutService {
     }
 
     private executeLogOutOperations(message:string, status:number){
+      console.log("starting log out operations execution")
       this.addMessage(message,true,status)
       this.store.dispatch(setUserLoggedToFalse())
       this.store.dispatch(setToken({token:""}))
