@@ -34,7 +34,7 @@ export class DeleteService {
 
     deleteTask(card: Card): void {
       if(this.serviceSettings.tokenReceived()){
-        const id = card.frontId;
+        const id = card.id;
         const url = `${this.serviceSettings.tasksUrl + this.token}/${id}`
         this.http.delete<StringDto>(url, {observe:'response'})
         .pipe(catchError(error => this.serviceSettings.handleHttpError(error)))

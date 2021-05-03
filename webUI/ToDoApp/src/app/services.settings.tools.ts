@@ -48,15 +48,21 @@ export class ServicesSettingsAndTools {
     }
 
     cardToTaskConverter(card:Card):Task {
-      var task:Task = {frontId:card.frontId,name:card.taskName, description:card.description, done:card.done}
+      var task:Task = {id:card.id,name:card.taskName, description:card.description, done:card.done}
       return task
+    }
+
+    taskToCardConverter(task:Task):Card {
+      var card:Card = {id:task.id, taskName:task.name, description:task.description, done:task.done,
+        message:"",messageShow:false, editMode:true, folded:false}
+      return card
     }
 
     taskListToCardConverter(tasks:Task[]):Card[] {
       var cards:Card[] = []
       for(var i=0; i<tasks.length; i++) {
         var card:Card = {
-          frontId:tasks[i].frontId,
+          id:tasks[i].id,
           taskName:tasks[i].name,
           description:tasks[i].description,
           done:tasks[i].done,

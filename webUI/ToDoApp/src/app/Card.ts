@@ -1,7 +1,7 @@
 import { Task } from "./Task";
 
 export interface Card {
-    frontId: number;
+    id: number;
     taskName: string;
     description: string;
     done: boolean;

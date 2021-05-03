@@ -25,8 +25,4 @@ export class CardFilterComponent implements OnInit {
   done():void {
 
   }
-
-  archived():void {
-
-  }
 }

@@ -33,7 +33,7 @@ export class TaskServiceService {
   }
 
   deleteTask(token:string,task: Task | number): Observable<HttpResponse<StringDto>> {
-    const id = typeof task === 'number' ? task : task.frontId;
+    const id = typeof task === 'number' ? task : task.id;
     const url = `${this.tasksUrl + token}/${id}`
 
     return this.http.delete<StringDto>(url, {observe:'response'})

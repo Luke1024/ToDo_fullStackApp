@@ -54,7 +54,7 @@ const _appReducer = createReducer(
     on(createCard, (state, {card}) => ({...state, cards:cardCreator(state,card)})),
     on(updateCard, (state, {card}) => ({...state, cards:cardUpdater(state,card)})),
     on(deleteCard, (state, {card
-    }) => ({...state, cards:state.cards.filter(c => c.frontId !== card.frontId)}))
+    }) => ({...state, cards:state.cards.filter(c => c.id !== card.id)}))
 )
 
 export function appReducer(state: AppState | undefined, action: Action){
@@ -76,7 +76,7 @@ var cardCreator = function(state:AppState, card:Card):Card[] {
 var cardUpdater = function(state:AppState, card:Card):Card[] {
     var cards = state.cards.slice()
     for(var i=0; i<cards.length; i++){
-        if(cards[i].frontId == card.frontId){
+        if(cards[i].id == card.id){
             cards[i]=card
         }
     }

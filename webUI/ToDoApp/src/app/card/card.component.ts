@@ -24,7 +24,6 @@ export class CardComponent implements OnInit {
   constructor(private store: Store<{appState:AppState}>,
     private updateService:UpdateService,
     private deleteService:DeleteService) { 
-    
   }
 
   ngOnInit(): void {

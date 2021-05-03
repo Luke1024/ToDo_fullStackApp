@@ -47,8 +47,10 @@ export class SaveService {
       if(response != null){
         var status = response.status
         if(response.body != null){
-          if(status==202){
-            this.store.dispatch(createCard({card}))
+          if(status==200){
+            var task:Task= response.body
+            var receivedCard:Card = this.serviceSettings.taskToCardConverter(task)
+            this.store.dispatch(createCard({card:receivedCard}))
             if(response.body != null && response.status != null){
               this.addMessage(response.body.value, false, response.status)
             }
