@@ -86,7 +86,7 @@ public class UserRepositoryTest {
     @Test
     public void checkIfAfterDeletingUserTaskBelongingToUserStillExists(){
         User user1 = generateUserWithRandomParameters();
-        Task task1 = new Task(1L,user1,"", "", false);
+        Task task1 = new Task(user1,"", "", false);
 
         user1.addTasks(Arrays.asList(task1));
 

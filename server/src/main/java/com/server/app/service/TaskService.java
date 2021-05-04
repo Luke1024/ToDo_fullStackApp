@@ -41,13 +41,37 @@ public class TaskService {
         }
     }
 
-    public ResponseEntity<StringDto> saveTask(String token, TaskDto taskDto){
+    public ResponseEntity<List<TaskDto>> getTasksDone(String token){
+        Optional<User> user = userRepository.findLoggedUserByToken(token);
+        if(user.isPresent()) {
+            List<Task> taskList = taskRepository.findAvailableTasksByUserIdDone(user.get().getId());
+            List<TaskDto> taskDtos = taskMapper.mapToTaskDtoList(taskList);
+            return ResponseEntity.ok(taskDtos);
+        } else {
+            LOGGER.warn("User with token: " + token + " not found.");
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    public ResponseEntity<List<TaskDto>> getTasksTodo(String token){
+        Optional<User> user = userRepository.findLoggedUserByToken(token);
+        if(user.isPresent()) {
+            List<Task> taskList = taskRepository.findAvailableTasksByUserIdTodo(user.get().getId());
+            List<TaskDto> taskDtos = taskMapper.mapToTaskDtoList(taskList);
+            return ResponseEntity.ok(taskDtos);
+        } else {
+            LOGGER.warn("User with token: " + token + " not found.");
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    public ResponseEntity<TaskDto> saveTask(String token, TaskDto taskDto){
         Optional<User> user = userRepository.findLoggedUserByToken(token);
         if(user.isPresent()){
             return processWithTaskSaving(user.get(), taskDto);
         } else {
             LOGGER.warn("User with token: " + token + " not found.");
-            return new ResponseEntity<>(new StringDto("User's session expired or logged out."), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new TaskDto(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -65,7 +89,7 @@ public class TaskService {
         Optional<User> user = userRepository.findLoggedUserByToken(token);
 
         if (user.isPresent()) {
-            Optional<Task> foundTask = taskRepository.findAvailableTaskByUserIdAndTaskFrontId(user.get().getId(), frontId);
+            Optional<Task> foundTask = taskRepository.findAvailableTaskByUserIdAndTaskId(user.get().getId(), frontId);
             if (foundTask.isPresent()) {
                 foundTask.get().setDeleted(true);
                 taskRepository.save(foundTask.get());
@@ -78,10 +102,12 @@ public class TaskService {
         return new ResponseEntity<>(new StringDto("User's session expired or logged out."), HttpStatus.BAD_REQUEST);
     }
 
-    private ResponseEntity<StringDto> processWithTaskSaving(User user, TaskDto taskDto){
-        user.addTasks(Collections.singletonList(taskMapper.mapToTaskFromDto(taskDto)));
-        userRepository.save(user);
-        return new ResponseEntity<>(new StringDto("Task saved."), HttpStatus.ACCEPTED);
+    private ResponseEntity<TaskDto> processWithTaskSaving(User user, TaskDto taskDto){
+        Task taskToSave = taskMapper.mapToTaskFromDto(taskDto);
+        taskToSave.setUser(user);
+        Task taskSavedWithId = taskRepository.save(taskToSave);
+        TaskDto dtoWithId = taskMapper.mapToTaskDto(taskSavedWithId);
+        return ResponseEntity.ok(dtoWithId);
     }
 
     private ResponseEntity<StringDto> processWithTaskUpdate(User userWithTaskToUpdate, TaskDto taskDto){
@@ -89,7 +115,6 @@ public class TaskService {
 
         if(taskToUpdateOptional.isPresent()) {
             Task taskToUpdate = taskToUpdateOptional.get();
-            taskToUpdate.setFrontId(taskDto.getFrontId());
             taskToUpdate.setTaskName(taskDto.getName());
             taskToUpdate.setTaskDescription(taskDto.getDescription());
             taskToUpdate.setDone(taskDto.isDone());
@@ -101,6 +126,6 @@ public class TaskService {
     }
 
     private Optional<Task> findTask(User userWithTaskToUpdate, TaskDto taskDto){
-        return taskRepository.findAvailableTaskByUserIdAndTaskFrontId(userWithTaskToUpdate.getId(), taskDto.getFrontId());
+        return taskRepository.findAvailableTaskByUserIdAndTaskId(userWithTaskToUpdate.getId(), taskDto.getId());
     }
 }

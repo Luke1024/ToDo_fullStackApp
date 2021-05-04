@@ -3,8 +3,8 @@ package com.server.app.domain;
 import javax.persistence.*;
 
 @NamedNativeQuery(
-        name = "Task.findAvailableTaskByUserIdAndTaskFrontId",
-        query = "SELECT * FROM task WHERE user_id =:USER_ID AND front_id=:FRONT_ID AND deleted=false",
+        name = "Task.findAvailableTaskByUserIdAndTaskId",
+        query = "SELECT * FROM task WHERE user_id =:USER_ID AND id=:ID AND deleted=false",
         resultClass = Task.class
 )
 
@@ -14,12 +14,23 @@ import javax.persistence.*;
         resultClass = Task.class
 )
 
+@NamedNativeQuery(
+        name = "Task.findAvailableTasksByUserIdDone",
+        query = "SELECT * FROM task WHERE user_id = :USER_ID AND deleted=false AND done=true",
+        resultClass = Task.class
+)
+
+@NamedNativeQuery(
+        name = "Task.findAvailableTasksByUserIdTodo",
+        query = "SELECT * FROM task WHERE user_id = :USER_ID AND deleted=false AND done=false",
+        resultClass = Task.class
+)
+
 @Entity
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private Long frontId;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "USER_ID")
     private User user;
@@ -30,8 +41,7 @@ public class Task {
 
     public Task() {}
 
-    public Task(Long frontId,User user, String taskName, String taskDescription, boolean done) {
-        this.frontId = frontId;
+    public Task(User user, String taskName, String taskDescription, boolean done) {
         setUser(user);
         this.taskName = taskName;
         this.taskDescription = taskDescription;
@@ -41,10 +51,6 @@ public class Task {
 
     public Long getId() {
         return id;
-    }
-
-    public Long getFrontId() {
-        return frontId;
     }
 
     public User getUser() {
@@ -78,10 +84,6 @@ public class Task {
 
     public boolean isDone() {
         return done;
-    }
-
-    public void setFrontId(Long frontId) {
-        this.frontId = frontId;
     }
 
     public void setTaskName(String taskName) {

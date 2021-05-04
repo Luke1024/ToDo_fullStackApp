@@ -31,7 +31,7 @@ public class UserController {
         return userService.registerUser(token, userCredentialsDto);
     }
 
-    @PostMapping(value = "/logout/{token}")
+    @GetMapping(value = "/logout/{token}")
     public ResponseEntity<StringDto> logout(@PathVariable String token){
         return userService.logoutUser(token);
     }

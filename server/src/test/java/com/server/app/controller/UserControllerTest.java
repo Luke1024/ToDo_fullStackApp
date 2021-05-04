@@ -73,7 +73,7 @@ public class UserControllerTest {
     public void logout() throws Exception {
         when(userService.logoutUser(anyString())).thenReturn(ResponseEntity.accepted().build());
 
-        mockMvc.perform(post("/toDo/logout/token"))
+        mockMvc.perform(get("/toDo/logout/token"))
                 .andExpect(status().isAccepted());
     }
 }

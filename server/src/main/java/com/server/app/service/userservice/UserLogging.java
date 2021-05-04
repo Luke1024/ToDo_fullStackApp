@@ -55,8 +55,10 @@ public class UserLogging {
     public ResponseEntity<StringDto> logoutUser(String token){
         Optional<User> userOptional = userRepository.findLoggedUserByToken(token);
         if(userOptional.isPresent()){
+            LOGGER.info(("Logging out user with token " + token));
             userOptional.get().setToken("");
             userOptional.get().setLogged(false);
+            userRepository.save(userOptional.get());
             return new ResponseEntity<>(new StringDto("User succesfully logged out."), HttpStatus.ACCEPTED);
         } else {
             LOGGER.warn("Logout failed. User with token " + token + " don't exist or logged out.");
@@ -72,7 +74,7 @@ public class UserLogging {
             LOGGER.warn("User with credentials " + userCredentialsDto.getUserEmail() + " " +
                     userCredentialsDto.getUserPassword() + " not found.");
             return new ResponseEntity<>(new StringDto("User email or password are incorrect or user doeesn't exist."),
-                    HttpStatus.BAD_REQUEST);
+                    HttpStatus.NOT_FOUND);
     }
 
     private ResponseEntity<StringDto> logInUserAndCopyTasks(User userAsQuest, User userRegistered){

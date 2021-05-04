@@ -26,8 +26,18 @@ public class TaskController {
         return taskService.getTasks(token);
     }
 
+    @GetMapping(value = "/tasks/done/{token}")
+    public ResponseEntity<List<TaskDto>> getTasksDone(@PathVariable String token) {
+        return taskService.getTasksDone(token);
+    }
+
+    @GetMapping(value = "/tasks/todo/{token}")
+    public ResponseEntity<List<TaskDto>> getTasksToDo(@PathVariable String token) {
+        return taskService.getTasksTodo(token);
+    }
+
     @PostMapping(value = "/tasks/{token}")
-    public ResponseEntity<StringDto> saveTask(@PathVariable String token, @RequestBody TaskDto taskDto){
+    public ResponseEntity<TaskDto> saveTask(@PathVariable String token, @RequestBody TaskDto taskDto){
         LOGGER.info("Saving task with token: " + token + " " + "Task " + taskDto.toString());
         return taskService.saveTask(token, taskDto);
     }

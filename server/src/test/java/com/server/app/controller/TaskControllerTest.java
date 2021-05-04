@@ -50,7 +50,7 @@ public class TaskControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].frontId", is(34)))
+                .andExpect(jsonPath("$[0].id", is(34)))
                 .andExpect(jsonPath("$[0].name", is("task name 1")))
                 .andExpect(jsonPath("$[1].description", is("task description 2")));
     }
