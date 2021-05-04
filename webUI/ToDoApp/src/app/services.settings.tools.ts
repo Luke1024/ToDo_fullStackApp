@@ -18,6 +18,8 @@ export class ServicesSettingsAndTools {
     loginUrl = this.rootUrl + '/login'
     registerUrl = this.rootUrl + '/register/'
     tasksUrl = this.rootUrl + '/tasks/'
+    tasksDoneUrl = this.rootUrl + '/tasks/done/'
+    tasksTodoUrl = this.rootUrl + '/tasks/todo/'
     logOutUrl = this.rootUrl + '/logout/'
     acceptedTokenLength = 15
 
