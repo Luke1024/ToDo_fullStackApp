@@ -20,6 +20,12 @@ public class TaskMapper {
                 .collect(Collectors.toList());
     }
 
+    public List<Task> mapToTaskList(List<TaskDto> taskDtoList){
+        if(taskDtoList == null || taskDtoList.isEmpty()) return new ArrayList<>();
+        else return  taskDtoList.stream().map(taskDto -> new Task(null, taskDto.getName(), taskDto.getDescription(), taskDto.isDone()))
+                .collect(Collectors.toList());
+    }
+
     public TaskDto mapToTaskDto(Task task){
         return new TaskDto(task.getId(), task.getTaskName(), task.getTaskDescription(), task.isDone());
     }

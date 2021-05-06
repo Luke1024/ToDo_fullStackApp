@@ -11,9 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
@@ -75,6 +77,16 @@ public class TaskService {
         }
     }
 
+    public ResponseEntity<List<TaskDto>> saveTasksArray(String token, List<TaskDto> taskDtoList){
+        Optional<User> user = userRepository.findLoggedUserByToken(token);
+        if(user.isPresent()){
+            return processWithTasksArraySaving(user.get(), taskDtoList);
+        } else {
+            LOGGER.warn("User with token: " + token + " not found.");
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     public ResponseEntity<StringDto> updateTask(String token, TaskDto taskDto){
         Optional<User> user = userRepository.findLoggedUserByToken(token);
         if(user.isPresent()){
@@ -107,6 +119,16 @@ public class TaskService {
         taskToSave.setUser(user);
         Task taskSavedWithId = taskRepository.save(taskToSave);
         TaskDto dtoWithId = taskMapper.mapToTaskDto(taskSavedWithId);
+        return ResponseEntity.ok(dtoWithId);
+    }
+
+    private ResponseEntity<List<TaskDto>> processWithTasksArraySaving(User user, List<TaskDto> taskDtoList){
+        List<Task> tasksToSave = taskMapper.mapToTaskList(taskDtoList);
+        tasksToSave.stream().forEach(task -> task.setUser(user));
+        Iterable<Task> tasksWithId = taskRepository.saveAll(tasksToSave);
+        List<Task> taskList = new ArrayList<>();
+        tasksWithId.forEach(taskList::add);
+        List<TaskDto> dtoWithId = taskMapper.mapToTaskDtoList(taskList);
         return ResponseEntity.ok(dtoWithId);
     }
 

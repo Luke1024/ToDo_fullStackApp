@@ -1,7 +1,6 @@
 package com.server.app.service.userservice;
 
 import com.server.app.domain.StringDto;
-import com.server.app.domain.Task;
 import com.server.app.domain.User;
 import com.server.app.domain.UserCredentialsDto;
 import com.server.app.repository.UserRepository;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -39,17 +37,13 @@ public class UserLogging {
     }
 
     public ResponseEntity<StringDto> loginUserAndGenerateNewToken(String token, UserCredentialsDto userCredentialsDto) {
-        if(token.length()>= serviceSettings.getAcceptTokenLength()){
-            Optional<User> userAsGuest = userRepository.findLoggedUserByToken(token);
-            if(userAsGuest.isPresent()){
-                return processWithUserLogging(userAsGuest.get(), userCredentialsDto);
-            } else {
-                LOGGER.warn("Logging failed. User with token " + token + " don'exist or logged out.");
-                return new ResponseEntity<>(new StringDto("User session expired or logged out."), HttpStatus.BAD_REQUEST);
-            }
+        Optional<User> userAsGuest = userRepository.findUserByToken(token);
+        if(userAsGuest.isPresent()){
+            return processWithUserLogging(userAsGuest.get(), userCredentialsDto);
+        } else {
+            LOGGER.warn("Logging failed. User with token " + token + " don'exist or logged out.");
+            return new ResponseEntity<>(new StringDto("User session expired or logged out."), HttpStatus.BAD_REQUEST);
         }
-        LOGGER.warn("Logging failed. Token " + token + " is to short.");
-        return new ResponseEntity<>(new StringDto("Bad request."), HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity<StringDto> logoutUser(String token){
@@ -69,7 +63,7 @@ public class UserLogging {
     private ResponseEntity<StringDto> processWithUserLogging(User userAsGuest, UserCredentialsDto userCredentialsDto){
         Optional<User> userRegistered = loadRegisteredUser(userCredentialsDto);
         if(userRegistered.isPresent()){
-            return logInUserAndCopyTasks(userAsGuest, userRegistered.get());
+            return logInUser(userAsGuest, userRegistered.get());
         } else
             LOGGER.warn("User with credentials " + userCredentialsDto.getUserEmail() + " " +
                     userCredentialsDto.getUserPassword() + " not found.");
@@ -77,16 +71,16 @@ public class UserLogging {
                     HttpStatus.NOT_FOUND);
     }
 
-    private ResponseEntity<StringDto> logInUserAndCopyTasks(User userAsQuest, User userRegistered){
-        List<Task> questTasks = userAsQuest.getTaskList();
-        if( ! questTasks.isEmpty()){
-            userRegistered.addTasks(questTasks);
-        }
+    private ResponseEntity<StringDto> logInUser(User userAsQuest, User userRegistered){
+
         userRegistered.setLogged(true);
-        userRegistered.setSessionActiveTo(LocalDateTime.now().plusHours(serviceSettings.getSessionActiveHours()));
+        //userRegistered.setSessionActiveTo(LocalDateTime.now().plusHours(serviceSettings.getSessionActiveHours()));
 
         String newToken = generateToken();
-        userRegistered.setToken(newToken);
+        //userRegistered.setToken(newToken);
+
+        //userAsQuest.setLogged(false);
+        userRepository.save(userAsQuest);
 
         userRepository.save(userRegistered);
 
@@ -98,8 +92,8 @@ public class UserLogging {
     }
 
     private void createGuestUser(String questToken){
-        userRepository.save(new User( "quest", "", true, questToken,
-                LocalDateTime.now().plusHours(serviceSettings.getSessionActiveHours()), new ArrayList<>()));
+        //userRepository.save(new User( "quest", "", true, questToken,
+          //      LocalDateTime.now().plusHours(serviceSettings.getSessionActiveHours()), new ArrayList<>()));
     }
 
     private String generateToken(){

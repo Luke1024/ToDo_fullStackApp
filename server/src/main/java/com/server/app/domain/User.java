@@ -1,17 +1,18 @@
 package com.server.app.domain;
 
+import com.server.app.repository.UserRepository;
+import com.server.app.service.UserServiceSettings;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
+import java.lang.reflect.Type;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @NamedNativeQuery(
-        name = "User.findLoggedUserByToken",
-        query = "SELECT * FROM user WHERE token =:TOKEN and logged = 1",
-        resultClass = User.class
-)
-@NamedNativeQuery(
-        name = "User.findUserByEmailAndPassword",
-        query = "SELECT * FROM user WHERE user_email =:EMAIL AND password =:PASSWORD",
+        name = "User.findUserByToken",
+        query = "SELECT * FROM user WHERE token =:TOKEN",
         resultClass = User.class
 )
 @NamedNativeQuery(
@@ -22,14 +23,30 @@ import java.util.List;
 
 @Entity
 public class User {
+
+    @Autowired
+    @Transient
+    private UserServiceSettings settings;
+
+    @Autowired
+    @Transient
+    private UserRepository userRepository;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    private TypeOfUser typeOfUser;
+
+    //credentials
     private String userEmail;
     private String password;
-    private boolean logged;
+
+    //session data
     private String token;
     private LocalDateTime sessionActiveTo;
+
+
     @OneToMany(targetEntity = Task.class,
             mappedBy = "user",
             cascade = CascadeType.ALL,
@@ -38,70 +55,111 @@ public class User {
     @OrderColumn
     private List<Task> taskList;
 
-    public User() {}
-
-    public User(String userEmail, String password, boolean logged, String token,
-                LocalDateTime sessionActiveTo, List<Task> taskList) {
-        this.userEmail = userEmail;
-        this.password = password;
-        this.logged = logged;
-        this.token = token;
-        this.sessionActiveTo = sessionActiveTo;
-        this.taskList = taskList;
+    public User() {
+        typeOfUser = TypeOfUser.INACTIVE;
     }
 
-    public void addTasks(List<Task> tasks){
-        for(Task task : tasks){
-            task.setUser(this);
+
+    class Registration {
+
+        public void creategGuestUser(String token) {
+            typeOfUser = TypeOfUser.GUEST;
+            executeLogIn(token);
+        }
+
+        public boolean registerUser(UserCredentialsDto userCredentialsDto){
+            if(typeOfUser == TypeOfUser.GUEST) {
+                typeOfUser = TypeOfUser.REGISTERED;
+                userEmail = userCredentialsDto.getUserEmail();
+                password = userCredentialsDto.getUserPassword();
+                saveUser();
+                return true;
+            }else return false;
         }
     }
 
-    public Long getId() {
-        return id;
+    class Logging {
+        public boolean logInUser(String password, String oldToken, List<Task> oldTasks){
+            if(isLogged()){
+                if(passwordOk(password)){
+                    executeLogIn(oldToken);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public boolean logOutUser(){
+            if(isLogged()){
+                token = "";
+                saveUser();
+                return true;
+            } else return false;
+        }
     }
 
-    public String getUserEmail() {
-        return userEmail;
+    class Tasks {
+        public void addTasks(List<Task> tasks) {
+            User.this.addTasks(tasks);
+        }
+
+        public List<Task> getTaskList() {
+            return taskList;
+        }
     }
 
-    public String getPassword() {
-        return password;
+    class Data {
+        public Long getId() {
+            return id;
+        }
+
+        public TypeOfUser getTypeOfUser() {
+            return typeOfUser;
+        }
+
+        public String getUserEmail() {
+            return userEmail;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public String getToken() {
+            return token;
+        }
+
+        public LocalDateTime getSessionActiveTo() {
+            return sessionActiveTo;
+        }
     }
 
-    public boolean isLogged() {
-        return logged;
+    private boolean passwordOk(String password){
+        if(this.password == password) return true;
+        else return false;
     }
 
-    public String getToken() {
-        return token;
+    private void saveUser(){
+        userRepository.save(this);
     }
 
-    public LocalDateTime getSessionActiveTo() {
-        return sessionActiveTo;
+    private void addTasks(List<Task> tasks){
+        for(Task task : tasks){
+            task.setUser(this);
+        }
+        saveUser();
     }
 
-    public List<Task> getTaskList() {
-        return taskList;
+    private boolean isLogged() {
+        if(token.length()>settings.getAcceptTokenLength()) return true;
+        else return false;
     }
 
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setLogged(boolean logged) {
-        this.logged = logged;
-    }
-
-    public void setToken(String token) {
+    private boolean executeLogIn(String token){
+        sessionActiveTo = LocalDateTime.now().plusHours(settings.getSessionActiveHours());
         this.token = token;
-    }
-
-    public void setSessionActiveTo(LocalDateTime sessionActiveTo) {
-        this.sessionActiveTo = sessionActiveTo;
+        saveUser();
+        return true;
     }
 
     @Override
@@ -110,7 +168,6 @@ public class User {
                 "id=" + id +
                 ", userEmail='" + userEmail + '\'' +
                 ", password='" + password + '\'' +
-                ", logged=" + logged +
                 ", token='" + token + '\'' +
                 ", taskList=" + taskList +
                 '}';

@@ -28,7 +28,7 @@ public class UserRegistration {
 
     public ResponseEntity<StringDto> registerUser(String token, UserCredentialsDto userCredentialsDto){
         if(token.length() >= serviceSettings.getAcceptTokenLength()){
-            Optional<User> user = userRepository.findLoggedUserByToken(token);
+            Optional<User> user = userRepository.findUserByToken(token);
             if(user.isPresent()) {
                 return processToUserRegistration(userCredentialsDto);
             }
@@ -59,7 +59,7 @@ public class UserRegistration {
     }
 
     private User createNewUser(UserCredentialsDto userCredentialsDto){
-        return new User(userCredentialsDto.getUserEmail(), userCredentialsDto.getUserPassword(),
-                false, "", null, new ArrayList<>());
+        return new User(); // (userCredentialsDto.getUserEmail(), userCredentialsDto.getUserPassword(),
+                //false, "", null, new ArrayList<>());
     }
 }

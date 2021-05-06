@@ -12,11 +12,8 @@ import java.util.Optional;
 public interface UserRepository extends CrudRepository<User, Long> {
 
     @Query
-    Optional<User> findLoggedUserByToken(@Param("TOKEN")String token);
+    Optional<User> findUserByToken(@Param("TOKEN")String token);
 
-    @Query
-    Optional<User> findUserByEmailAndPassword(@Param("EMAIL")String email,
-                                              @Param("PASSWORD")String password);
 
     @Query
     Optional<User> findByEmail(@Param("EMAIL")String email);
