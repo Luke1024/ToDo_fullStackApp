@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -30,7 +29,7 @@ public class UserRegistration {
         if(token.length() >= serviceSettings.getAcceptTokenLength()){
             Optional<User> user = userRepository.findUserByToken(token);
             if(user.isPresent()) {
-                return processToUserRegistration(userCredentialsDto);
+                return processToUserRegistration(userCredentialsDto, user.get());
             }
             String message = "Registration failed, token " + token + " expired.";
             LOGGER.warn(message);
@@ -40,15 +39,20 @@ public class UserRegistration {
         return new ResponseEntity<>(new StringDto("Token is not valid."), HttpStatus.BAD_REQUEST);
     }
 
-    private ResponseEntity<StringDto> processToUserRegistration(UserCredentialsDto userCredentialsDto){
+    private ResponseEntity<StringDto> processToUserRegistration(UserCredentialsDto userCredentialsDto, User user){
         if( ! userWithThisEmailExist(userCredentialsDto.getUserEmail())){
-            if(userCredentialsDto.getUserPassword().length() >= serviceSettings.getMinimalPasswordLength()) {
-                userRepository.save(createNewUser(userCredentialsDto));
-                return new ResponseEntity<>(new StringDto("User registered."), HttpStatus.ACCEPTED);
-            } else {
-                LOGGER.warn("Password is to short.");
-                return new ResponseEntity<>(new StringDto("Password is to short."), HttpStatus.BAD_REQUEST);
-            }
+            if(credentialsAnalysis(userCredentialsDto)) {
+                if (userCredentialsDto.getUserPassword().length() >= serviceSettings.getMinimalPasswordLength()) {
+
+                    user.registerUser(userCredentialsDto);
+                    userRepository.save(user);
+
+                    return new ResponseEntity<>(new StringDto("User registered."), HttpStatus.ACCEPTED);
+                } else {
+                    LOGGER.warn("Password is to short.");
+                    return new ResponseEntity<>(new StringDto("Password is to short."), HttpStatus.BAD_REQUEST);
+                }
+            } else return new ResponseEntity<>(new StringDto("Problem with user credentials"), HttpStatus.BAD_REQUEST);
         }
         LOGGER.warn("User with email : " + userCredentialsDto.getUserEmail() + " exist.");
         return new ResponseEntity<>(new StringDto("User with this email already exist."), HttpStatus.BAD_REQUEST);
@@ -58,8 +62,12 @@ public class UserRegistration {
         return userRepository.findByEmail(userEmail).isPresent();
     }
 
-    private User createNewUser(UserCredentialsDto userCredentialsDto){
-        return new User(); // (userCredentialsDto.getUserEmail(), userCredentialsDto.getUserPassword(),
-                //false, "", null, new ArrayList<>());
+    private boolean credentialsAnalysis(UserCredentialsDto credentialsDto){
+        if(credentialsDto != null){
+            if(credentialsDto.getUserPassword() != null && credentialsDto.getUserEmail() != null){
+                return true;
+            }
+        }
+        return false;
     }
 }

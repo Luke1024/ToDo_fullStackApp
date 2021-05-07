@@ -5,9 +5,7 @@ import com.server.app.service.UserServiceSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
-import java.lang.reflect.Type;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @NamedNativeQuery(
@@ -27,10 +25,6 @@ public class User {
     @Autowired
     @Transient
     private UserServiceSettings settings;
-
-    @Autowired
-    @Transient
-    private UserRepository userRepository;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -55,99 +49,59 @@ public class User {
     @OrderColumn
     private List<Task> taskList;
 
+
     public User() {
         typeOfUser = TypeOfUser.INACTIVE;
     }
 
-
-    class Registration {
-
-        public void creategGuestUser(String token) {
-            typeOfUser = TypeOfUser.GUEST;
-            executeLogIn(token);
-        }
-
-        public boolean registerUser(UserCredentialsDto userCredentialsDto){
-            if(typeOfUser == TypeOfUser.GUEST) {
-                typeOfUser = TypeOfUser.REGISTERED;
-                userEmail = userCredentialsDto.getUserEmail();
-                password = userCredentialsDto.getUserPassword();
-                saveUser();
-                return true;
-            }else return false;
-        }
+    public void creategGuestUser(String token) {
+        typeOfUser = TypeOfUser.GUEST;
+        executeLogIn(token);
     }
 
-    class Logging {
-        public boolean logInUser(String password, String oldToken, List<Task> oldTasks){
-            if(isLogged()){
-                if(passwordOk(password)){
-                    executeLogIn(oldToken);
-                    return true;
-                }
+    public boolean registerUser(UserCredentialsDto userCredentialsDto){
+        if(typeOfUser == TypeOfUser.GUEST) {
+            typeOfUser = TypeOfUser.REGISTERED;
+            userEmail = userCredentialsDto.getUserEmail();
+            password = userCredentialsDto.getUserPassword();
+            return true;
+        }else return false;
+    }
+
+    public boolean logInUser(String password, String token){
+        if(isLogged()){
+            if(passwordOk(password)){
+                executeLogIn(token);
+                return true;
             }
-            return false;
         }
+        return false;
+    }
 
-        public boolean logOutUser(){
-            if(isLogged()){
-                token = "";
-                saveUser();
-                return true;
-            } else return false;
+    public boolean logOutUser(){
+        if(isLogged()){
+            token = "";
+            return true;
+        } else return false;
+    }
+
+    public List<Task> getTaskList() {
+        return taskList;
+    }
+
+    public void addTasks(List<Task> tasks){
+        for(Task task : tasks){
+            task.setUser(this);
         }
     }
 
-    class Tasks {
-        public void addTasks(List<Task> tasks) {
-            User.this.addTasks(tasks);
-        }
-
-        public List<Task> getTaskList() {
-            return taskList;
-        }
-    }
-
-    class Data {
-        public Long getId() {
-            return id;
-        }
-
-        public TypeOfUser getTypeOfUser() {
-            return typeOfUser;
-        }
-
-        public String getUserEmail() {
-            return userEmail;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public String getToken() {
-            return token;
-        }
-
-        public LocalDateTime getSessionActiveTo() {
-            return sessionActiveTo;
-        }
+    public Long getId() {
+        return id;
     }
 
     private boolean passwordOk(String password){
         if(this.password == password) return true;
         else return false;
-    }
-
-    private void saveUser(){
-        userRepository.save(this);
-    }
-
-    private void addTasks(List<Task> tasks){
-        for(Task task : tasks){
-            task.setUser(this);
-        }
-        saveUser();
     }
 
     private boolean isLogged() {
@@ -158,7 +112,6 @@ public class User {
     private boolean executeLogIn(String token){
         sessionActiveTo = LocalDateTime.now().plusHours(settings.getSessionActiveHours());
         this.token = token;
-        saveUser();
         return true;
     }
 

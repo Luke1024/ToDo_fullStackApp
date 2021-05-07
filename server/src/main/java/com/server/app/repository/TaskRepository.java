@@ -23,5 +23,5 @@ public interface TaskRepository extends CrudRepository<Task, Long>{
     List<Task> findAvailableTasksByUserIdDone(@Param("USER_ID")Long userId);
 
     @Query
-    List<Task> findAvailableTasksByUserIdTodo(@Param("USER_ID")Long userId);
+    List<Task> findAvailableTasksByUserIdTodo(@Param("USER-ID")Long userId);
 }

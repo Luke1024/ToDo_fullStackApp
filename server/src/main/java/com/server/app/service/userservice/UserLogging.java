@@ -12,15 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Optional;
-import java.util.Random;
 
 @Service
 public class UserLogging {
-
-    private Random random = new Random();
 
     @Autowired
     private UserServiceSettings serviceSettings;
@@ -30,82 +25,62 @@ public class UserLogging {
 
     private Logger LOGGER = LoggerFactory.getLogger(UserLogging.class);
 
-    public ResponseEntity<StringDto> createGuestUserAndGenerateToken(){
-        String guestToken = generateToken();
-        createGuestUser(guestToken);
-        return ResponseEntity.ok(new StringDto(guestToken));
+    public ResponseEntity<StringDto> loginUser(String token, UserCredentialsDto userCredentialsDto) {
+        if (credentialsAnalysis(userCredentialsDto)) {
+            findUserUsingToken(token, userCredentialsDto);
+        } else {
+            return new ResponseEntity<>(new StringDto("There is problem with user credentials"), HttpStatus.BAD_REQUEST);
+        }
     }
 
-    public ResponseEntity<StringDto> loginUserAndGenerateNewToken(String token, UserCredentialsDto userCredentialsDto) {
-        Optional<User> userAsGuest = userRepository.findUserByToken(token);
-        if(userAsGuest.isPresent()){
-            return processWithUserLogging(userAsGuest.get(), userCredentialsDto);
+    private ResponseEntity<StringDto> findUserUsingToken(String token, UserCredentialsDto credentialsDto){
+        Optional<User> userAsGuest = findUserByToken(token);
+        if (userAsGuest.isPresent()) {
+            return findUserWithCredentials(token, userAsGuest.get(), credentialsDto);
         } else {
             LOGGER.warn("Logging failed. User with token " + token + " don'exist or logged out.");
             return new ResponseEntity<>(new StringDto("User session expired or logged out."), HttpStatus.BAD_REQUEST);
         }
     }
 
-    public ResponseEntity<StringDto> logoutUser(String token){
-        Optional<User> userOptional = userRepository.findLoggedUserByToken(token);
-        if(userOptional.isPresent()){
-            LOGGER.info(("Logging out user with token " + token));
-            userOptional.get().setToken("");
-            userOptional.get().setLogged(false);
-            userRepository.save(userOptional.get());
-            return new ResponseEntity<>(new StringDto("User succesfully logged out."), HttpStatus.ACCEPTED);
-        } else {
-            LOGGER.warn("Logout failed. User with token " + token + " don't exist or logged out.");
-            return new ResponseEntity<>(new StringDto("User session expired or logged out."), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    private ResponseEntity<StringDto> processWithUserLogging(User userAsGuest, UserCredentialsDto userCredentialsDto){
-        Optional<User> userRegistered = loadRegisteredUser(userCredentialsDto);
+    private ResponseEntity<StringDto> findUserWithCredentials(String token, User userAsGuest, UserCredentialsDto userCredentialsDto){
+        Optional<User> userRegistered = findUserByEmail(userCredentialsDto.getUserEmail());
         if(userRegistered.isPresent()){
-            return logInUser(userAsGuest, userRegistered.get());
+            return logInUser(userAsGuest, userRegistered.get(), userCredentialsDto.getUserPassword());
         } else
             LOGGER.warn("User with credentials " + userCredentialsDto.getUserEmail() + " " +
                     userCredentialsDto.getUserPassword() + " not found.");
-            return new ResponseEntity<>(new StringDto("User email or password are incorrect or user doeesn't exist."),
-                    HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new StringDto("User email or password are incorrect or user doeesn't exist."),
+                HttpStatus.NOT_FOUND);
     }
 
-    private ResponseEntity<StringDto> logInUser(User userAsQuest, User userRegistered){
+    private ResponseEntity<StringDto> logInUser(String token, User userAsQuest, User userRegistered){
 
-        userRegistered.setLogged(true);
-        //userRegistered.setSessionActiveTo(LocalDateTime.now().plusHours(serviceSettings.getSessionActiveHours()));
+        userAsQuest.logOutUser();
 
-        String newToken = generateToken();
-        //userRegistered.setToken(newToken);
-
-        //userAsQuest.setLogged(false);
-        userRepository.save(userAsQuest);
-
-        userRepository.save(userRegistered);
-
-        return new ResponseEntity<>(new StringDto(newToken), HttpStatus.ACCEPTED);
-    }
-
-    private Optional<User> loadRegisteredUser(UserCredentialsDto userCredentialsDto){
-        return userRepository.findUserByEmailAndPassword(userCredentialsDto.getUserEmail(), userCredentialsDto.getUserPassword());
-    }
-
-    private void createGuestUser(String questToken){
-        //userRepository.save(new User( "quest", "", true, questToken,
-          //      LocalDateTime.now().plusHours(serviceSettings.getSessionActiveHours()), new ArrayList<>()));
-    }
-
-    private String generateToken(){
-        int leftLimit = 97;
-        int rightLimit = 122;
-        int targetStringLength = 15;
-        StringBuilder buffer = new StringBuilder(targetStringLength);
-        for (int i = 0; i < targetStringLength; i++) {
-            int randomLimitedInt = leftLimit + (int)
-                    (random.nextFloat() * (rightLimit - leftLimit + 1));
-            buffer.append((char) randomLimitedInt);
+        if(userRegistered.logInUser(password, newToken)) {
+            userRepository.save(userRegistered);
+            return new ResponseEntity<>(new StringDto(newToken), HttpStatus.ACCEPTED);
+        } else {
+            return new ResponseEntity<>(new StringDto("Something went wrong."), HttpStatus.BAD_REQUEST);
         }
-        return buffer.toString();
     }
+
+    private boolean credentialsAnalysis(UserCredentialsDto credentialsDto){
+        if(credentialsDto != null){
+            if(credentialsDto.getUserPassword() != null && credentialsDto.getUserEmail() != null){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Optional<User> findUserByToken(String token){
+        return userRepository.findUserByToken(token);
+    }
+
+    private Optional<User> findUserByEmail(String email){
+        return userRepository.findByEmail(userCredentialsDto.getUserEmail());
+    }
+
 }
