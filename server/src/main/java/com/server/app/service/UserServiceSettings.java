@@ -11,7 +11,7 @@ public class UserServiceSettings {
     //settings
     private static int sessionActiveHours = 6;
     private static int acceptTokenLength = 15;
-    private static int minimalPasswordLength = 10;
+    private static int minimalPasswordLength = 5;
     private static boolean allowUserLoggedFromMultipleDevicesAtTheSameTime = true;
 
     public static int getSessionActiveHours() {

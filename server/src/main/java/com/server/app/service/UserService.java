@@ -28,8 +28,6 @@ public class UserService {
     @Autowired
     private UserLoggingOut loggingOut;
 
-
-
     @Autowired
     private UserRepository userRepository;
 
@@ -52,7 +50,7 @@ public class UserService {
     }
 
     public ResponseEntity<StringDto> logoutUser(String token){
-        return userLoggingOut.logoutUser(token);
+        return loggingOut.logoutUser(token);
     }
 
     private String generateToken(){

@@ -1,6 +1,5 @@
 package com.server.app.domain;
 
-import com.server.app.repository.UserRepository;
 import com.server.app.service.UserServiceSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -105,7 +104,7 @@ public class User {
     }
 
     private boolean isLogged() {
-        if(token.length()>settings.getAcceptTokenLength()) return true;
+        if(token.length()==settings.getAcceptTokenLength()) return true;
         else return false;
     }
 

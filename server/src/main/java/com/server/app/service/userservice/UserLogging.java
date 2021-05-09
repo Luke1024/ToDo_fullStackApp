@@ -25,62 +25,64 @@ public class UserLogging {
 
     private Logger LOGGER = LoggerFactory.getLogger(UserLogging.class);
 
+    private String token;
+    private UserCredentialsDto userCredentialsDto;
+
     public ResponseEntity<StringDto> loginUser(String token, UserCredentialsDto userCredentialsDto) {
-        if (credentialsAnalysis(userCredentialsDto)) {
-            findUserUsingToken(token, userCredentialsDto);
-        } else {
-            return new ResponseEntity<>(new StringDto("There is problem with user credentials"), HttpStatus.BAD_REQUEST);
-        }
+        loadDataToAnalysis(token, userCredentialsDto);
+        if (analyzeToken()) {
+            if (analyzeCredentials()) {
+                if (checkIfUserUsingTokenExist()) {
+                    if (isUserWithCredentialsRegistered()) {
+                        if (isUserLogggingSuccesfull()) {
+                            return new ResponseEntity<>(new StringDto("User succesfully logged in."), HttpStatus.ACCEPTED);
+                        } else return new ResponseEntity<>(new StringDto("User already logged."), HttpStatus.BAD_REQUEST);
+                    } else return new ResponseEntity<>(new StringDto("User not exist."), HttpStatus.BAD_REQUEST);
+                } else return new ResponseEntity<>(new StringDto("Session expired."), HttpStatus.BAD_REQUEST);
+            } else return new ResponseEntity<>(new StringDto("Password is too short or there is something with credentials in general."), HttpStatus.BAD_REQUEST);
+        } else return new ResponseEntity<>(new StringDto("Token is not valid."), HttpStatus.BAD_REQUEST);
     }
 
-    private ResponseEntity<StringDto> findUserUsingToken(String token, UserCredentialsDto credentialsDto){
-        Optional<User> userAsGuest = findUserByToken(token);
-        if (userAsGuest.isPresent()) {
-            return findUserWithCredentials(token, userAsGuest.get(), credentialsDto);
-        } else {
-            LOGGER.warn("Logging failed. User with token " + token + " don'exist or logged out.");
-            return new ResponseEntity<>(new StringDto("User session expired or logged out."), HttpStatus.BAD_REQUEST);
-        }
+    private void loadDataToAnalysis(String token, UserCredentialsDto credentialsDto){
+        this.token = token;
+        this.userCredentialsDto = credentialsDto;
     }
 
-    private ResponseEntity<StringDto> findUserWithCredentials(String token, User userAsGuest, UserCredentialsDto userCredentialsDto){
-        Optional<User> userRegistered = findUserByEmail(userCredentialsDto.getUserEmail());
-        if(userRegistered.isPresent()){
-            return logInUser(userAsGuest, userRegistered.get(), userCredentialsDto.getUserPassword());
-        } else
-            LOGGER.warn("User with credentials " + userCredentialsDto.getUserEmail() + " " +
-                    userCredentialsDto.getUserPassword() + " not found.");
-        return new ResponseEntity<>(new StringDto("User email or password are incorrect or user doeesn't exist."),
-                HttpStatus.NOT_FOUND);
+    private boolean analyzeToken(){
+        if(token != null){
+            return token.length() >= serviceSettings.getAcceptTokenLength();
+        } else return false;
     }
 
-    private ResponseEntity<StringDto> logInUser(String token, User userAsQuest, User userRegistered){
-
-        userAsQuest.logOutUser();
-
-        if(userRegistered.logInUser(password, newToken)) {
-            userRepository.save(userRegistered);
-            return new ResponseEntity<>(new StringDto(newToken), HttpStatus.ACCEPTED);
-        } else {
-            return new ResponseEntity<>(new StringDto("Something went wrong."), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    private boolean credentialsAnalysis(UserCredentialsDto credentialsDto){
-        if(credentialsDto != null){
-            if(credentialsDto.getUserPassword() != null && credentialsDto.getUserEmail() != null){
-                return true;
+    private boolean analyzeCredentials() {
+        if(userCredentialsDto != null){
+            if(userCredentialsDto.getUserPassword() != null && userCredentialsDto.getUserEmail() != null) {
+                if (userCredentialsDto.getUserPassword().length() >= serviceSettings.getMinimalPasswordLength()) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
-    private Optional<User> findUserByToken(String token){
-        return userRepository.findUserByToken(token);
+    private boolean checkIfUserUsingTokenExist(){
+        return userRepository.findUserByToken(this.token).isPresent();
     }
 
-    private Optional<User> findUserByEmail(String email){
-        return userRepository.findByEmail(userCredentialsDto.getUserEmail());
+    private boolean isUserWithCredentialsRegistered(){
+        Optional<User> userToRegister = userRepository.findUserByToken(this.token);
+        if(userToRegister.get().registerUser(this.userCredentialsDto)){
+            return true;
+        } else return false;
+    }
+
+    private boolean isUserLogggingSuccesfull(){
+        User userAsQuest = userRepository.findUserByToken(this.token).get();
+        userAsQuest.logOutUser();
+
+        User userToLogin = userRepository.findByEmail(this.userCredentialsDto.getUserEmail()).get();
+        if(userToLogin.logInUser(this.userCredentialsDto.getUserPassword(), this.token)) return true;
+        else return false;
     }
 
 }

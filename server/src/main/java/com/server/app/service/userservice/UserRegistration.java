@@ -25,49 +25,59 @@ public class UserRegistration {
 
     private Logger LOGGER = LoggerFactory.getLogger(UserRegistration.class);
 
+    private String token;
+    private UserCredentialsDto userCredentialsDto;
+
     public ResponseEntity<StringDto> registerUser(String token, UserCredentialsDto userCredentialsDto){
-        if(token.length() >= serviceSettings.getAcceptTokenLength()){
-            Optional<User> user = userRepository.findUserByToken(token);
-            if(user.isPresent()) {
-                return processToUserRegistration(userCredentialsDto, user.get());
-            }
-            String message = "Registration failed, token " + token + " expired.";
-            LOGGER.warn(message);
-            return new ResponseEntity<>(new StringDto(message), HttpStatus.BAD_REQUEST);
-        }
-        LOGGER.warn("Registration failed, token: " + token + " is to short.");
-        return new ResponseEntity<>(new StringDto("Token is not valid."), HttpStatus.BAD_REQUEST);
+        loadDataToAnalysis(token, userCredentialsDto);
+        if(analyzeToken()){
+            if(analyzeCredentials()){
+                if(isEmailFreeToUse()){
+                    if(findUserByToken()){
+                        if(isUserRegistered()){
+                            return new ResponseEntity<>(new StringDto("User succesfully registered."), HttpStatus.ACCEPTED);
+                        } else return new ResponseEntity<>(new StringDto("User with this credentials already exists."), HttpStatus.BAD_REQUEST);
+                    } else return new ResponseEntity<>(new StringDto("Session expired."), HttpStatus.BAD_REQUEST);
+                } else new ResponseEntity<>(new StringDto("User with this email already exist."), HttpStatus.BAD_REQUEST);
+            } else new ResponseEntity<>(new StringDto("Password is too short or there is something with credentials in general."), HttpStatus.BAD_REQUEST);
+        } else return new ResponseEntity<>(new StringDto("Token is not valid."), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new StringDto("Something bad happen."), HttpStatus.BAD_REQUEST);
     }
 
-    private ResponseEntity<StringDto> processToUserRegistration(UserCredentialsDto userCredentialsDto, User user){
-        if( ! userWithThisEmailExist(userCredentialsDto.getUserEmail())){
-            if(credentialsAnalysis(userCredentialsDto)) {
+    private void loadDataToAnalysis(String token, UserCredentialsDto credentialsDto){
+        this.token = token;
+        this.userCredentialsDto = credentialsDto;
+    }
+
+    private boolean analyzeToken(){
+        if(token != null){
+            return token.length() >= serviceSettings.getAcceptTokenLength();
+        } else return false;
+    }
+
+    private boolean analyzeCredentials() {
+        if(userCredentialsDto != null){
+            if(userCredentialsDto.getUserPassword() != null && userCredentialsDto.getUserEmail() != null) {
                 if (userCredentialsDto.getUserPassword().length() >= serviceSettings.getMinimalPasswordLength()) {
-
-                    user.registerUser(userCredentialsDto);
-                    userRepository.save(user);
-
-                    return new ResponseEntity<>(new StringDto("User registered."), HttpStatus.ACCEPTED);
-                } else {
-                    LOGGER.warn("Password is to short.");
-                    return new ResponseEntity<>(new StringDto("Password is to short."), HttpStatus.BAD_REQUEST);
+                    return true;
                 }
-            } else return new ResponseEntity<>(new StringDto("Problem with user credentials"), HttpStatus.BAD_REQUEST);
-        }
-        LOGGER.warn("User with email : " + userCredentialsDto.getUserEmail() + " exist.");
-        return new ResponseEntity<>(new StringDto("User with this email already exist."), HttpStatus.BAD_REQUEST);
-    }
-
-    private boolean userWithThisEmailExist(String userEmail){
-        return userRepository.findByEmail(userEmail).isPresent();
-    }
-
-    private boolean credentialsAnalysis(UserCredentialsDto credentialsDto){
-        if(credentialsDto != null){
-            if(credentialsDto.getUserPassword() != null && credentialsDto.getUserEmail() != null){
-                return true;
             }
         }
         return false;
+    }
+
+    private boolean isEmailFreeToUse(){
+        return ! userRepository.findByEmail(this.userCredentialsDto.getUserEmail()).isPresent();
+    }
+
+    private boolean findUserByToken(){
+        return userRepository.findUserByToken(this.token).isPresent();
+    }
+
+    private boolean isUserRegistered(){
+        Optional<User> userToRegister = userRepository.findUserByToken(this.token);
+        if(userToRegister.get().registerUser(this.userCredentialsDto)){
+            return true;
+        } else return false;
     }
 }

@@ -54,24 +54,21 @@ export class LoginService {
       var status = response.status
       if(response.body != null){  
         if(status==202){
-          var token = response.body.value
-          if(this.serviceSettings.checkTokenLength(token)){
-            this.executeLoginOperations(response, userCredentials)
-          }
+          var message = response.body.value
+          this.executeLoginOperations(message, userCredentials)
         }      
       }
     }
   }
 
-  private executeLoginOperations(response:HttpResponse<StringDto>, userCredentials:UserCredentials) {
-    this.store.dispatch(setTopBarMessage({message:userCredentials.userEmail}))
+  private executeLoginOperations(message: string, userCredentials:UserCredentials) {
+    this.store.dispatch(setTopBarMessage({message:message}))
     this.store.dispatch(setUserLoggedToTrue())
-    this.store.dispatch(setToken({token:response.body!.value}))
     this.addMessage("User logged in.",true,0)
-    this.reloadTasks(response)
+    this.reloadTasks()
   }
 
-  private reloadTasks(response:any):void {
+  private reloadTasks():void {
     this.http.get<Task[]>(this.serviceSettings.tasksUrl + this.token, {observe:'response'})
     .pipe(catchError(error => this.serviceSettings.handleHttpError(error)))
     .subscribe(response => this.analyzeGetTasksResponse(response))

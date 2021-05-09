@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,8 +32,7 @@ public class TaskService {
         Optional<User> user = getUserByToken(token);
         if(user.isPresent()) {
             List<Task> taskList = taskRepository.findAvailableTasksByUserId(user.get().getId());
-            List<TaskDto> taskDtos = taskMapper.mapToTaskDtoList(taskList);
-            return ResponseEntity.ok(taskDtos);
+            return ResponseEntity.ok(convertTaskListToDto(taskList));
         } else {
             LOGGER.warn("User with token: " + token + " not found.");
             return ResponseEntity.badRequest().build();
@@ -49,8 +47,7 @@ public class TaskService {
         Optional<User> user = getUserByToken(token);
         if(user.isPresent()) {
             List<Task> taskList = taskRepository.findAvailableTasksByUserIdDone(user.get().getId());
-            List<TaskDto> taskDtos = taskMapper.mapToTaskDtoList(taskList);
-            return ResponseEntity.ok(taskDtos);
+            return ResponseEntity.ok(convertTaskListToDto(taskList));
         } else {
             LOGGER.warn("User with token: " + token + " not found.");
             return ResponseEntity.badRequest().build();
@@ -61,8 +58,7 @@ public class TaskService {
         Optional<User> user = getUserByToken(token);
         if(user.isPresent()) {
             List<Task> taskList = taskRepository.findAvailableTasksByUserIdTodo(user.get().getId());
-            List<TaskDto> taskDtos = taskMapper.mapToTaskDtoList(taskList);
-            return ResponseEntity.ok(taskDtos);
+            return ResponseEntity.ok(convertTaskListToDto(taskList));
         } else {
             LOGGER.warn("User with token: " + token + " not found.");
             return ResponseEntity.badRequest().build();
@@ -104,6 +100,10 @@ public class TaskService {
             }
         }
         return new ResponseEntity<>(new StringDto("User's session expired or logged out."), HttpStatus.BAD_REQUEST);
+    }
+
+    private List<TaskDto> convertTaskListToDto(List<Task> tasks){
+        return taskMapper.mapToTaskDtoList(tasks);
     }
 
     private ResponseEntity<TaskDto> processWithTaskSaving(User user, TaskDto taskDto){
