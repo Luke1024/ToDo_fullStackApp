@@ -14,10 +14,10 @@ import { catchError } from "rxjs/operators"
     providedIn: 'root'
 })
 export class LoginService {
-  token:string = ""
-  userLogged:boolean = false
+  private token:string = ""
+  private userLogged:boolean = false
 
-  appState$:Observable<any>
+  private appState$:Observable<any>
 
   constructor(private store: Store<{appState:AppState}>,
     private http:HttpClient,

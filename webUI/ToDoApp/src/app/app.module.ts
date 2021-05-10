@@ -20,7 +20,6 @@ import { TopBarComponent } from './top-bar/top-bar.component';
 import { FormPanelComponent } from './form-panel/form-panel.component';
 import { EffectsModule } from '@ngrx/effects';
 import { MessageBarComponent } from './message-bar/message-bar.component';
-import { TaskMergerComponent } from './task-merger/task-merger.component';
 
 @NgModule({
   declarations: [
@@ -30,8 +29,7 @@ import { TaskMergerComponent } from './task-merger/task-merger.component';
     CardFilterComponent,
     TopBarComponent,
     FormPanelComponent,
-    MessageBarComponent,
-    TaskMergerComponent
+    MessageBarComponent
   ],
   imports: [
     BrowserModule,
