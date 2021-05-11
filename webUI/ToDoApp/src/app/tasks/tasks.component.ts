@@ -6,7 +6,7 @@ import { StringDto } from '../StringDto';
 import { Task } from '../Task';
 import { TaskServiceService } from '../task-service.service';
 import { AppState } from '../AppState';
-import { createCard } from '../store-actions'
+import { createCard } from '../store-actions';
 import { Card } from '../Card';
 import { SaveService } from '../task_service/save.service';
 

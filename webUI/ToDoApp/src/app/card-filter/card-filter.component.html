@@ -1,7 +1,15 @@
-<div id="panel">
-    <ul>
-        <li (click)="all()"><a>All</a></li>
-        <li (click)="toDo()"><a>To Do</a></li>
-        <li (click)="done()"><a>Done</a></li>
-    </ul>
+<div class="card">
+    <div class="card-body">
+        <div class="btn-group btn-group-toggle">
+            <label class="btn-primary" ngbButtonLabel>
+                <input type="checkbox" ngbButton (click)="all()" [(ngModel)]="model.all">All
+            </label>
+            <label class="btn-primary" ngbButtonLabel>
+                <input type="checkbox" ngbButton (click)="toDo()" [(ngModel)]="model.todo">To do
+            </label>
+            <label class="btn-primary" ngbButtonLabel>
+                <input type="checkbox" ngbButton (click)="done()" [(ngModel)]="model.done">Done
+            </label>
+        </div>
+    </div>
 </div>

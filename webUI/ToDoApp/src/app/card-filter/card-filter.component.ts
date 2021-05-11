@@ -16,6 +16,12 @@ export class CardFilterComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  model = {
+    all: true,
+    todo: false,
+    done: false,
+  }
+
   all():void {
     this.getService.getAllTasks()
   }

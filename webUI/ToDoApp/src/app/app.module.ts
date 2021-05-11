@@ -20,6 +20,7 @@ import { TopBarComponent } from './top-bar/top-bar.component';
 import { FormPanelComponent } from './form-panel/form-panel.component';
 import { EffectsModule } from '@ngrx/effects';
 import { MessageBarComponent } from './message-bar/message-bar.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { MessageBarComponent } from './message-bar/message-bar.component';
     MatSlideToggleModule,
     MatIconModule,
     StoreModule.forRoot({appState: appReducer}),
-    StoreDevtoolsModule.instrument()],
+    StoreDevtoolsModule.instrument(),
+    NgbModule],
   providers: [],
   bootstrap: [AppComponent]
 })

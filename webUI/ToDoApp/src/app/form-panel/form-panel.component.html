@@ -1,12 +1,20 @@
-<div *ngIf="panelVisible">
-    <div *ngIf="formVisibility">
-        <input [(ngModel)]="email" placeholder="email">
-        <input [(ngModel)]="password" placeholder="password">
-        <button id="cancelButton" (click)="cancel()">Cancel</button>
-        <div id="logInSignInButton">
-            <button *ngIf="logInButton" (click)="logIn()">Log In</button>
-            <button *ngIf="signInButton" (click)="signIn()">Sign In</button>
+<div *ngIf="panelVisible" class="card">
+    <div class="card-body">
+        <div *ngIf="formVisibility">
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" [(ngModel)]="email">
+                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" [(ngModel)]="password">
+              </div>
         </div>
+        <div id="logInSignInButton">
+            <button *ngIf="logInButton" (click)="logIn()" class="btn btn-primary">Log In</button>
+            <button *ngIf="signInButton" (click)="signIn()" class="btn btn-primary">Sign In</button>
+        </div>
+        <p *ngIf="messageVisibility" id="message">{{message}}</p>
     </div>
-    <p *ngIf="messageVisibility" id="message">{{message}}</p>
 </div>
