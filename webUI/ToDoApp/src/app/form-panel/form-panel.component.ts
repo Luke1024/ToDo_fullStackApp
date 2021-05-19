@@ -73,6 +73,8 @@ export class FormPanelComponent implements OnInit {
   }
 
   cancel() {
+    this.email = ""
+    this.password = ""
     this.store.dispatch(setFormPanelVisibleToFalse())
   }
 }

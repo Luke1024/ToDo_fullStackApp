@@ -5,8 +5,9 @@ import { Observable } from "rxjs";
 import { catchError } from "rxjs/operators";
 import { AppState } from "../AppState";
 import { ServicesSettingsAndTools } from "../services.settings.tools";
-import { createMultipleCards } from "../store-actions";
+import { changeTaskListStatus, createMultipleCards } from "../store-actions";
 import { Task } from "../Task";
+import { TaskListStatus } from "../task-list-status";
 
 @Injectable({
     providedIn: 'root'
@@ -25,6 +26,7 @@ export class GetService {
 
     getAllTasks():void {
         if(this.serviceSettings.tokenReceived()){
+            this.store.dispatch(changeTaskListStatus({taskListStatus:TaskListStatus.ALL}))
             this.http.get<Task[]>(this.serviceSettings.tasksUrl + this.token, {observe:'response'})
             .pipe(catchError(error => this.serviceSettings.handleHttpError(error)))
             .subscribe(response => this.analyzeGetTasksResponse(response))
@@ -33,6 +35,7 @@ export class GetService {
 
     getDoneTasks():void {
         if(this.serviceSettings.tokenReceived()){
+            this.store.dispatch(changeTaskListStatus({taskListStatus:TaskListStatus.DONE}))
             this.http.get<Task[]>(this.serviceSettings.tasksDoneUrl + this.token, {observe:'response'})
             .pipe(catchError(error => this.serviceSettings.handleHttpError(error)))
             .subscribe(response => this.analyzeGetTasksResponse(response))
@@ -41,6 +44,7 @@ export class GetService {
 
     getTodoTasks():void {
         if(this.serviceSettings.tokenReceived()){
+            this.store.dispatch(changeTaskListStatus({taskListStatus:TaskListStatus.TODO}))
             this.http.get<Task[]>(this.serviceSettings.tasksTodoUrl + this.token, {observe:'response'})
             .pipe(catchError(error => this.serviceSettings.handleHttpError(error)))
             .subscribe(response => this.analyzeGetTasksResponse(response))

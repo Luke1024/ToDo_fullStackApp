@@ -1,15 +1,18 @@
-<div class="card">
+<div class="card m-2">
     <div class="card-body">
         <div class="btn-group btn-group-toggle">
-            <label class="btn-primary" ngbButtonLabel>
+            <label class="btn-outline-primary" ngbButtonLabel>
                 <input type="checkbox" ngbButton (click)="all()" [(ngModel)]="model.all">All
             </label>
-            <label class="btn-primary" ngbButtonLabel>
+            <label class="btn-outline-primary" ngbButtonLabel>
                 <input type="checkbox" ngbButton (click)="toDo()" [(ngModel)]="model.todo">To do
             </label>
-            <label class="btn-primary" ngbButtonLabel>
+            <label class="btn-outline-primary" ngbButtonLabel>
                 <input type="checkbox" ngbButton (click)="done()" [(ngModel)]="model.done">Done
             </label>
+        </div>
+        <div class="mb-3">
+            <input class="form-control" [(ngModel)]="search">
         </div>
     </div>
 </div>

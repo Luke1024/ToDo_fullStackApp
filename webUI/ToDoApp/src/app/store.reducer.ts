@@ -17,12 +17,14 @@ setToken,
 setUserLoggedToFalse,
 setUserLoggedToTrue,
 addServerMessage,
-createMultipleCards
+createMultipleCards,
+changeTaskListStatus
 } from './store-actions'
 import { Card } from './Card'
 import { FormPanelMode } from './form-panel-mode'
 import { TopBar } from './top-bar'
 import { ServerMessage } from './server-message'
+import { TaskListStatus } from './task-list-status'
 
 export const initialState:AppState = {
     topBarDisableButtons:false,
@@ -33,6 +35,7 @@ export const initialState:AppState = {
     token:"",
     userLogged:false,
     serverMessages:[],
+    taskListStatus: TaskListStatus.ALL,
     cards:[]}
 
 const _appReducer = createReducer(
@@ -49,7 +52,8 @@ const _appReducer = createReducer(
     on(setUserLoggedToTrue, state => ({...state, userLogged:true})),
     on(setUserLoggedToFalse, state => ({...state, userLogged:false})),
     on(addServerMessage, (state,{message}) => ({...state, serverMessages:messageAdder(state,message)})),
-    
+    on(changeTaskListStatus, (state,{taskListStatus}) => ({...state, taskListStatus:taskListStatus})),
+
     on(createMultipleCards, (state, {cards}) => ({...state, cards:cards})),
     on(createCard, (state, {card}) => ({...state, cards:cardCreator(state,card)})),
     on(updateCard, (state, {card}) => ({...state, cards:cardUpdater(state,card)})),

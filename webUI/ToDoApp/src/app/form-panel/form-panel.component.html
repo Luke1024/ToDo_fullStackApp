@@ -1,5 +1,5 @@
-<div *ngIf="panelVisible" class="card">
-    <div class="card-body">
+<div *ngIf="panelVisible" class="card m-3">
+    <div class="card-body" >
         <div *ngIf="formVisibility">
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Email address</label>
@@ -9,12 +9,11 @@
             <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label">Password</label>
                 <input type="password" class="form-control" id="exampleInputPassword1" [(ngModel)]="password">
-              </div>
+            </div>
         </div>
-        <div id="logInSignInButton">
-            <button *ngIf="logInButton" (click)="logIn()" class="btn btn-primary">Log In</button>
-            <button *ngIf="signInButton" (click)="signIn()" class="btn btn-primary">Sign In</button>
-        </div>
+        <button type="button" *ngIf="logInButton" (click)="logIn()" class="btn btn-primary m-2">Log In</button>
+        <button type="button" *ngIf="signInButton" (click)="signIn()" class="btn btn-primary m-2">Sign In</button>
+        <button type="button" (click)="cancel()" class="btn btn-primary m-2">Cancel</button>
         <p *ngIf="messageVisibility" id="message">{{message}}</p>
     </div>
 </div>

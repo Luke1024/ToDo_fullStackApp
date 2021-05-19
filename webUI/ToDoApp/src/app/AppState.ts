@@ -3,6 +3,7 @@ import { FormPanel } from "./form-panel";
 import { FormPanelMode } from "./form-panel-mode";
 import { ServerMessage } from "./server-message";
 import { ServerManagement } from "./ServerManagement";
+import { TaskListStatus } from "./task-list-status";
 import { TopBar } from "./top-bar";
 
 export interface AppState {
@@ -21,5 +22,6 @@ export interface AppState {
     userLogged:boolean
     serverMessages:ServerMessage[]
 
+    taskListStatus: TaskListStatus
     cards:Card[]
 }

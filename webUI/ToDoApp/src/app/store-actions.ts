@@ -2,6 +2,7 @@ import { createAction, props } from '@ngrx/store'
 import { Card } from './Card'
 import { FormPanelMode } from './form-panel-mode'
 import { ServerMessage } from './server-message'
+import { TaskListStatus } from './task-list-status'
 
 //TopBar component actions
 export const setDisableButtonsToTrue = createAction("[TopBar Component] Set disableButtons to true. ")
@@ -29,6 +30,10 @@ export const setUserLoggedToTrue = createAction("[ServerManagement] Set user log
 export const setUserLoggedToFalse = createAction("[ServerManagement] Set user logged to false.")
 export const addServerMessage = createAction("[ServerManagement] Add message.",
     props<{message:ServerMessage}>())
+
+export const changeTaskListStatus = createAction(
+    "[Task Component] Change task list status.",
+    props<{taskListStatus:TaskListStatus}>())
 
 export const createMultipleCards = createAction(
     '[Tasks Component] Create multiple cards',

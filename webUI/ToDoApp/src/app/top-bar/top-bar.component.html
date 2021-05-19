@@ -1,13 +1,9 @@
-<div id="topBar">
-    <p>{{barMessage}}</p>
-    <div *ngIf="logInSignInVisible" id="logInSignInButtons">
-        <button (click)="logIn()">Log In</button>
-        <button (click)="signIn()">Sign In</button>
-    </div>
-    <div *ngIf="logOutVisible" id="logOutButtons">
-        <button *ngIf="logOutVisible" (click)="logOut()">Log Out</button>
-    </div>
-    <div id="connectionIcon">
-
+<div class="card m-2">
+    <div class="card-body">
+        <p>{{barMessage}}</p>
+        <button *ngIf="logInSignInVisible" (click)="logIn()" class="btn btn-primary m-2">Log In</button>
+        <button *ngIf="logInSignInVisible" (click)="signIn()" class="btn btn-primary m-2">Sign In</button>
+        <button *ngIf="logOutVisible" (click)="logOut()" class="btn btn-primary m-2">Log Out</button>
+        <app-form-panel></app-form-panel>
     </div>
 </div>

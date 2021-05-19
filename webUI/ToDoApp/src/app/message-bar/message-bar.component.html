@@ -1,7 +1,9 @@
-<div id="basicContainer">
-    <div id="panel">
-        <div *ngFor="let serverMessage of messages">
-            <p><span id="statusCode">{{serverMessage.messageStatusCode}}</span><span id="message">{{serverMessage.message}}</span></p>
-        </div>
+<div class="card m-2" style="height: 100px; overflow-y: auto;" id="list-to-scroll">
+    <div class="card">
+        <ul class="list-group list-group-flush" *ngFor="let serverMessage of messages">
+            <li class="list-group-item" [ngClass]="{'text-success':serverMessage.messageStatus, 'text-danger': ! serverMessage.messageStatus}">
+            <span *ngIf="serverMessage.messageStatusCode != 0">{{serverMessage.messageStatusCode}}</span><span>&nbsp;&nbsp;</span>
+            <span>{{serverMessage.message}}</span></li>
+        </ul>
     </div>
 </div>
