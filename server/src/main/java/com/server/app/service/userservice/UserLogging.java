@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -32,12 +33,12 @@ public class UserLogging {
         loadDataToAnalysis(token, userCredentialsDto);
         if (analyzeToken()) {
             if (analyzeCredentials()) {
-                if (checkIfUserUsingTokenExist()) {
-                    if (isUserWithCredentialsRegistered()) {
-                        if (isUserLogggingSuccesfull()) {
+                if (findUserUsingToken()) {
+                    if (checkIfUserWithCredentialsExist()) {
+                        if (executeUserLogging()) {
                             return new ResponseEntity<>(new StringDto("User succesfully logged in."), HttpStatus.ACCEPTED);
                         } else return new ResponseEntity<>(new StringDto("User already logged."), HttpStatus.BAD_REQUEST);
-                    } else return new ResponseEntity<>(new StringDto("User not exist."), HttpStatus.BAD_REQUEST);
+                    } else return new ResponseEntity<>(new StringDto("Credentials aren't valid."), HttpStatus.BAD_REQUEST);
                 } else return new ResponseEntity<>(new StringDto("Session expired."), HttpStatus.BAD_REQUEST);
             } else return new ResponseEntity<>(new StringDto("Password is too short or there is something with credentials in general."), HttpStatus.BAD_REQUEST);
         } else return new ResponseEntity<>(new StringDto("Token is not valid."), HttpStatus.BAD_REQUEST);
@@ -65,24 +66,42 @@ public class UserLogging {
         return false;
     }
 
-    private boolean checkIfUserUsingTokenExist(){
+    private boolean findUserUsingToken() {
         return userRepository.findUserByToken(this.token).isPresent();
     }
 
-    private boolean isUserWithCredentialsRegistered(){
-        Optional<User> userToRegister = userRepository.findUserByToken(this.token);
-        if(userToRegister.get().registerUser(this.userCredentialsDto)){
-            return true;
-        } else return false;
+    private boolean checkIfUserWithCredentialsExist(){
+        return userRepository.findUserByEmailAndPassword(
+                this.userCredentialsDto.getUserEmail(),
+                this.userCredentialsDto.getUserPassword()).isPresent();
     }
 
-    private boolean isUserLogggingSuccesfull(){
-        User userAsQuest = userRepository.findUserByToken(this.token).get();
-        userAsQuest.logOutUser();
-
-        User userToLogin = userRepository.findByEmail(this.userCredentialsDto.getUserEmail()).get();
-        if(userToLogin.logInUser(this.userCredentialsDto.getUserPassword(), this.token)) return true;
-        else return false;
+    private boolean executeUserLogging(){
+        logOutGuestUserWithCurrentToken();
+        Optional<User> userAsLoggedOut = userRepository.findUserByEmailAndPassword(this.userCredentialsDto.getUserEmail(),
+                this.userCredentialsDto.getUserPassword());
+        if(userAsLoggedOut.isPresent()){
+            if(checkIfUserLoggedIn(userAsLoggedOut.get())) {
+                logInUser(userAsLoggedOut.get());
+                return true;
+            }
+        }
+        return false;
     }
 
+    private void logOutGuestUserWithCurrentToken(){
+        userRepository.findUserByToken(this.token).get().setToken("");
+    }
+
+    private boolean checkIfUserLoggedIn(User userAsLoggedOut) {
+        if (userAsLoggedOut.getToken().length() == 0) {
+            return false;
+        } else return true;
+    }
+
+    private void logInUser(User userAsLoggedOut) {
+        userAsLoggedOut.setToken(this.token);
+        userAsLoggedOut.setSessionActiveTo(LocalDateTime.now().plusHours(serviceSettings.getSessionActiveHours()));
+        userRepository.save(userAsLoggedOut);
+    }
 }

@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.ArrayList;
 
 @Service
 public class UserRegistration {
@@ -34,9 +34,8 @@ public class UserRegistration {
             if(analyzeCredentials()){
                 if(isEmailFreeToUse()){
                     if(findUserByToken()){
-                        if(isUserRegistered()){
-                            return new ResponseEntity<>(new StringDto("User succesfully registered."), HttpStatus.ACCEPTED);
-                        } else return new ResponseEntity<>(new StringDto("User with this credentials already exists."), HttpStatus.BAD_REQUEST);
+                        executeRegistration();
+                        return new ResponseEntity<>(new StringDto("User succesfully registered."), HttpStatus.ACCEPTED);
                     } else return new ResponseEntity<>(new StringDto("Session expired."), HttpStatus.BAD_REQUEST);
                 } else new ResponseEntity<>(new StringDto("User with this email already exist."), HttpStatus.BAD_REQUEST);
             } else new ResponseEntity<>(new StringDto("Password is too short or there is something with credentials in general."), HttpStatus.BAD_REQUEST);
@@ -74,10 +73,10 @@ public class UserRegistration {
         return userRepository.findUserByToken(this.token).isPresent();
     }
 
-    private boolean isUserRegistered(){
-        Optional<User> userToRegister = userRepository.findUserByToken(this.token);
-        if(userToRegister.get().registerUser(this.userCredentialsDto)){
-            return true;
-        } else return false;
+    private void executeRegistration(){
+        User userToRegister = userRepository.findUserByToken(this.token).get();
+        userToRegister.setUserEmail(this.userCredentialsDto.getUserEmail());
+        userToRegister.setPassword(this.userCredentialsDto.getUserPassword());
+        userRepository.save(userToRegister);
     }
 }

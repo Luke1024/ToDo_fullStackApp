@@ -1,6 +1,7 @@
 package com.server.app.service;
 
 import com.server.app.domain.StringDto;
+import com.server.app.domain.TypeOfUser;
 import com.server.app.domain.User;
 import com.server.app.domain.UserCredentialsDto;
 import com.server.app.repository.UserRepository;
@@ -40,7 +41,8 @@ public class UserService {
     public ResponseEntity<StringDto> createGuestUserAndGenerateToken(){
         String guestToken = generateToken();
         User newUser = new User();
-        newUser.creategGuestUser(guestToken);
+        newUser.setTypeOfUser(TypeOfUser.GUEST);
+        newUser.setToken(guestToken);
         userRepository.save(newUser);
         return ResponseEntity.ok(new StringDto(guestToken));
     }

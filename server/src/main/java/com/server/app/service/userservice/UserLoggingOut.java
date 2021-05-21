@@ -40,10 +40,17 @@ public class UserLoggingOut {
     }
 
     private boolean logggingOutUser(String token, User user){
-        if(user.logOutUser()) {
+        if(checkIfUserLoggedIn(user)){
+            user.setToken("");
             userRepository.save(user);
             return true;
         } else return false;
+    }
+
+    private boolean checkIfUserLoggedIn(User userAsLoggedOut) {
+        if (userAsLoggedOut.getToken().length() == 0) {
+            return false;
+        } else return true;
     }
 
     private Optional<User> findUserByToken(String token){
