@@ -1,18 +1,10 @@
 package com.server.app.domain;
 
-import com.server.app.service.UserServiceSettings;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@NamedNativeQuery(
-        name = "User.findUserByToken",
-        query = "SELECT * FROM user WHERE token =:TOKEN",
-        resultClass = User.class
-)
 @NamedNativeQuery(
         name = "User.findByEmail",
         query = "SELECT * FROM user WHERE user_email =:EMAIL",
@@ -37,11 +29,6 @@ public class User {
     private String userEmail;
     private String password;
 
-    //session data
-    private String token;
-    private LocalDateTime sessionActiveTo;
-
-
     @OneToMany(targetEntity = Task.class,
             mappedBy = "user",
             cascade = CascadeType.ALL,
@@ -49,6 +36,15 @@ public class User {
     )
     @OrderColumn
     private List<Task> taskList = new ArrayList<>();
+
+
+    @OneToMany(targetEntity = Session.class,
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    @OrderColumn
+    private List<Session> sessionList = new ArrayList<>();
 
     public User() {
 
@@ -58,6 +54,10 @@ public class User {
         for(Task task : tasks){
             task.setUser(this);
         }
+    }
+
+    public void addSession(Session session){
+        session.setUser(this);
     }
 
     public Long getId() {
@@ -88,20 +88,8 @@ public class User {
         this.password = password;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public LocalDateTime getSessionActiveTo() {
-        return sessionActiveTo;
-    }
-
-    public void setSessionActiveTo(LocalDateTime sessionActiveTo) {
-        this.sessionActiveTo = sessionActiveTo;
+    public List<Session> getSessionList() {
+        return sessionList;
     }
 
     public List<Task> getTaskList() {
@@ -118,7 +106,6 @@ public class User {
                 "id=" + id +
                 ", userEmail='" + userEmail + '\'' +
                 ", password='" + password + '\'' +
-                ", token='" + token + '\'' +
                 ", taskList=" + taskList +
                 '}';
     }

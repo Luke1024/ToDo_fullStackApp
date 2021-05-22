@@ -23,7 +23,7 @@ public class UserController {
 
     @PostMapping(value = "/login/{token}")
     public ResponseEntity<StringDto> login(@PathVariable String token, @RequestBody UserCredentialsDto userCredentialsDto){
-        return userService.loginUserAndGenerateNewToken(token, userCredentialsDto);
+        return userService.loginUser(token, userCredentialsDto);
     }
 
     @PostMapping(value = "/register/{token}")

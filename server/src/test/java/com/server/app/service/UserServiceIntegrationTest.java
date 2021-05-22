@@ -127,7 +127,7 @@ public class UserServiceIntegrationTest {
         ResponseEntity<StringDto> guestUserResponse = userService.createGuestUserAndGenerateToken();
         Assert.assertEquals(HttpStatus.OK, guestUserResponse.getStatusCode());
 
-        ResponseEntity<StringDto> loginResponse = userService.loginUserAndGenerateNewToken(guestUserResponse.getBody().getValue(),
+        ResponseEntity<StringDto> loginResponse = userService.loginUser(guestUserResponse.getBody().getValue(),
                 new UserCredentialsDto(userEmail, userPassword));
         Optional<User> user = userRepository.findById(user1.getId());
 
@@ -145,7 +145,7 @@ public class UserServiceIntegrationTest {
         ResponseEntity<StringDto> guestUserResponse = userService.createGuestUserAndGenerateToken();
         Assert.assertEquals(HttpStatus.OK, guestUserResponse.getStatusCode());
 
-        ResponseEntity<StringDto> loginResponse = userService.loginUserAndGenerateNewToken(guestUserResponse.getBody().getValue(),
+        ResponseEntity<StringDto> loginResponse = userService.loginUser(guestUserResponse.getBody().getValue(),
                 new UserCredentialsDto(userEmail, userPassword));
 
         Assert.assertEquals(new ResponseEntity<>(new StringDto("User email or password are incorrect or user doeesn't exist.")
@@ -163,7 +163,7 @@ public class UserServiceIntegrationTest {
         ResponseEntity<StringDto> guestUserResponse = userService.createGuestUserAndGenerateToken();
         Assert.assertEquals(HttpStatus.OK, guestUserResponse.getStatusCode());
 
-        ResponseEntity<StringDto> loginResponse = userService.loginUserAndGenerateNewToken(generateToken(settings.getAcceptTokenLength()),
+        ResponseEntity<StringDto> loginResponse = userService.loginUser(generateToken(settings.getAcceptTokenLength()),
                 new UserCredentialsDto(userEmail, userPassword));
 
         ResponseEntity<StringDto> expectedResponse =
@@ -188,7 +188,7 @@ public class UserServiceIntegrationTest {
         ResponseEntity<StringDto> guestUserResponse = userService.createGuestUserAndGenerateToken();
         Assert.assertEquals(HttpStatus.OK, guestUserResponse.getStatusCode());
 
-        ResponseEntity<StringDto> loginResponse = userService.loginUserAndGenerateNewToken(guestUserResponse.getBody().getValue(), new UserCredentialsDto(userEmail, badPassword));
+        ResponseEntity<StringDto> loginResponse = userService.loginUser(guestUserResponse.getBody().getValue(), new UserCredentialsDto(userEmail, badPassword));
 
         Assert.assertEquals(new ResponseEntity<>(new StringDto("User email or password are incorrect or user doeesn't exist."),
                 HttpStatus.BAD_REQUEST).toString(), loginResponse.toString());

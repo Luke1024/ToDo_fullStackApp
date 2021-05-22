@@ -47,7 +47,7 @@ public class UserControllerTest {
 
     @Test
     public void login() throws Exception {
-        when(userService.loginUserAndGenerateNewToken(anyString(), any(UserCredentialsDto.class)))
+        when(userService.loginUser(anyString(), any(UserCredentialsDto.class)))
                 .thenReturn(ResponseEntity.ok(new StringDto("qwerty")));
 
         mockMvc.perform(post("/toDo/login/token")

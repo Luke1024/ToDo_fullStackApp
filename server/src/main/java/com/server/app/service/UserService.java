@@ -1,9 +1,6 @@
 package com.server.app.service;
 
-import com.server.app.domain.StringDto;
-import com.server.app.domain.TypeOfUser;
-import com.server.app.domain.User;
-import com.server.app.domain.UserCredentialsDto;
+import com.server.app.domain.*;
 import com.server.app.repository.UserRepository;
 import com.server.app.service.userservice.UserLogging;
 import com.server.app.service.userservice.UserLoggingOut;
@@ -12,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Random;
 
 @Service
@@ -42,12 +40,18 @@ public class UserService {
         String guestToken = generateToken();
         User newUser = new User();
         newUser.setTypeOfUser(TypeOfUser.GUEST);
-        newUser.setToken(guestToken);
+        Session guestSession = generateSession(guestToken, newUser);
+        newUser.addSession(guestSession);
         userRepository.save(newUser);
         return ResponseEntity.ok(new StringDto(guestToken));
     }
 
-    public ResponseEntity<StringDto> loginUserAndGenerateNewToken(String token, UserCredentialsDto userCredentialsDto){
+    private Session generateSession(String token, User newUser){
+        LocalDateTime sessionActiveTo = LocalDateTime.now().plusHours(serviceSettings.getSessionActiveHours());
+        return new Session(newUser, token, sessionActiveTo);
+    }
+
+    public ResponseEntity<StringDto> loginUser(String token, UserCredentialsDto userCredentialsDto){
         return userLogging.loginUser(token, userCredentialsDto);
     }
 

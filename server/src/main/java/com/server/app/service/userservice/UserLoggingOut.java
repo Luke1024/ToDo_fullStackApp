@@ -1,7 +1,8 @@
 package com.server.app.service.userservice;
 
+import com.server.app.domain.Session;
 import com.server.app.domain.StringDto;
-import com.server.app.domain.User;
+import com.server.app.repository.SessionRepository;
 import com.server.app.repository.UserRepository;
 import com.server.app.service.UserServiceSettings;
 import org.slf4j.Logger;
@@ -22,12 +23,16 @@ public class UserLoggingOut {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private SessionRepository sessionRepository;
+
     private Logger LOGGER = LoggerFactory.getLogger(UserLoggingOut.class);
 
     public ResponseEntity<StringDto> logoutUser(String token){
-        Optional<User> userOptional = findUserByToken(token);
-        if(userOptional.isPresent()){
-            if(logggingOutUser(token, userOptional.get())){
+        Optional<Session> optionalSessionToEnd = sessionRepository.findSessionByToken(token);
+
+        if(optionalSessionToEnd.isPresent()){
+            if(endingSession(token, optionalSessionToEnd.get())){
                 LOGGER.info(("Logging out user with token " + token));
                 return new ResponseEntity<>(new StringDto("User succesfully logged out."), HttpStatus.ACCEPTED);
             } else {
@@ -39,21 +44,9 @@ public class UserLoggingOut {
         }
     }
 
-    private boolean logggingOutUser(String token, User user){
-        if(checkIfUserLoggedIn(user)){
-            user.setToken("");
-            userRepository.save(user);
-            return true;
-        } else return false;
-    }
-
-    private boolean checkIfUserLoggedIn(User userAsLoggedOut) {
-        if (userAsLoggedOut.getToken().length() == 0) {
-            return false;
-        } else return true;
-    }
-
-    private Optional<User> findUserByToken(String token){
-        return userRepository.findUserByToken(token);
+    private boolean endingSession(String token, Session session){
+        session.setToken("");
+        sessionRepository.save(session);
+        return true;
     }
 }

@@ -55,7 +55,7 @@ export class FormPanelComponent implements OnInit {
         this.formVisibility = true
         this.messageVisibility = false
         break;
-      case FormPanelMode.WAITING:
+      case FormPanelMode.MESSAGE:
         this.formVisibility = false
         this.messageVisibility = true
         break;

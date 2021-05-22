@@ -1,6 +1,6 @@
 package com.server.app.repository;
 
-import com.server.app.domain.User;
+import com.server.app.domain.Session;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -9,12 +9,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends CrudRepository<User, Long> {
-
-
-    @Query
-    Optional<User> findByEmail(@Param("EMAIL")String email);
+public interface SessionRepository extends CrudRepository<Session, Long> {
 
     @Query
-    Optional<User> findUserByEmailAndPassword(@Param("EMAIL") String email, @Param("PASSWORD") String password);
+    Optional<Session> findSessionByToken(@Param("TOKEN")String token);
 }

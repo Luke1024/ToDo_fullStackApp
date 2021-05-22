@@ -1,8 +1,10 @@
 package com.server.app.service.userservice;
 
+import com.server.app.domain.Session;
 import com.server.app.domain.StringDto;
 import com.server.app.domain.User;
 import com.server.app.domain.UserCredentialsDto;
+import com.server.app.repository.SessionRepository;
 import com.server.app.repository.UserRepository;
 import com.server.app.service.UserServiceSettings;
 import org.slf4j.Logger;
@@ -12,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class UserRegistration {
@@ -22,6 +24,9 @@ public class UserRegistration {
 
     @Autowired
     private static UserServiceSettings serviceSettings;
+
+    @Autowired
+    private SessionRepository sessionRepository;
 
     private Logger LOGGER = LoggerFactory.getLogger(UserRegistration.class);
 
@@ -33,9 +38,9 @@ public class UserRegistration {
         if(analyzeToken()){
             if(analyzeCredentials()){
                 if(isEmailFreeToUse()){
-                    if(findUserByToken()){
+                    if(findSessionByTokenUsedForRegistration()){
                         executeRegistration();
-                        return new ResponseEntity<>(new StringDto("User succesfully registered."), HttpStatus.ACCEPTED);
+                        return new ResponseEntity<>(new StringDto("User succesfully registered. You can login now."), HttpStatus.ACCEPTED);
                     } else return new ResponseEntity<>(new StringDto("Session expired."), HttpStatus.BAD_REQUEST);
                 } else new ResponseEntity<>(new StringDto("User with this email already exist."), HttpStatus.BAD_REQUEST);
             } else new ResponseEntity<>(new StringDto("Password is too short or there is something with credentials in general."), HttpStatus.BAD_REQUEST);
@@ -69,12 +74,15 @@ public class UserRegistration {
         return ! userRepository.findByEmail(this.userCredentialsDto.getUserEmail()).isPresent();
     }
 
-    private boolean findUserByToken(){
-        return userRepository.findUserByToken(this.token).isPresent();
+    private boolean findSessionByTokenUsedForRegistration(){
+        Optional<Session> sessionToEndOptional = sessionRepository.findSessionByToken(this.token);
+        if(sessionToEndOptional.isPresent()){
+            return true;
+        } else return false;
     }
 
     private void executeRegistration(){
-        User userToRegister = userRepository.findUserByToken(this.token).get();
+        User userToRegister = new User();
         userToRegister.setUserEmail(this.userCredentialsDto.getUserEmail());
         userToRegister.setPassword(this.userCredentialsDto.getUserPassword());
         userRepository.save(userToRegister);

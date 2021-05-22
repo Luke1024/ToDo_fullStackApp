@@ -2,6 +2,7 @@ package com.server.app.service;
 
 import com.server.app.domain.*;
 import com.server.app.mapper.TaskMapper;
+import com.server.app.repository.SessionRepository;
 import com.server.app.repository.TaskRepository;
 import com.server.app.repository.UserRepository;
 import org.slf4j.Logger;
@@ -24,6 +25,9 @@ public class TaskService {
     private UserRepository userRepository;
 
     @Autowired
+    private SessionRepository sessionRepository;
+
+    @Autowired
     private TaskMapper taskMapper;
 
     private Logger LOGGER = LoggerFactory.getLogger(TaskService.class);
@@ -37,10 +41,6 @@ public class TaskService {
             LOGGER.warn("User with token: " + token + " not found.");
             return ResponseEntity.badRequest().build();
         }
-    }
-
-    public Optional<User> getUserByToken(String token){
-        return userRepository.findUserByToken(token);
     }
 
     public ResponseEntity<List<TaskDto>> getTasksDone(String token){
@@ -76,7 +76,7 @@ public class TaskService {
     }
 
     public ResponseEntity<StringDto> updateTask(String token, TaskDto taskDto){
-        Optional<User> user = userRepository.findUserByToken(token);
+        Optional<User> user = getUserByToken(token);
         if(user.isPresent()){
             return processWithTaskUpdate(user.get(), taskDto);
         } else {
@@ -86,7 +86,7 @@ public class TaskService {
     }
 
     public ResponseEntity<StringDto> deleteTask(String token, long frontId) {
-        Optional<User> user = userRepository.findUserByToken(token);
+        Optional<User> user = getUserByToken(token);
 
         if (user.isPresent()) {
             Optional<Task> foundTask = taskRepository.findAvailableTaskByUserIdAndTaskId(user.get().getId(), frontId);
@@ -100,6 +100,14 @@ public class TaskService {
             }
         }
         return new ResponseEntity<>(new StringDto("User's session expired or logged out."), HttpStatus.BAD_REQUEST);
+    }
+
+    public Optional<User> getUserByToken(String token){
+        Optional<Session> sessionOptional = sessionRepository.findSessionByToken(token);
+
+        if(sessionOptional.isPresent()){
+            return Optional.of(sessionOptional.get().getUser());
+        } else return Optional.empty();
     }
 
     private List<TaskDto> convertTaskListToDto(List<Task> tasks){

@@ -1,8 +1,10 @@
 package com.server.app.service.userservice;
 
+import com.server.app.domain.Session;
 import com.server.app.domain.StringDto;
 import com.server.app.domain.User;
 import com.server.app.domain.UserCredentialsDto;
+import com.server.app.repository.SessionRepository;
 import com.server.app.repository.UserRepository;
 import com.server.app.service.UserServiceSettings;
 import org.slf4j.Logger;
@@ -24,20 +26,24 @@ public class UserLogging {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private SessionRepository sessionRepository;
+
     private Logger LOGGER = LoggerFactory.getLogger(UserLogging.class);
 
     private String token;
     private UserCredentialsDto userCredentialsDto;
+    private Session sessionToEnd;
+    private User userToLogIn;
 
     public ResponseEntity<StringDto> loginUser(String token, UserCredentialsDto userCredentialsDto) {
         loadDataToAnalysis(token, userCredentialsDto);
         if (analyzeToken()) {
             if (analyzeCredentials()) {
-                if (findUserUsingToken()) {
-                    if (checkIfUserWithCredentialsExist()) {
-                        if (executeUserLogging()) {
-                            return new ResponseEntity<>(new StringDto("User succesfully logged in."), HttpStatus.ACCEPTED);
-                        } else return new ResponseEntity<>(new StringDto("User already logged."), HttpStatus.BAD_REQUEST);
+                if(findSessionUsingToken()){
+                    if(loadUserWithCredentials()){
+                        executeUserLogging();
+                        return new ResponseEntity<>(new StringDto("User succesfully logged in."), HttpStatus.ACCEPTED);
                     } else return new ResponseEntity<>(new StringDto("Credentials aren't valid."), HttpStatus.BAD_REQUEST);
                 } else return new ResponseEntity<>(new StringDto("Session expired."), HttpStatus.BAD_REQUEST);
             } else return new ResponseEntity<>(new StringDto("Password is too short or there is something with credentials in general."), HttpStatus.BAD_REQUEST);
@@ -66,42 +72,30 @@ public class UserLogging {
         return false;
     }
 
-    private boolean findUserUsingToken() {
-        return userRepository.findUserByToken(this.token).isPresent();
+    private boolean findSessionUsingToken() {
+        Optional<Session> sessionOptional = sessionRepository.findSessionByToken(this.token);
+        if(sessionOptional.isPresent()){
+            sessionToEnd = sessionOptional.get();
+            return true;
+        } else return false;
     }
 
-    private boolean checkIfUserWithCredentialsExist(){
-        return userRepository.findUserByEmailAndPassword(
+    private boolean loadUserWithCredentials(){
+        Optional<User> userOptional = userRepository.findUserByEmailAndPassword(
                 this.userCredentialsDto.getUserEmail(),
-                this.userCredentialsDto.getUserPassword()).isPresent();
-    }
-
-    private boolean executeUserLogging(){
-        logOutGuestUserWithCurrentToken();
-        Optional<User> userAsLoggedOut = userRepository.findUserByEmailAndPassword(this.userCredentialsDto.getUserEmail(),
                 this.userCredentialsDto.getUserPassword());
-        if(userAsLoggedOut.isPresent()){
-            if(checkIfUserLoggedIn(userAsLoggedOut.get())) {
-                logInUser(userAsLoggedOut.get());
-                return true;
-            }
-        }
-        return false;
+        if(userOptional.isPresent()){
+            userToLogIn = userOptional.get();
+            return true;
+        } else return false;
     }
 
-    private void logOutGuestUserWithCurrentToken(){
-        userRepository.findUserByToken(this.token).get().setToken("");
-    }
+    private void executeUserLogging(){
+        sessionToEnd.setToken("");
+        sessionRepository.save(sessionToEnd);
 
-    private boolean checkIfUserLoggedIn(User userAsLoggedOut) {
-        if (userAsLoggedOut.getToken().length() == 0) {
-            return false;
-        } else return true;
-    }
-
-    private void logInUser(User userAsLoggedOut) {
-        userAsLoggedOut.setToken(this.token);
-        userAsLoggedOut.setSessionActiveTo(LocalDateTime.now().plusHours(serviceSettings.getSessionActiveHours()));
-        userRepository.save(userAsLoggedOut);
+        LocalDateTime sessionActiveTo = LocalDateTime.now().plusHours(serviceSettings.getSessionActiveHours());
+        Session newSession = new Session(userToLogIn, token, sessionActiveTo);
+        sessionRepository.save(newSession);
     }
 }
