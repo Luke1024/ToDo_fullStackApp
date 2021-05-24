@@ -1,5 +1,3 @@
-import { Task } from "./Task";
-
 export interface Card {
     id: number;
     taskName: string;

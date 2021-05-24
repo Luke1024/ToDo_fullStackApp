@@ -2,13 +2,12 @@ import { ThrowStmt } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { StringDto } from '../StringDto';
-import { Task } from '../Task';
-import { TaskServiceService } from '../task-service.service';
-import { AppState } from '../AppState';
-import { createCard } from '../store-actions';
-import { Card } from '../Card';
-import { SaveService } from '../task_service/save.service';
+import { StringDto } from '../models/string-dto';
+import { Task } from '../models/task';
+import { AppState } from '../store/AppState';
+import { createCard } from '../store/store-actions';
+import { Card } from '../models/card';
+import { SaveService } from '../services/task_services/save.service';
 
 @Component({
   selector: 'app-tasks',

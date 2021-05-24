@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { AppState } from '../AppState';
-import { TaskListStatus } from '../task-list-status';
-import { GetService } from '../task_service/get.service';
+import { AppState } from '../store/AppState';
+import { TaskListStatus } from '../models/task-list-status';
+import { GetService } from '../services/task_services/get.service';
 
 @Component({
   selector: 'app-card-filter',

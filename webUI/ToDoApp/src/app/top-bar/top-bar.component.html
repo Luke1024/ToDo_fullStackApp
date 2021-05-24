@@ -1,9 +1,10 @@
-<div class="card m-2">
+<div class="card m-2" style="height:70px">
     <div class="card-body">
-        <p>{{barMessage}}</p>
-        <button *ngIf="logInSignInVisible" (click)="logIn()" class="btn btn-primary m-2">Log In</button>
-        <button *ngIf="logInSignInVisible" (click)="signIn()" class="btn btn-primary m-2">Sign In</button>
-        <button *ngIf="logOutVisible" (click)="logOut()" class="btn btn-primary m-2">Log Out</button>
-        <app-form-panel></app-form-panel>
+        <h2 class="card-title">{{barMessage}}</h2>
+        <div style="float:right; position:relative; top:-60px">
+            <button *ngIf="logInSignInVisible" (click)="logIn()" class="btn btn-primary m-2">Log In</button>
+            <button *ngIf="logInSignInVisible" (click)="signIn()" class="btn btn-primary m-2">Sign In</button>
+            <button *ngIf="logOutVisible" (click)="logOut()" class="btn btn-primary m-2">Log Out</button>
+        </div>
     </div>
 </div>

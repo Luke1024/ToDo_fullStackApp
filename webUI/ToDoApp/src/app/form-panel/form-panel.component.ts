@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { AppState } from '../AppState';
-import { FormPanelMode } from '../form-panel-mode';
-import { setFormPanelMode } from '../store-actions';
-import { UserCredentials } from '../UserCredentials';
-import { LoginService } from '../user_services/login.service';
-import { LogOutService } from '../user_services/logOut.service';
-import { RegistrationService } from '../user_services/registration.service';
+import { AppState } from '../store/AppState';
+import { FormPanelMode } from '../models/form-panel-mode';
+import { setFormPanelMode } from '../store/store-actions';
+import { UserCredentials } from '../models/user-credentials';
+import { LoginService } from '../services/user_services/login.service';
+import { LogOutService } from '../services/user_services/logOut.service';
+import { RegistrationService } from '../services/user_services/registration.service';
 
 @Component({
   selector: 'app-form-panel',

@@ -2,14 +2,14 @@ import { HttpClient, HttpErrorResponse, HttpResponse } from "@angular/common/htt
 import { Injectable } from "@angular/core"
 import { Store } from "@ngrx/store"
 import { Observable, of, throwError } from "rxjs"
-import { AppState } from "../AppState"
-import { addServerMessage, createMultipleCards, setFormPanelMode, setToken, setTopBarMessage, setUserLoggedToTrue } from "../store-actions"
-import { StringDto } from "../StringDto"
-import { Task } from "../Task"
-import { ServicesSettingsAndTools } from "../services.settings.tools"
-import { UserCredentials } from "../UserCredentials"
+import { AppState } from "../../store/AppState"
+import { addServerMessage, createMultipleCards, setFormPanelMode, setToken, setTopBarMessage, setUserLoggedToTrue } from "../../store/store-actions"
+import { StringDto } from "../../models/string-dto"
+import { Task } from "../../models/task"
+import { ServicesSettingsAndTools } from "../../services.settings.tools"
+import { UserCredentials } from "../../models/user-credentials"
 import { catchError } from "rxjs/operators"
-import { FormPanelMode } from "../form-panel-mode"
+import { FormPanelMode } from "../../models/form-panel-mode"
 
 @Injectable({
     providedIn: 'root'

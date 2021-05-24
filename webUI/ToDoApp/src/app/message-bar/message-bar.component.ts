@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { AppState } from '../AppState';
-import { ServerMessage } from '../server-message';
-import { ServerManagement } from '../ServerManagement';
+import { AppState } from '../store/AppState';
+import { ServerMessage } from '../models/server-message';
 
 @Component({
   selector: 'app-message-bar',
@@ -16,21 +15,23 @@ export class MessageBarComponent implements OnInit {
 
   messages:ServerMessage[] = []
 
-  constructor(private store: Store<{appState:AppState}>) {
+  constructor(private store: Store<{appState:AppState}>, private element:ElementRef) {
     this.appState$ = store.select('appState')
     this.appState$.subscribe(app => this.updateMessage(app.serverMessages))
   }
 
   private updateMessage(serverMessages:ServerMessage[]){
     this.messages = serverMessages
-    //problems in this function
-    var element = document.getElementById("list-to-scroll")
-    if(element != null){
-      console.log("element found")
-      element.scrollTop = element.scrollHeight
-    }
-    
+    this.scrollToBottom()
   }
+
+  private scrollToBottom(){
+    const scrollPane: any = this.element.nativeElement.querySelector('#list-to-scroll')
+    if(scrollPane) {
+      setTimeout(()=> scrollPane.scrollTop = scrollPane.scrollHeight)
+    }
+  }
+
   ngOnInit(): void {
   }
 }

@@ -2,13 +2,13 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Event } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { takeLast } from 'rxjs/operators';
-import { AppState } from '../AppState';
-import { Card } from '../Card';
+import { AppState } from '../store/AppState';
+import { Card } from '../models/card';
 import { createCard,
-  updateCard, deleteCard } from '../store-actions';
-import { Task } from '../Task';
-import { DeleteService } from '../task_service/delete.service';
-import { UpdateService } from '../task_service/update.service';
+  updateCard, deleteCard } from '../store/store-actions';
+import { Task } from '../models/task';
+import { DeleteService } from '../services/task_services/delete.service';
+import { UpdateService } from '../services/task_services/update.service';
 
 @Component({
   selector: 'app-card',

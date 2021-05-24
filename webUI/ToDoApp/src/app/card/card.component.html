@@ -1,16 +1,18 @@
 <div class="card m-2">
     <div class="card-body">
-        <button mat-icon-button *ngIf="!card.folded" (click)="fold()"><mat-icon>expand_less</mat-icon></button>
-        <button mat-icon-button *ngIf="card.folded" (click)="unfold()"><mat-icon>expand_more</mat-icon></button>
-        <button mat-icon-button (click)="delete()"><mat-icon>close</mat-icon></button>
-        <input type="checkbox" [checked]="card.done" (change)="card.done = !card.done; updater()"> Done
+        <div style="float: right;">
+            <button mat-icon-button *ngIf="!card.folded" (click)="fold()"><mat-icon>expand_less</mat-icon></button>
+            <button mat-icon-button *ngIf="card.folded" (click)="unfold()"><mat-icon>expand_more</mat-icon></button>
+            <input type="checkbox" [checked]="card.done" (change)="card.done = !card.done; updater()"> Done
+            <button mat-icon-button (click)="delete()"><mat-icon>close</mat-icon></button>
+        </div>
         <div *ngIf="card.folded">
             <h2 class="card-title">{{card.taskName}}</h2>
         </div>
         <div *ngIf="!card.folded">
             <div *ngIf="!card.editMode">
-                <h2 class="card-title">{{card.taskName}}</h2>
-                <p class="card-text">{{card.description}}</p>
+                <h1 class="card-title">{{card.taskName}}</h1>
+                <h2 class="card-text">{{card.description}}</h2>
                 <button *ngIf="!card.editMode" (click)="edit()" class="btn btn-primary">Edit</button>
             </div>
             <div *ngIf="card.editMode">
@@ -22,41 +24,9 @@
                     <label for="taskdescription" class="form-label">Task description</label>
                     <input class="form-control" id="taskdescription" [(ngModel)]="card.description">
                 </div>
-                <button *ngIf="card.editMode" (click)="save()" class="btn btn-primary">Save</button>
+                <button *ngIf="card.editMode" (click)="save()" class="btn btn-primary mb-3">Save</button>
             </div>
         </div>
+        <h2 class="text-danger" *ngIf="card.messageShow">{{card.message}}</h2>
     </div>
 </div>
-
-<!--
-    <div class="card-body">
-    <p id="name" *ngIf="card.folded">{{card.taskName}}</p>
-    <div>
-        <p id="name" *ngIf="card.folded">{{card.taskName}}</p>
-        <div *ngIf="!card.folded">
-            <div *ngIf="!card.editMode">
-                <p id="name">{{card.taskName}}</p>
-                <p id="description">{{card.description}}</p>
-            </div>
-            <div *ngIf="card.editMode">
-                <input id="name" [(ngModel)]="card.taskName" (change)="updater()"  placeholder="name">
-                <textarea id="description" [(ngModel)]="card.description" (change)="updater()" placeholder="description"></textarea>
-            </div>
-        </div>
-    </div>
-    <div id="saveEdit" *ngIf="!card.folded">
-        <button *ngIf="card.editMode" (click)="save()" class="btn btn-primary">Save</button>
-        <button *ngIf="!card.editMode" (click)="edit()">Edit</button>
-    </div>
-    <div id="foldExpandArrow">
-        <button mat-icon-button *ngIf="!card.folded" (click)="fold()"><mat-icon>expand_less</mat-icon></button>
-        <button mat-icon-button *ngIf="card.folded" (click)="unfold()"><mat-icon>expand_more</mat-icon></button>
-    </div>
-    <button mat-icon-button id="deleteButton" (click)="delete()"><mat-icon>close</mat-icon></button>
-    <div id="doneButton">
-        <input type="checkbox" [checked]="card.done" (change)="card.done = !card.done; updater()">Done
-    </div>
-    </div>
-</div>
-<p id="cardMessage" *ngIf="card.messageShow">{{card.message}}</p>
--->

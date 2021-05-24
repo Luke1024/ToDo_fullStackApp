@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { AppState } from '../AppState';
-import { FormPanelMode } from '../form-panel-mode';
-import { setFormPanelMode } from '../store-actions';
-import { TopBar } from '../top-bar';
-import { LogOutService } from '../user_services/logOut.service';
+import { AppState } from '../store/AppState';
+import { FormPanelMode } from '../models/form-panel-mode';
+import { setFormPanelMode } from '../store/store-actions';
+import { LogOutService } from '../services/user_services/logOut.service';
 
 @Component({
   selector: 'app-top-bar',

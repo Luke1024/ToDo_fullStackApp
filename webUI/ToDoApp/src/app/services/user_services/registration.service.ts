@@ -3,12 +3,12 @@ import { Injectable } from "@angular/core"
 import { Store } from "@ngrx/store"
 import { Observable } from "rxjs"
 import { catchError } from "rxjs/operators"
-import { AppState } from "../AppState"
-import { ServerMessage } from "../server-message"
-import { ServicesSettingsAndTools } from "../services.settings.tools"
-import { addServerMessage, setTopBarMessage } from "../store-actions"
-import { StringDto } from "../StringDto"
-import { UserCredentials } from "../UserCredentials"
+import { AppState } from "../../store/AppState"
+import { ServerMessage } from "../../models/server-message"
+import { ServicesSettingsAndTools } from "../../services.settings.tools"
+import { addServerMessage, setTopBarMessage } from "../../store/store-actions"
+import { StringDto } from "../../models/string-dto"
+import { UserCredentials } from "../../models/user-credentials"
 
 @Injectable({
     providedIn: 'root'

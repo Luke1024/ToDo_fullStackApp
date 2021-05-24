@@ -3,11 +3,11 @@ import { Injectable } from "@angular/core";
 import { Store } from "@ngrx/store";
 import { Observable } from "rxjs";
 import { catchError } from "rxjs/operators";
-import { AppState } from "../AppState";
-import { ServicesSettingsAndTools } from "../services.settings.tools";
-import { changeTaskListStatus, createMultipleCards } from "../store-actions";
-import { Task } from "../Task";
-import { TaskListStatus } from "../task-list-status";
+import { AppState } from "../../store/AppState";
+import { ServicesSettingsAndTools } from "../../services.settings.tools";
+import { changeTaskListStatus, createMultipleCards } from "../../store/store-actions";
+import { Task } from "../../models/task";
+import { TaskListStatus } from "../../models/task-list-status";
 
 @Injectable({
     providedIn: 'root'

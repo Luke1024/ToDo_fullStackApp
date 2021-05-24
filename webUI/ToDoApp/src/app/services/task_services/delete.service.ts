@@ -2,18 +2,18 @@ import { HttpClient, HttpResponse } from "@angular/common/http"
 import { Injectable } from "@angular/core"
 import { Store } from "@ngrx/store"
 import { Observable } from "rxjs"
+import { AppState } from "../../store/AppState"
+import { StringDto } from "../../models/string-dto"
+import { Task } from "../../models/task"
+import { ServicesSettingsAndTools } from "../../services.settings.tools"
+import { deleteCard } from "../../store/store-actions"
+import { Card } from "../../models/card"
 import { catchError } from "rxjs/operators"
-import { AppState } from "../AppState"
-import { Card } from "../Card"
-import { ServicesSettingsAndTools } from "../services.settings.tools"
-import { updateCard } from "../store-actions"
-import { StringDto } from "../StringDto"
-import { Task } from "../Task"
 
 @Injectable({
     providedIn: 'root'
 })
-export class UpdateService {
+export class DeleteService {
 
     token:string = ""
     userLogged:boolean = false
@@ -32,27 +32,23 @@ export class UpdateService {
         this.userLogged = this.userLogged
     }
 
-    updateTask(card: Card): void {
-      console.log(card)
+    deleteTask(card: Card): void {
       if(this.serviceSettings.tokenReceived()){
-        this.http.put<StringDto>(this.serviceSettings.tasksUrl + this.token, 
-          this.serviceSettings.cardToTaskConverter(card), {observe:'response'})
-          .pipe(catchError(error => this.serviceSettings.handleHttpError(error)))
-          .subscribe(response => this.analyzeUpdateResponse(card,response))
-      } else {
-        this.addMessage(this.serviceSettings.tokenNotFoundMessage,false,0)
+        const id = card.id;
+        const url = `${this.serviceSettings.tasksUrl + this.token}/${id}`
+        this.http.delete<StringDto>(url, {observe:'response'})
+        .pipe(catchError(error => this.serviceSettings.handleHttpError(error)))
+        .subscribe(response => this.analyzeDeleteResponse(card,response))
       }
     }
-
-    private analyzeUpdateResponse(card:Card, response:any):void {
+    
+    private analyzeDeleteResponse(card:Card, response:any){
       if(response != null){
         var status = response.status
-        if(response.body != null){  
+        if(response.body != null){
           if(status==202){
-            this.store.dispatch(updateCard({card}))
-            if(response.body != null && response.status != null){
-              this.addMessage(response.body.value, false, response.status)
-            }
+            this.store.dispatch(deleteCard({card}))
+            this.addMessage(response.body.value, true, response.status)
           }
         }
       }

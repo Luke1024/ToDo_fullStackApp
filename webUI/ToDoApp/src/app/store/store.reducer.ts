@@ -1,5 +1,5 @@
 import { Action, createReducer, createReducerFactory, on, State, Store } from '@ngrx/store'
-import { Task } from './Task'
+import { Task } from '../models/task'
 import { AppState } from './AppState'
 import { createCard,
      updateCard,
@@ -13,11 +13,10 @@ addServerMessage,
 createMultipleCards,
 changeTaskListStatus
 } from './store-actions'
-import { Card } from './Card'
-import { FormPanelMode } from './form-panel-mode'
-import { TopBar } from './top-bar'
-import { ServerMessage } from './server-message'
-import { TaskListStatus } from './task-list-status'
+import { Card } from '../models/card'
+import { FormPanelMode } from '../models/form-panel-mode'
+import { ServerMessage } from '../models/server-message'
+import { TaskListStatus } from '../models/task-list-status'
 
 export const initialState:AppState = {
     topBarMessage:"ToDo App",

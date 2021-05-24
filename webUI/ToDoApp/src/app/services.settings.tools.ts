@@ -2,12 +2,12 @@ import { HttpErrorResponse, HttpHeaders, HttpResponse } from "@angular/common/ht
 import { Injectable } from "@angular/core"
 import { Store } from "@ngrx/store"
 import { Observable } from "rxjs"
-import { AppState } from "./AppState"
-import { Card } from "./Card"
-import { ServerMessage } from "./server-message"
-import { addServerMessage } from "./store-actions"
-import { StringDto } from "./StringDto"
-import { Task } from "./Task"
+import { AppState } from "./store/AppState"
+import { Card } from "./models/card"
+import { ServerMessage } from "./models/server-message"
+import { addServerMessage } from "./store/store-actions"
+import { StringDto } from "./models/string-dto"
+import { Task } from "./models/task"
 
 @Injectable({
   providedIn: 'root'

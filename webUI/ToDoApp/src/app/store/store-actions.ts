@@ -1,8 +1,8 @@
 import { createAction, props } from '@ngrx/store'
-import { Card } from './Card'
-import { FormPanelMode } from './form-panel-mode'
-import { ServerMessage } from './server-message'
-import { TaskListStatus } from './task-list-status'
+import { Card } from '../models/card'
+import { FormPanelMode } from '../models/form-panel-mode'
+import { ServerMessage } from '../models/server-message'
+import { TaskListStatus } from '../models/task-list-status'
 
 //TopBar component actions
 export const setTopBarMessage = createAction(
