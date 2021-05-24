@@ -5,25 +5,16 @@ import { ServerMessage } from './server-message'
 import { TaskListStatus } from './task-list-status'
 
 //TopBar component actions
-export const setDisableButtonsToTrue = createAction("[TopBar Component] Set disableButtons to true. ")
-export const setDisableButtonsToFalse = createAction("[TopBar Component] Set disableButtons to false.")
 export const setTopBarMessage = createAction(
     "[TopBar Component] Set message.",
     props<{message:string}>())
 
 //FormPanel component actions
-export const setFormPanelVisibleToTrue = createAction("[FormPanel Component] Set visible to true.")
-export const setFormPanelVisibleToFalse = createAction("[FormPanel Component] Set visible to false.")
 export const setFormPanelMode = createAction(
     "[FormPanel Component] Set mode.",
     props<{mode:FormPanelMode}>())
-export const setFormPanelMessage = createAction(
-    "[FormPanel Component] Set message.",
-    props<{message:string}>())
 
 //ServerManagement actions
-export const setConnectedToTrue = createAction("[ServerManagement] Set connected to true.")
-export const setConnectedToFalse = createAction("[ServerManagement] Set connected to false.")
 export const setToken = createAction("[ServerManagement] Set token.",
     props<{token:string}>())
 export const setUserLoggedToTrue = createAction("[ServerManagement] Set user logged to true.")

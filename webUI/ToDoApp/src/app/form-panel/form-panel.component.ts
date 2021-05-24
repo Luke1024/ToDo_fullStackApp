@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from '../AppState';
 import { FormPanelMode } from '../form-panel-mode';
-import { setFormPanelVisibleToFalse } from '../store-actions';
+import { setFormPanelMode } from '../store-actions';
 import { UserCredentials } from '../UserCredentials';
 import { LoginService } from '../user_services/login.service';
 import { LogOutService } from '../user_services/logOut.service';
@@ -19,7 +19,6 @@ export class FormPanelComponent implements OnInit {
   email:string = ""
   password:string = ""
   formVisibility!:boolean
-  messageVisibility!:boolean
 
   logInButton!:boolean
   signInButton!:boolean
@@ -31,8 +30,7 @@ export class FormPanelComponent implements OnInit {
 
   constructor(private store:Store<{appState:AppState}>,
     private logInService:LoginService,
-    private registrationService:RegistrationService,
-    private logOutService:LogOutService) {
+    private registrationService:RegistrationService) {
     this.appState$ = store.select('appState')
     this.appState$.subscribe(app => this.setStates(app))
   }
@@ -41,23 +39,22 @@ export class FormPanelComponent implements OnInit {
   }
 
   setStates(appState:AppState){
-    this.panelVisible = appState.formPanelVisible
     switch(appState.formPanelMode){
       case FormPanelMode.LOG_IN:
+        this.clearForm()
         this.logInButton = true
         this.signInButton = false
         this.formVisibility = true
-        this.messageVisibility = false
         break;
       case FormPanelMode.SIGN_IN:
+        this.clearForm()
         this.logInButton = false
         this.signInButton = true
         this.formVisibility = true
-        this.messageVisibility = false
         break;
-      case FormPanelMode.MESSAGE:
+      case FormPanelMode.NOT_VISIBLE:
+        this.clearForm()
         this.formVisibility = false
-        this.messageVisibility = true
         break;
     }
   }
@@ -65,16 +62,22 @@ export class FormPanelComponent implements OnInit {
   logIn() {
     var credentials:UserCredentials = {userEmail:this.email, userPassword:this.password}
     this.logInService.loginUser(credentials)
+    this.clearForm()
   }
 
   signIn() {
     var credentials:UserCredentials = {userEmail:this.email, userPassword:this.password}
     this.registrationService.registerUser(credentials)
+    this.clearForm()
   }
 
   cancel() {
+    this.clearForm()
+    this.store.dispatch(setFormPanelMode({mode:FormPanelMode.NOT_VISIBLE}))
+  }
+
+  private clearForm(){
     this.email = ""
     this.password = ""
-    this.store.dispatch(setFormPanelVisibleToFalse())
   }
 }

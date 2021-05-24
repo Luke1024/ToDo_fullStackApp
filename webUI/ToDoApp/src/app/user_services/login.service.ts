@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core"
 import { Store } from "@ngrx/store"
 import { Observable, of, throwError } from "rxjs"
 import { AppState } from "../AppState"
-import { addServerMessage, createMultipleCards, setFormPanelMessage, setFormPanelMode, setToken, setTopBarMessage, setUserLoggedToTrue } from "../store-actions"
+import { addServerMessage, createMultipleCards, setFormPanelMode, setToken, setTopBarMessage, setUserLoggedToTrue } from "../store-actions"
 import { StringDto } from "../StringDto"
 import { Task } from "../Task"
 import { ServicesSettingsAndTools } from "../services.settings.tools"
@@ -37,7 +37,7 @@ export class LoginService {
       if(!userCredentials.userEmail || !userCredentials.userPassword){
         this.addMessage('Email and password can\'t be blank.',false,0)
       }else{
-        this.setFormPanelMessages()
+        this.switchOffFormPanel()
         this.communicateWithServer(userCredentials);
       }
     } else {
@@ -45,9 +45,8 @@ export class LoginService {
     }
   }
 
-  private setFormPanelMessages(){
-    this.store.dispatch(setFormPanelMode({mode:FormPanelMode.MESSAGE}))
-    this.store.dispatch(setFormPanelMessage({message:"Waiting for server response."}))
+  private switchOffFormPanel(){
+    this.store.dispatch(setFormPanelMode({mode:FormPanelMode.NOT_VISIBLE}))
   }
 
   private communicateWithServer(userCredentials:UserCredentials){
@@ -73,8 +72,8 @@ export class LoginService {
   }
 
   private executeLoginOperations(message: string, userCredentials:UserCredentials) {
-    this.store.dispatch(setTopBarMessage({message:userCredentials.userEmail}))
-    
+    var topBarMessage = "Logged as " + userCredentials.userEmail
+    this.store.dispatch(setTopBarMessage({message: topBarMessage}))
     this.store.dispatch(setUserLoggedToTrue())
     this.addMessage("User logged in.",true,0)
     this.reloadTasks()

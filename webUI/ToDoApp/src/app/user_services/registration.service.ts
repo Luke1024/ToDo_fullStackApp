@@ -6,7 +6,7 @@ import { catchError } from "rxjs/operators"
 import { AppState } from "../AppState"
 import { ServerMessage } from "../server-message"
 import { ServicesSettingsAndTools } from "../services.settings.tools"
-import { addServerMessage, setFormPanelMessage, setTopBarMessage } from "../store-actions"
+import { addServerMessage, setTopBarMessage } from "../store-actions"
 import { StringDto } from "../StringDto"
 import { UserCredentials } from "../UserCredentials"
 
@@ -33,13 +33,11 @@ export class RegistrationService {
     }
 
     registerUser(userCredentials: UserCredentials):void {
-      this.addMessage("Registering user...",true,0)
         if(this.serviceSettings.tokenReceived()){
           if(!userCredentials.userEmail || !userCredentials.userPassword){
-            var message = 'Email and password can\'t be blank.'
-            this.store.dispatch(setFormPanelMessage({message}))
-            this.addMessage(message,false,0)
+            this.addMessage('Email and password can\'t be blank.',false,0)
           }else{
+            this.addMessage("Registering user...",true,0)
             this.http.post<StringDto>(
               this.serviceSettings.registerUrl + this.token, userCredentials, {observe: 'response'})
               .pipe(catchError(error => this.serviceSettings.handleHttpError(error)))
@@ -60,11 +58,8 @@ export class RegistrationService {
           if(response.body != null){
             var message:string = response.body.value
             if(status==202){
-              this.store.dispatch(setFormPanelMessage({message}))
               this.addMessage(message,true,status)
-            } else {
-              this.store.dispatch(setFormPanelMessage({message}))
-            }
+            } 
           }
         }
       }

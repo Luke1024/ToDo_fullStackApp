@@ -4,15 +4,8 @@ import { AppState } from './AppState'
 import { createCard,
      updateCard,
       deleteCard,
-       setDisableButtonsToTrue,
-        setDisableButtonsToFalse,
          setTopBarMessage,
-        setFormPanelVisibleToTrue,
-    setFormPanelVisibleToFalse,
 setFormPanelMode,
-setFormPanelMessage,
-setConnectedToFalse,
-setConnectedToTrue,
 setToken,
 setUserLoggedToFalse,
 setUserLoggedToTrue,
@@ -27,11 +20,8 @@ import { ServerMessage } from './server-message'
 import { TaskListStatus } from './task-list-status'
 
 export const initialState:AppState = {
-    topBarDisableButtons:false,
-    topBarMessage:"ToDo",
-    formPanelVisible:false,
-    formPanelMode:FormPanelMode.LOG_IN,
-    formPanelMessage:"",
+    topBarMessage:"ToDo App",
+    formPanelMode:FormPanelMode.NOT_VISIBLE,
     token:"",
     userLogged:false,
     serverMessages:[],
@@ -41,13 +31,8 @@ export const initialState:AppState = {
 const _appReducer = createReducer(
     initialState,
     //TopBar actions
-    on(setDisableButtonsToTrue, state => ({...state, topBarDisableButtons:true})),
-    on(setDisableButtonsToFalse, state => ({...state, topBarDisableButtons:false})),
     on(setTopBarMessage, (state,{message}) => ({...state, topBarMessage:message})),
-    on(setFormPanelVisibleToTrue, state => ({...state, formPanelVisible:true})),
-    on(setFormPanelVisibleToFalse, state => ({...state, formPanelVisible:false})),
     on(setFormPanelMode, (state,{mode}) => ({...state, formPanelMode:mode})),
-    on(setFormPanelMessage, (state,{message}) => ({...state,formPanelMessage:message})),
     on(setToken, (state,{token}) => ({...state, token:token})),
     on(setUserLoggedToTrue, state => ({...state, userLogged:true})),
     on(setUserLoggedToFalse, state => ({...state, userLogged:false})),

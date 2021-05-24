@@ -5,7 +5,7 @@ import { Observable } from "rxjs"
 import { catchError } from "rxjs/operators"
 import { AppState } from "../AppState"
 import { ServicesSettingsAndTools } from "../services.settings.tools"
-import { addServerMessage, createMultipleCards, setToken, setUserLoggedToFalse } from "../store-actions"
+import { addServerMessage, createMultipleCards, setToken, setTopBarMessage, setUserLoggedToFalse } from "../store-actions"
 import { StringDto } from "../StringDto"
 import { TokenService } from "./token.service"
 
@@ -60,10 +60,10 @@ export class LogOutService {
     }
 
     private executeLogOutOperations(message:string, status:number){
-      console.log("starting log out operations execution")
       this.addMessage(message,true,status)
       this.store.dispatch(setUserLoggedToFalse())
       this.store.dispatch(setToken({token:""}))
+      this.store.dispatch(setTopBarMessage({message:"ToDo App"}))
       this.store.dispatch(createMultipleCards({cards:[]}))
       this.tokenService.getToken()
     }

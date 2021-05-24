@@ -9,13 +9,10 @@ import { TopBar } from "./top-bar";
 export interface AppState {
 
     //TopBar
-    topBarDisableButtons:boolean
     topBarMessage:string
 
     //FormPanel
-    formPanelVisible:boolean
     formPanelMode: FormPanelMode
-    formPanelMessage: string
 
     //ServerManagement
     token:string

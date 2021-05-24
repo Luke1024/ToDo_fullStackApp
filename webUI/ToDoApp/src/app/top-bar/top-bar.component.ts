@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppState } from '../AppState';
 import { FormPanelMode } from '../form-panel-mode';
-import { setDisableButtonsToTrue, setFormPanelMode, setFormPanelVisibleToTrue } from '../store-actions';
+import { setFormPanelMode } from '../store-actions';
 import { TopBar } from '../top-bar';
 import { LogOutService } from '../user_services/logOut.service';
 
@@ -28,13 +28,7 @@ export class TopBarComponent implements OnInit {
 
   setStates(appState:AppState){
     this.barMessage = appState.topBarMessage
-    var disableButtons = appState.topBarDisableButtons
     var userLogged = appState.userLogged
-    if(disableButtons){
-
-    } else {
-
-    }
     if(userLogged){
       this.logOutVisible=true
       this.logInSignInVisible=false
@@ -48,14 +42,10 @@ export class TopBarComponent implements OnInit {
   }
 
   logIn(): void {
-    this.store.dispatch(setFormPanelVisibleToTrue())
-    this.store.dispatch(setDisableButtonsToTrue())
     this.store.dispatch(setFormPanelMode({mode:FormPanelMode.LOG_IN}))
   }
 
   signIn(): void {
-    this.store.dispatch(setFormPanelVisibleToTrue())
-    this.store.dispatch(setDisableButtonsToTrue())
     this.store.dispatch(setFormPanelMode({mode:FormPanelMode.SIGN_IN}))
   }
 
