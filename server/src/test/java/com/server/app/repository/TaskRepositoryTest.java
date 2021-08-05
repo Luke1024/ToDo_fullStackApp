@@ -38,50 +38,16 @@ public class TaskRepositoryTest {
 
     @Test
     public void testUpdate(){
-        User user1 = new User("","",true,"", LocalDateTime.now().plusHours(1),new ArrayList<>());
-        Task task = new Task(user1, "task1", "task1 description", false);
-        taskRepository.save((task));
-        Optional<Task> taskOptional = taskRepository.findAvailableTaskByUserIdAndTaskId(user1.getId(),task.getId());
-        taskOptional.get().setTaskDescription("new description");
-        taskRepository.save(taskOptional.get());
-        Assert.assertEquals("new description",taskRepository.findAvailableTaskByUserIdAndTaskId(
-                user1.getId(), task.getId())
-                .get().getTaskDescription());
-        taskRepository.delete(task);
+
     }
 
     @Test
     public void testNotFindingTaskAfterMarkingDelete(){
-        User user1 = new User("","",true,"", LocalDateTime.now().plusHours(1),new ArrayList<>());
-        Task task = new Task(user1, "task1", "task1 description", false);
 
-        taskRepository.save(task);
-
-        Optional<Task> taskOptional = taskRepository.findAvailableTaskByUserIdAndTaskId(user1.getId(), task.getId());
-        taskOptional.get().setDeleted(true);
-        taskRepository.save(taskOptional.get());
-
-        Optional<Task> taskOptionalDeleted = taskRepository.findAvailableTaskByUserIdAndTaskId(user1.getId(), task.getId());
-        Assert.assertEquals(Optional.empty(), taskOptionalDeleted);
     }
 
     @Test
     public void testFindAvailableTasksByUser(){
-        User user1 = new User("","",true,"", LocalDateTime.now().plusHours(1),new ArrayList<>());
-        Task task1 = new Task(user1, "task1", "task1 description", false);
-        Task task2 = new Task(user1, "task1", "task1 description", false);
-        Task task3 = new Task(user1, "task1", "task1 description", false);
 
-        List<Task> taskListExpected = Arrays.asList(task1, task2);
-        task3.setDeleted(true);
-
-        taskRepository.save(task1);
-        taskRepository.save(task2);
-        taskRepository.save(task3);
-
-        List<Task> taskList = taskRepository.findAvailableTasksByUserId(user1.getId());
-
-        Assert.assertEquals(taskListExpected.stream().map(task -> task.toString()).collect(Collectors.joining()),
-                taskList.stream().map(task -> task.toString()).collect(Collectors.joining()));
     }
 }

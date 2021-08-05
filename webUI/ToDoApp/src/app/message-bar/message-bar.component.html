@@ -1,4 +1,4 @@
-<div class="card m-2" style="height: 100px; overflow-y: auto;" id="list-to-scroll">
+<div class="card m-2 shadow" style="height: 100px; overflow-y: auto;" id="list-to-scroll">
     <div class="card">
         <ul class="list-group list-group-flush" *ngFor="let serverMessage of messages">
             <li class="list-group-item" [ngClass]="{'text-success':serverMessage.messageStatus, 'text-danger': !serverMessage.messageStatus}">
