@@ -19,7 +19,7 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-    private Logger LOGGER = LoggerFactory.getLogger(TaskController.class);
+    private Logger logger = LoggerFactory.getLogger(TaskController.class);
 
     @GetMapping(value = "/tasks/{token}")
     public ResponseEntity<List<TaskDto>> getTasks(@PathVariable String token){
@@ -40,19 +40,19 @@ public class TaskController {
 
     @PostMapping(value = "/tasks/{token}")
     public ResponseEntity<TaskDto> saveTask(@PathVariable String token, @RequestBody TaskDto taskDto){
-        LOGGER.info("Saving task with token: " + token + " " + "Task " + taskDto.toString());
+        logger.info("Saving task with token: " + token + " " + "Task " + taskDto.toString());
         return taskService.saveTask(token, taskDto);
     }
 
     @PutMapping(value = "/tasks/{token}")
     public ResponseEntity<StringDto> updateTask(@PathVariable String token, @RequestBody TaskDto taskDto){
-        LOGGER.info("Updating task with token: " + token + " " + "Task " + taskDto.toString());
+        logger.info("Updating task with token: " + token + " " + "Task " + taskDto.toString());
         return taskService.updateTask(token, taskDto);
     }
 
     @DeleteMapping(value = "/tasks/{token}/{id}")
     public ResponseEntity<StringDto> deleteTask(@PathVariable String token, @PathVariable long id){
-        LOGGER.info("Deleting task with token " + token + " , with id: " + id);
+        logger.info("Deleting task with token " + token + " , with id: " + id);
         return taskService.deleteTask(token, id);
     }
 }

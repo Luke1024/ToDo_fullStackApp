@@ -28,7 +28,7 @@ public class UserRegistration {
     @Autowired
     private SessionRepository sessionRepository;
 
-    private Logger LOGGER = LoggerFactory.getLogger(UserRegistration.class);
+    private Logger logger = LoggerFactory.getLogger(UserRegistration.class);
 
     private String token;
     private UserCredentialsDto userCredentialsDto;

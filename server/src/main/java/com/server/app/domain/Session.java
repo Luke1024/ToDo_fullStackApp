@@ -70,7 +70,7 @@ public class Session {
         if(user != null){
             user.getSessionList().add(this);
         } else if (this.user != null){
-            this.user.getTaskList().remove(this);
+            this.user.getSessionList().remove(this);
         }
         this.user = user;
     }

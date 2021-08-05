@@ -29,8 +29,6 @@ public class UserLogging {
     @Autowired
     private SessionRepository sessionRepository;
 
-    private Logger LOGGER = LoggerFactory.getLogger(UserLogging.class);
-
     private String token;
     private UserCredentialsDto userCredentialsDto;
     private Session sessionToEnd;
@@ -62,12 +60,10 @@ public class UserLogging {
     }
 
     private boolean analyzeCredentials() {
-        if(userCredentialsDto != null){
-            if(userCredentialsDto.getUserPassword() != null && userCredentialsDto.getUserEmail() != null) {
+        if(userCredentialsDto != null && userCredentialsDto.getUserPassword() != null && userCredentialsDto.getUserEmail() != null) {
                 if (userCredentialsDto.getUserPassword().length() >= serviceSettings.getMinimalPasswordLength()) {
                     return true;
                 }
-            }
         }
         return false;
     }
