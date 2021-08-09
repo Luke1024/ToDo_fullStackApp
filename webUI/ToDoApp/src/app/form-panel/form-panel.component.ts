@@ -21,7 +21,7 @@ export class FormPanelComponent implements OnInit {
   formVisibility!:boolean
 
   logInButton!:boolean
-  signInButton!:boolean
+  signUpButton!:boolean
 
   panelVisible!:boolean
   message!:string
@@ -43,13 +43,13 @@ export class FormPanelComponent implements OnInit {
       case FormPanelMode.LOG_IN:
         this.clearForm()
         this.logInButton = true
-        this.signInButton = false
+        this.signUpButton = false
         this.formVisibility = true
         break;
       case FormPanelMode.SIGN_IN:
         this.clearForm()
         this.logInButton = false
-        this.signInButton = true
+        this.signUpButton = true
         this.formVisibility = true
         break;
       case FormPanelMode.NOT_VISIBLE:
@@ -65,7 +65,7 @@ export class FormPanelComponent implements OnInit {
     this.clearForm()
   }
 
-  signIn() {
+  signUp() {
     var credentials:UserCredentials = {userEmail:this.email, userPassword:this.password}
     this.registrationService.registerUser(credentials)
     this.clearForm()

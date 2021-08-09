@@ -44,7 +44,7 @@ export class TopBarComponent implements OnInit {
     this.store.dispatch(setFormPanelMode({mode:FormPanelMode.LOG_IN}))
   }
 
-  signIn(): void {
+  signUp(): void {
     this.store.dispatch(setFormPanelMode({mode:FormPanelMode.SIGN_IN}))
   }
 
