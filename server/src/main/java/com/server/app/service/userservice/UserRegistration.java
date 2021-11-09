@@ -1,9 +1,9 @@
 package com.server.app.service.userservice;
 
 import com.server.app.domain.Session;
-import com.server.app.domain.StringDto;
+import com.server.app.domain.dto.StringDto;
 import com.server.app.domain.User;
-import com.server.app.domain.UserCredentialsDto;
+import com.server.app.domain.dto.UserCredentialsDto;
 import com.server.app.repository.SessionRepository;
 import com.server.app.repository.UserRepository;
 import com.server.app.service.UserServiceSettings;

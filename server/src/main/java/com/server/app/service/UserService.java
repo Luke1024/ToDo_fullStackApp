@@ -1,6 +1,8 @@
 package com.server.app.service;
 
 import com.server.app.domain.*;
+import com.server.app.domain.dto.StringDto;
+import com.server.app.domain.dto.UserCredentialsDto;
 import com.server.app.repository.UserRepository;
 import com.server.app.service.userservice.UserLogging;
 import com.server.app.service.userservice.UserLoggingOut;

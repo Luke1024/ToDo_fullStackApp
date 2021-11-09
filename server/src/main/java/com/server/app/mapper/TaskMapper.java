@@ -1,7 +1,7 @@
 package com.server.app.mapper;
 
 import com.server.app.domain.Task;
-import com.server.app.domain.TaskDto;
+import com.server.app.domain.dto.TaskDto;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

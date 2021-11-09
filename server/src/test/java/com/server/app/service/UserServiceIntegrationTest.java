@@ -1,21 +1,12 @@
 package com.server.app.service;
 
-import com.server.app.domain.StringDto;
-import com.server.app.domain.User;
-import com.server.app.domain.UserCredentialsDto;
 import com.server.app.repository.UserRepository;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Optional;
 import java.util.Random;
 
 @RunWith(SpringRunner.class)

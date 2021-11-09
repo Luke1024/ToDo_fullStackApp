@@ -1,7 +1,7 @@
 package com.server.app.controller;
 
-import com.server.app.domain.StringDto;
-import com.server.app.domain.TaskDto;
+import com.server.app.domain.dto.StringDto;
+import com.server.app.domain.dto.TaskDto;
 import com.server.app.service.TaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -2,8 +2,8 @@ package com.server.app.controller;
 
 
 import com.google.gson.Gson;
-import com.server.app.domain.StringDto;
-import com.server.app.domain.UserCredentialsDto;
+import com.server.app.domain.dto.StringDto;
+import com.server.app.domain.dto.UserCredentialsDto;
 import com.server.app.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

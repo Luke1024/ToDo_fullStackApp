@@ -1,14 +1,12 @@
 package com.server.app.service.userservice;
 
 import com.server.app.domain.Session;
-import com.server.app.domain.StringDto;
+import com.server.app.domain.dto.StringDto;
 import com.server.app.domain.User;
-import com.server.app.domain.UserCredentialsDto;
+import com.server.app.domain.dto.UserCredentialsDto;
 import com.server.app.repository.SessionRepository;
 import com.server.app.repository.UserRepository;
 import com.server.app.service.UserServiceSettings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

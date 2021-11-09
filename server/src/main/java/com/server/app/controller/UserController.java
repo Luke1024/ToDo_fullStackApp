@@ -1,7 +1,7 @@
 package com.server.app.controller;
 
-import com.server.app.domain.StringDto;
-import com.server.app.domain.UserCredentialsDto;
+import com.server.app.domain.dto.StringDto;
+import com.server.app.domain.dto.UserCredentialsDto;
 import com.server.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

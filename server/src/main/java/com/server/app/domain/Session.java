@@ -29,6 +29,7 @@ public class Session {
     public Session(User user, String token, LocalDateTime sessionActiveTo){
         setUser(user);
         this.token = token;
+        this.sessionOpen = LocalDateTime.now();
         this.sessionActiveTo = sessionActiveTo;
     }
 

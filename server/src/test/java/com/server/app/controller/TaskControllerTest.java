@@ -1,7 +1,7 @@
 package com.server.app.controller;
 
 import com.google.gson.Gson;
-import com.server.app.domain.TaskDto;
+import com.server.app.domain.dto.TaskDto;
 import com.server.app.service.TaskService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

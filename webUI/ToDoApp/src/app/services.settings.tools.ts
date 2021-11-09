@@ -13,7 +13,8 @@ import { Task } from "./models/task"
   providedIn: 'root'
 })
 export class ServicesSettingsAndTools {
-    rootUrl = 'https://morning-coast-72770.herokuapp.com/toDo'
+    rootUrl = 'http://localhost:8080/toDo' 
+  //rootUrl = 'https://morning-coast-72770.herokuapp.com/toDo'
     tokenUrl = this.rootUrl + '/token'
     loginUrl = this.rootUrl + '/login'
     registerUrl = this.rootUrl + '/register/'

@@ -1,6 +1,8 @@
 package com.server.app.service;
 
 import com.server.app.domain.*;
+import com.server.app.domain.dto.StringDto;
+import com.server.app.domain.dto.TaskDto;
 import com.server.app.mapper.TaskMapper;
 import com.server.app.repository.SessionRepository;
 import com.server.app.repository.TaskRepository;

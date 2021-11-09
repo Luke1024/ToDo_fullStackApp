@@ -1,4 +1,4 @@
-package com.server.app.domain;
+package com.server.app.domain.dto;
 
 public class StringDto {
 
