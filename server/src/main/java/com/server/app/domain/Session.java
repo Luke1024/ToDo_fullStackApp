@@ -26,10 +26,10 @@ public class Session {
     public Session() {
     }
 
-    public Session(User user, String token, LocalDateTime sessionActiveTo){
+    public Session(User user, String token, LocalDateTime sessionActiveTo, LocalDateTime sessionOpen){
         setUser(user);
         this.token = token;
-        this.sessionOpen = LocalDateTime.now();
+        this.sessionOpen = sessionOpen;
         this.sessionActiveTo = sessionActiveTo;
     }
 

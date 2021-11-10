@@ -89,7 +89,7 @@ public class UserLogging {
         sessionRepository.save(sessionToEnd);
 
         LocalDateTime sessionActiveTo = LocalDateTime.now().plusHours(serviceSettings.getSessionActiveHours());
-        Session newSession = new Session(userToLogIn, token, sessionActiveTo);
+        Session newSession = new Session(userToLogIn, token, sessionActiveTo, LocalDateTime.now());
         sessionRepository.save(newSession);
     }
 }

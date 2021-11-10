@@ -3,6 +3,7 @@ package com.server.app.service;
 import com.server.app.domain.*;
 import com.server.app.domain.dto.StringDto;
 import com.server.app.domain.dto.UserCredentialsDto;
+import com.server.app.repository.SessionRepository;
 import com.server.app.repository.UserRepository;
 import com.server.app.service.userservice.UserLogging;
 import com.server.app.service.userservice.UserLoggingOut;
@@ -32,6 +33,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private SessionRepository sessionRepository;
+
     private Random random = new Random();
 
     public ResponseEntity<StringDto> registerUser(String token, UserCredentialsDto userCredentialsDto){
@@ -43,14 +47,16 @@ public class UserService {
         User newUser = new User();
         newUser.setTypeOfUser(TypeOfUser.GUEST);
         Session guestSession = generateSession(guestToken, newUser);
-        newUser.addSession(guestSession);
-        userRepository.save(newUser);
+        //newUser.addSession(guestSession);
+        //userRepository.save(newUser);
+        sessionRepository.save(guestSession);
+
         return ResponseEntity.ok(new StringDto(guestToken));
     }
 
     private Session generateSession(String token, User newUser){
         LocalDateTime sessionActiveTo = LocalDateTime.now().plusHours(serviceSettings.getSessionActiveHours());
-        return new Session(newUser, token, sessionActiveTo);
+        return new Session(newUser, token, sessionActiveTo, LocalDateTime.now());
     }
 
     public ResponseEntity<StringDto> loginUser(String token, UserCredentialsDto userCredentialsDto){
