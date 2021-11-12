@@ -1,6 +1,7 @@
 package com.server.app.service.userservice;
 
 import com.server.app.domain.Session;
+import com.server.app.domain.TypeOfUser;
 import com.server.app.domain.dto.StringDto;
 import com.server.app.domain.User;
 import com.server.app.domain.dto.UserCredentialsDto;
@@ -83,6 +84,7 @@ public class UserRegistration {
 
     private void executeRegistration(){
         User userToRegister = new User();
+        userToRegister.setTypeOfUser(TypeOfUser.REGISTERED);
         userToRegister.setUserEmail(this.userCredentialsDto.getUserEmail());
         userToRegister.setPassword(this.userCredentialsDto.getUserPassword());
         userRepository.save(userToRegister);
