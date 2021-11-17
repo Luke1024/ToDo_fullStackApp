@@ -13,15 +13,15 @@ import java.util.Optional;
 @Repository
 public interface TaskRepository extends CrudRepository<Task, Long>{
 
-    @Query
+    @Query("SELECT t FROM Task t WHERE app_user_id =:USER_ID AND t.id=:ID AND t.deleted=false")
     Optional<Task> findAvailableTaskByUserIdAndTaskId(@Param("USER_ID")Long userId, @Param("ID")Long taskId);
 
-    @Query
+    @Query("SELECT t FROM Task t WHERE app_user_id =:USER_ID AND t.deleted=false")
     List<Task> findAvailableTasksByUserId(@Param("USER_ID")Long userId);
 
-    @Query
+    @Query("SELECT t FROM Task t WHERE app_user_id =:USER_ID AND t.deleted=false AND done=true")
     List<Task> findAvailableTasksByUserIdDone(@Param("USER_ID")Long userId);
 
-    @Query
+    @Query("SELECT t FROM Task t WHERE app_user_id =:USER_ID AND t.deleted=false AND done=false")
     List<Task> findAvailableTasksByUserIdTodo(@Param("USER_ID")Long userId);
 }

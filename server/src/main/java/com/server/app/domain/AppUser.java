@@ -5,19 +5,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@NamedNativeQuery(
-        name = "User.findByEmail",
-        query = "SELECT * FROM user WHERE user_email =:EMAIL",
-        resultClass = User.class
-)
-@NamedNativeQuery(
-        name = "User.findUserByEmailAndPassword",
-        query = "SELECT * FROM user WHERE user_email =:EMAIL AND password =:PASSWORD",
-        resultClass = User.class
-)
-
 @Entity
-public class User {
+public class AppUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -30,7 +19,7 @@ public class User {
     private String password;
 
     @OneToMany(targetEntity = Task.class,
-            mappedBy = "user",
+            mappedBy = "appUser",
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER
     )
@@ -38,26 +27,26 @@ public class User {
     private List<Task> taskList = new ArrayList<>();
 
 
-    @OneToMany(targetEntity = Session.class,
-            mappedBy = "user",
+    @OneToMany(targetEntity = AppSession.class,
+            mappedBy = "appUser",
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
     @OrderColumn
-    private List<Session> sessionList = new ArrayList<>();
+    private List<AppSession> appSessionList = new ArrayList<>();
 
-    public User() {
+    public AppUser() {
 
     }
 
     public void addTasks(List<Task> tasks){
         for(Task task : tasks){
-            task.setUser(this);
+            task.setAppUser(this);
         }
     }
 
-    public void addSession(Session session){
-        session.setUser(this);
+    public void addSession(AppSession appSession){
+        appSession.setAppUser(this);
     }
 
     public Long getId() {
@@ -88,8 +77,8 @@ public class User {
         this.password = password;
     }
 
-    public List<Session> getSessionList() {
-        return sessionList;
+    public List<AppSession> getAppSessionList() {
+        return appSessionList;
     }
 
     public List<Task> getTaskList() {

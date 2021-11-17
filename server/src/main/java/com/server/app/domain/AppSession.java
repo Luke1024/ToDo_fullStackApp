@@ -3,14 +3,9 @@ package com.server.app.domain;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@NamedNativeQuery(
-        name = "User.findSessionByToken",
-        query = "SELECT * FROM session WHERE token=:TOKEN",
-        resultClass = Session.class
-)
 
 @Entity
-public class Session {
+public class AppSession {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,17 +15,21 @@ public class Session {
     private LocalDateTime sessionOpen;
     private LocalDateTime sessionClosed;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "USER_ID")
-    private User user;
+    @JoinColumn(name = "APPUSER_ID")
+    private AppUser appUser;
 
-    public Session() {
+    public AppSession() {
     }
 
-    public Session(User user, String token, LocalDateTime sessionActiveTo, LocalDateTime sessionOpen){
-        setUser(user);
+    public AppSession(AppUser appUser, String token, LocalDateTime sessionActiveTo, LocalDateTime sessionOpen){
+        setAppUser(appUser);
         this.token = token;
         this.sessionOpen = sessionOpen;
         this.sessionActiveTo = sessionActiveTo;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getToken() {
@@ -63,16 +62,16 @@ public class Session {
         this.sessionClosed = sessionClosed;
     }
 
-    public User getUser() {
-        return user;
+    public AppUser getAppUser() {
+        return appUser;
     }
 
-    public void setUser(User user) {
-        if(user != null){
-            user.getSessionList().add(this);
-        } else if (this.user != null){
-            this.user.getSessionList().remove(this);
+    public void setAppUser(AppUser appUser) {
+        if(appUser != null){
+            appUser.getAppSessionList().add(this);
+        } else if (this.appUser != null){
+            this.appUser.getAppSessionList().remove(this);
         }
-        this.user = user;
+        this.appUser = appUser;
     }
 }

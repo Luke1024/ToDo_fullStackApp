@@ -1,8 +1,8 @@
 package com.server.app.service.userservice;
 
-import com.server.app.domain.Session;
+import com.server.app.domain.AppSession;
 import com.server.app.domain.dto.StringDto;
-import com.server.app.domain.User;
+import com.server.app.domain.AppUser;
 import com.server.app.domain.dto.UserCredentialsDto;
 import com.server.app.repository.SessionRepository;
 import com.server.app.repository.UserRepository;
@@ -29,8 +29,8 @@ public class UserLogging {
 
     private String token;
     private UserCredentialsDto userCredentialsDto;
-    private Session sessionToEnd;
-    private User userToLogIn;
+    private AppSession appSessionToEnd;
+    private AppUser appUserToLogIn;
 
     public ResponseEntity<StringDto> loginUser(String token, UserCredentialsDto userCredentialsDto) {
         loadDataToAnalysis(token, userCredentialsDto);
@@ -67,29 +67,29 @@ public class UserLogging {
     }
 
     private boolean findSessionUsingToken() {
-        Optional<Session> sessionOptional = sessionRepository.findSessionByToken(this.token);
+        Optional<AppSession> sessionOptional = sessionRepository.findSessionByToken(this.token);
         if(sessionOptional.isPresent()){
-            sessionToEnd = sessionOptional.get();
+            appSessionToEnd = sessionOptional.get();
             return true;
         } else return false;
     }
 
     private boolean loadUserWithCredentials(){
-        Optional<User> userOptional = userRepository.findUserByEmailAndPassword(
+        Optional<AppUser> userOptional = userRepository.findUserByEmailAndPassword(
                 this.userCredentialsDto.getUserEmail(),
                 this.userCredentialsDto.getUserPassword());
         if(userOptional.isPresent()){
-            userToLogIn = userOptional.get();
+            appUserToLogIn = userOptional.get();
             return true;
         } else return false;
     }
 
     private void executeUserLogging(){
-        sessionToEnd.setToken("");
-        sessionRepository.save(sessionToEnd);
+        appSessionToEnd.setToken("");
+        sessionRepository.save(appSessionToEnd);
 
         LocalDateTime sessionActiveTo = LocalDateTime.now().plusHours(serviceSettings.getSessionActiveHours());
-        Session newSession = new Session(userToLogIn, token, sessionActiveTo, LocalDateTime.now());
-        sessionRepository.save(newSession);
+        AppSession newAppSession = new AppSession(appUserToLogIn, token, sessionActiveTo, LocalDateTime.now());
+        sessionRepository.save(newAppSession);
     }
 }

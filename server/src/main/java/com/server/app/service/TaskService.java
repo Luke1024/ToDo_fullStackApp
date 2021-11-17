@@ -35,7 +35,7 @@ public class TaskService {
     private Logger LOGGER = LoggerFactory.getLogger(TaskService.class);
 
     public ResponseEntity<List<TaskDto>> getTasks(String token){
-        Optional<User> user = getUserByToken(token);
+        Optional<AppUser> user = getUserByToken(token);
         if(user.isPresent()) {
             List<Task> taskList = taskRepository.findAvailableTasksByUserId(user.get().getId());
             return ResponseEntity.ok(convertTaskListToDto(taskList));
@@ -46,7 +46,7 @@ public class TaskService {
     }
 
     public ResponseEntity<List<TaskDto>> getTasksDone(String token){
-        Optional<User> user = getUserByToken(token);
+        Optional<AppUser> user = getUserByToken(token);
         if(user.isPresent()) {
             List<Task> taskList = taskRepository.findAvailableTasksByUserIdDone(user.get().getId());
             return ResponseEntity.ok(convertTaskListToDto(taskList));
@@ -57,7 +57,7 @@ public class TaskService {
     }
 
     public ResponseEntity<List<TaskDto>> getTasksTodo(String token){
-        Optional<User> user = getUserByToken(token);
+        Optional<AppUser> user = getUserByToken(token);
         if(user.isPresent()) {
             List<Task> taskList = taskRepository.findAvailableTasksByUserIdTodo(user.get().getId());
             return ResponseEntity.ok(convertTaskListToDto(taskList));
@@ -68,7 +68,7 @@ public class TaskService {
     }
 
     public ResponseEntity<TaskDto> saveTask(String token, TaskDto taskDto){
-        Optional<User> user = getUserByToken(token);
+        Optional<AppUser> user = getUserByToken(token);
         if(user.isPresent()){
             return processWithTaskSaving(user.get(), taskDto);
         } else {
@@ -78,7 +78,7 @@ public class TaskService {
     }
 
     public ResponseEntity<StringDto> updateTask(String token, TaskDto taskDto){
-        Optional<User> user = getUserByToken(token);
+        Optional<AppUser> user = getUserByToken(token);
         if(user.isPresent()){
             return processWithTaskUpdate(user.get(), taskDto);
         } else {
@@ -88,7 +88,7 @@ public class TaskService {
     }
 
     public ResponseEntity<StringDto> deleteTask(String token, long frontId) {
-        Optional<User> user = getUserByToken(token);
+        Optional<AppUser> user = getUserByToken(token);
 
         if (user.isPresent()) {
             Optional<Task> foundTask = taskRepository.findAvailableTaskByUserIdAndTaskId(user.get().getId(), frontId);
@@ -104,11 +104,11 @@ public class TaskService {
         return new ResponseEntity<>(new StringDto("User's session expired or logged out."), HttpStatus.BAD_REQUEST);
     }
 
-    public Optional<User> getUserByToken(String token){
-        Optional<Session> sessionOptional = sessionRepository.findSessionByToken(token);
+    public Optional<AppUser> getUserByToken(String token){
+        Optional<AppSession> sessionOptional = sessionRepository.findSessionByToken(token);
 
         if(sessionOptional.isPresent()){
-            return Optional.of(sessionOptional.get().getUser());
+            return Optional.of(sessionOptional.get().getAppUser());
         } else return Optional.empty();
     }
 
@@ -116,16 +116,16 @@ public class TaskService {
         return taskMapper.mapToTaskDtoList(tasks);
     }
 
-    private ResponseEntity<TaskDto> processWithTaskSaving(User user, TaskDto taskDto){
+    private ResponseEntity<TaskDto> processWithTaskSaving(AppUser appUser, TaskDto taskDto){
         Task taskToSave = taskMapper.mapToTaskFromDto(taskDto);
-        taskToSave.setUser(user);
+        taskToSave.setAppUser(appUser);
         Task taskSavedWithId = taskRepository.save(taskToSave);
         TaskDto dtoWithId = taskMapper.mapToTaskDto(taskSavedWithId);
         return ResponseEntity.ok(dtoWithId);
     }
 
-    private ResponseEntity<StringDto> processWithTaskUpdate(User userWithTaskToUpdate, TaskDto taskDto){
-        Optional<Task> taskToUpdateOptional = findTask(userWithTaskToUpdate, taskDto);
+    private ResponseEntity<StringDto> processWithTaskUpdate(AppUser appUserWithTaskToUpdate, TaskDto taskDto){
+        Optional<Task> taskToUpdateOptional = findTask(appUserWithTaskToUpdate, taskDto);
 
         if(taskToUpdateOptional.isPresent()) {
             Task taskToUpdate = taskToUpdateOptional.get();
@@ -139,7 +139,7 @@ public class TaskService {
         }
     }
 
-    private Optional<Task> findTask(User userWithTaskToUpdate, TaskDto taskDto){
-        return taskRepository.findAvailableTaskByUserIdAndTaskId(userWithTaskToUpdate.getId(), taskDto.getId());
+    private Optional<Task> findTask(AppUser appUserWithTaskToUpdate, TaskDto taskDto){
+        return taskRepository.findAvailableTaskByUserIdAndTaskId(appUserWithTaskToUpdate.getId(), taskDto.getId());
     }
 }

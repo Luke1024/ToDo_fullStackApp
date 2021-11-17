@@ -2,29 +2,7 @@ package com.server.app.domain;
 
 import javax.persistence.*;
 
-@NamedNativeQuery(
-        name = "Task.findAvailableTaskByUserIdAndTaskId",
-        query = "SELECT * FROM task WHERE user_id =:USER_ID AND id=:ID AND deleted=false",
-        resultClass = Task.class
-)
 
-@NamedNativeQuery(
-        name = "Task.findAvailableTasksByUserId",
-        query = "SELECT * FROM task WHERE user_id = :USER_ID AND deleted=false",
-        resultClass = Task.class
-)
-
-@NamedNativeQuery(
-        name = "Task.findAvailableTasksByUserIdDone",
-        query = "SELECT * FROM task WHERE user_id = :USER_ID AND deleted=false AND done=true",
-        resultClass = Task.class
-)
-
-@NamedNativeQuery(
-        name = "Task.findAvailableTasksByUserIdTodo",
-        query = "SELECT * FROM task WHERE user_id = :USER_ID AND deleted=false AND done=false",
-        resultClass = Task.class
-)
 
 @Entity
 public class Task {
@@ -32,8 +10,8 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "USER_ID")
-    private User user;
+    @JoinColumn(name = "APP_USER_ID")
+    private AppUser appUser;
     private String taskName;
     private String taskDescription;
     private boolean done;
@@ -41,8 +19,8 @@ public class Task {
 
     public Task() {}
 
-    public Task(User user, String taskName, String taskDescription, boolean done) {
-        setUser(user);
+    public Task(AppUser appUser, String taskName, String taskDescription, boolean done) {
+        setAppUser(appUser);
         this.taskName = taskName;
         this.taskDescription = taskDescription;
         this.done = done;
@@ -53,17 +31,17 @@ public class Task {
         return id;
     }
 
-    public User getUser() {
-        return user;
+    public AppUser getAppUser() {
+        return appUser;
     }
 
-    public void setUser(User user) {
-        if(user != null){
-            user.getTaskList().add(this);
-        } else if (this.user != null){
-            this.user.getTaskList().remove(this);
+    public void setAppUser(AppUser appUser) {
+        if(appUser != null){
+            appUser.getTaskList().add(this);
+        } else if (this.appUser != null){
+            this.appUser.getTaskList().remove(this);
         }
-        this.user = user;
+        this.appUser = appUser;
     }
 
     public String getTaskName() {

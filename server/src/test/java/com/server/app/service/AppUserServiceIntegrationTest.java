@@ -11,7 +11,7 @@ import java.util.Random;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserServiceIntegrationTest {
+public class AppUserServiceIntegrationTest {
 
     private Random random = new Random();
 

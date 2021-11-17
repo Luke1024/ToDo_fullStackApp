@@ -1,8 +1,8 @@
 package com.server.app.service.admin;
 
-import com.server.app.domain.Session;
+import com.server.app.domain.AppSession;
+import com.server.app.domain.AppUser;
 import com.server.app.domain.Task;
-import com.server.app.domain.User;
 import com.server.app.domain.dto.admin.ExtendedTaskDto;
 import com.server.app.domain.dto.admin.UserDto;
 import com.server.app.repository.SessionRepository;
@@ -30,19 +30,19 @@ public class AdminService {
     private SessionRepository sessionRepository;
 
     public List<UserDto> getUsers(){
-        Iterable<User> users = userRepository.findAll();
+        Iterable<AppUser> users = userRepository.findAll();
         List<UserDto> userDtos = new ArrayList<>();
-        for(User user : users){
-            userDtos.add(mapToUserDto(user));
+        for(AppUser appUser : users){
+            userDtos.add(mapToUserDto(appUser));
         }
         return userDtos;
     }
 
     public List<UserDto> getUsersFirstActiveNoLaterThan(int daysFrom){
-        Iterable<User> users = userRepository.findAll();
+        Iterable<AppUser> users = userRepository.findAll();
         List<UserDto> userDtos = new ArrayList<>();
-        for(User user : users){
-            UserDto userDto = mapToUserDto(user);
+        for(AppUser appUser : users){
+            UserDto userDto = mapToUserDto(appUser);
             if(isUserFirstActiveNoLaterThan(daysFrom, userDto)) {
                 userDtos.add(userDto);
             }
@@ -50,34 +50,34 @@ public class AdminService {
         return userDtos;
     }
 
-    private UserDto mapToUserDto(User user){
-        Optional<LocalDateTime> firstActive = getFirstActive(user);
-        Optional<LocalDateTime> lastActive = getLastActive(user);
+    private UserDto mapToUserDto(AppUser appUser){
+        Optional<LocalDateTime> firstActive = getFirstActive(appUser);
+        Optional<LocalDateTime> lastActive = getLastActive(appUser);
         return new UserDto(
-                user.getId(),
+                appUser.getId(),
                 firstActive,
                 lastActive,
-                user.getTypeOfUser().toString(),
-                user.getUserEmail(),
-                user.getPassword(),
-                user.getTaskList().size());
+                appUser.getTypeOfUser().toString(),
+                appUser.getUserEmail(),
+                appUser.getPassword(),
+                appUser.getTaskList().size());
     }
 
-    private Optional<LocalDateTime> getFirstActive(User user){
-        List<Session> sessions = user.getSessionList();
-        if(sessions.size()>0){
-            return Optional.of(sessions.get(0).getSessionOpen());
+    private Optional<LocalDateTime> getFirstActive(AppUser appUser){
+        List<AppSession> appSessions = appUser.getAppSessionList();
+        if(appSessions.size()>0){
+            return Optional.of(appSessions.get(0).getSessionOpen());
         } else {
             return Optional.empty();
         }
     }
 
-    private Optional<LocalDateTime> getLastActive(User user){
-        List<Session> sessions = user.getSessionList();
-        if(sessions.size()>0) {
-            Session session = sessions.get(sessions.size() - 1);
-            if (session.getSessionClosed() != null) {
-                return Optional.of(session.getSessionClosed());
+    private Optional<LocalDateTime> getLastActive(AppUser appUser){
+        List<AppSession> appSessions = appUser.getAppSessionList();
+        if(appSessions.size()>0) {
+            AppSession appSession = appSessions.get(appSessions.size() - 1);
+            if (appSession.getSessionClosed() != null) {
+                return Optional.of(appSession.getSessionClosed());
             }
         }
         return Optional.empty();
@@ -92,7 +92,7 @@ public class AdminService {
     }
 
     public List<ExtendedTaskDto> getTasksByUserId(Long id){
-        Optional<User> userOptional = userRepository.findById(id);
+        Optional<AppUser> userOptional = userRepository.findById(id);
         if(userOptional.isPresent()){
             List<Task> taskList = userOptional.get().getTaskList();
             return mapToExtendedTaskDtoList(taskList);

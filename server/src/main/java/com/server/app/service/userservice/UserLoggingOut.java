@@ -1,6 +1,6 @@
 package com.server.app.service.userservice;
 
-import com.server.app.domain.Session;
+import com.server.app.domain.AppSession;
 import com.server.app.domain.dto.StringDto;
 import com.server.app.repository.SessionRepository;
 import com.server.app.repository.UserRepository;
@@ -29,7 +29,7 @@ public class UserLoggingOut {
     private Logger LOGGER = LoggerFactory.getLogger(UserLoggingOut.class);
 
     public ResponseEntity<StringDto> logoutUser(String token){
-        Optional<Session> optionalSessionToEnd = sessionRepository.findSessionByToken(token);
+        Optional<AppSession> optionalSessionToEnd = sessionRepository.findSessionByToken(token);
 
         if(optionalSessionToEnd.isPresent()){
             if(endingSession(token, optionalSessionToEnd.get())){
@@ -44,9 +44,9 @@ public class UserLoggingOut {
         }
     }
 
-    private boolean endingSession(String token, Session session){
-        session.setToken("");
-        sessionRepository.save(session);
+    private boolean endingSession(String token, AppSession appSession){
+        appSession.setToken("");
+        sessionRepository.save(appSession);
         return true;
     }
 }

@@ -451,7 +451,7 @@ instanceKlass org/mockito/MockingDetails
 instanceKlass org/mockito/stubbing/LenientStubber
 instanceKlass org/mockito/stubbing/BaseStubber
 instanceKlass org/mockito/internal/MockitoCore
-instanceKlass org/mockito/session/MockitoSessionBuilder
+instanceKlass org/mockito/appSession/MockitoSessionBuilder
 instanceKlass org/mockito/MockitoFramework
 instanceKlass org/mockito/verification/VerificationAfterDelay
 instanceKlass org/mockito/verification/VerificationWithTimeout
@@ -9247,7 +9247,7 @@ instanceKlass javax/el/ELException
 instanceKlass org/springframework/boot/context/properties/source/InvalidConfigurationPropertyValueException
 instanceKlass org/springframework/boot/web/server/WebServerException
 instanceKlass org/springframework/boot/context/properties/bind/validation/BindValidationException
-instanceKlass org/springframework/boot/autoconfigure/session/NonUniqueSessionRepositoryException
+instanceKlass org/springframework/boot/autoconfigure/appSession/NonUniqueSessionRepositoryException
 instanceKlass java/lang/reflect/MalformedParameterizedTypeException
 instanceKlass javax/persistence/PersistenceException
 instanceKlass org/apache/logging/log4j/LoggingException

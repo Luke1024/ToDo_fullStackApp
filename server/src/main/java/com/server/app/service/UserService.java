@@ -44,19 +44,19 @@ public class UserService {
 
     public ResponseEntity<StringDto> createGuestUserAndGenerateToken(){
         String guestToken = generateToken();
-        User newUser = new User();
-        newUser.setTypeOfUser(TypeOfUser.GUEST);
-        Session guestSession = generateSession(guestToken, newUser);
+        AppUser newAppUser = new AppUser();
+        newAppUser.setTypeOfUser(TypeOfUser.GUEST);
+        AppSession guestAppSession = generateSession(guestToken, newAppUser);
         //newUser.addSession(guestSession);
         //userRepository.save(newUser);
-        sessionRepository.save(guestSession);
+        sessionRepository.save(guestAppSession);
 
         return ResponseEntity.ok(new StringDto(guestToken));
     }
 
-    private Session generateSession(String token, User newUser){
+    private AppSession generateSession(String token, AppUser newAppUser){
         LocalDateTime sessionActiveTo = LocalDateTime.now().plusHours(serviceSettings.getSessionActiveHours());
-        return new Session(newUser, token, sessionActiveTo, LocalDateTime.now());
+        return new AppSession(newAppUser, token, sessionActiveTo, LocalDateTime.now());
     }
 
     public ResponseEntity<StringDto> loginUser(String token, UserCredentialsDto userCredentialsDto){

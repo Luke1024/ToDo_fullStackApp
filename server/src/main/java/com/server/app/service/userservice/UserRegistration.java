@@ -1,9 +1,9 @@
 package com.server.app.service.userservice;
 
-import com.server.app.domain.Session;
+import com.server.app.domain.AppSession;
 import com.server.app.domain.TypeOfUser;
 import com.server.app.domain.dto.StringDto;
-import com.server.app.domain.User;
+import com.server.app.domain.AppUser;
 import com.server.app.domain.dto.UserCredentialsDto;
 import com.server.app.repository.SessionRepository;
 import com.server.app.repository.UserRepository;
@@ -76,17 +76,17 @@ public class UserRegistration {
     }
 
     private boolean findSessionByTokenUsedForRegistration(){
-        Optional<Session> sessionToEndOptional = sessionRepository.findSessionByToken(this.token);
+        Optional<AppSession> sessionToEndOptional = sessionRepository.findSessionByToken(this.token);
         if(sessionToEndOptional.isPresent()){
             return true;
         } else return false;
     }
 
     private void executeRegistration(){
-        User userToRegister = new User();
-        userToRegister.setTypeOfUser(TypeOfUser.REGISTERED);
-        userToRegister.setUserEmail(this.userCredentialsDto.getUserEmail());
-        userToRegister.setPassword(this.userCredentialsDto.getUserPassword());
-        userRepository.save(userToRegister);
+        AppUser appUserToRegister = new AppUser();
+        appUserToRegister.setTypeOfUser(TypeOfUser.REGISTERED);
+        appUserToRegister.setUserEmail(this.userCredentialsDto.getUserEmail());
+        appUserToRegister.setPassword(this.userCredentialsDto.getUserPassword());
+        userRepository.save(appUserToRegister);
     }
 }
