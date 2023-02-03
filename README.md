@@ -1,6 +1,6 @@
 # ToDo_fullStackApp
 Todo app using Angular and Spring Boot.
-Deployed on heroku (wait a moment for heroku to wake up: https://morning-coast-72770.herokuapp.com/
+Deployed on amazon ec2: http://ec2-3-73-59-212.eu-central-1.compute.amazonaws.com:8081
 
 
 ## General info
